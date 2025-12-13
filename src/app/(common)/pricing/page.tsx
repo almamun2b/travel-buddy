@@ -1,7 +1,7 @@
 // app/pricing/page.tsx
 import PricingSection from "@/components/modules/pricing/PricingSection";
 import { getSubscriptionPlans } from "@/services/payment/getSubscriptionPlans";
-export const dynamic = "force-static";
+export const dynamic = "force-dynamic";
 
 const PricingPage = async () => {
   const result = await getSubscriptionPlans();
