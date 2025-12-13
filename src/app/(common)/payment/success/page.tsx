@@ -21,6 +21,7 @@ import {
   User,
 } from "lucide-react";
 import Link from "next/link";
+export const dynamic = "force-static";
 
 interface PaymentSuccessPageProps {
   searchParams: Promise<{ session_id?: string }>;

@@ -4,7 +4,7 @@ import PaginationCommon from "@/components/shared/pagination-common";
 import { me } from "@/services/auth/me";
 import { exploreTravelers } from "@/services/user/exploreTravelers";
 import { Metadata } from "next";
-
+export const dynamic = "force-static";
 interface ProjectPageProps {
   searchParams: Promise<{ page?: string }>;
 }

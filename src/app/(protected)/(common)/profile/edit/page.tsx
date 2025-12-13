@@ -2,7 +2,7 @@ import { UpdateProfileForm } from "@/components/modules/profile/EditProfileForm"
 import { me } from "@/services/auth/me";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-
+export const dynamic = "force-static";
 export const metadata: Metadata = {
   title: "Edit Profile",
   description: "Update your profile information.",
