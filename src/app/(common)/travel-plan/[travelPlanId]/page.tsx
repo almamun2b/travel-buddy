@@ -12,7 +12,6 @@ import {
   Users2,
 } from "lucide-react";
 import Image from "next/image";
-export const dynamic = "force-static";
 
 interface TravelPlanDetailPageProps {
   params: Promise<{ travelPlanId: string }>;
