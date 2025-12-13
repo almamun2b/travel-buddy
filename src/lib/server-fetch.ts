@@ -1,4 +1,5 @@
-// import { getNewAccessToken } from "@/services/auth/authService";
+"use server";
+
 import { getCookie } from "@/services/auth/tokenHandlers";
 
 const BACKEND_API_URL =
