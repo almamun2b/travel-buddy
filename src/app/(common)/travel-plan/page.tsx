@@ -56,10 +56,6 @@ const TravelPlanPage = async ({ searchParams }: ProjectPageProps) => {
     }
   );
 
-  if (!userInfo.success || !response) {
-    return <div>Something went wrong</div>;
-  }
-
   const travelPlans = isFetchError(response) ? [] : response.data;
   const meta = isFetchError(response)
     ? { page: 1, limit: 20, total: 0 }
