@@ -16,14 +16,17 @@ export const metadata: Metadata = {
 
 const TravelPlanPage = async ({ searchParams }: ProjectPageProps) => {
   const { page } = await searchParams;
-  const userInfo = await me();
-  const data: any = await getAllTourPlans({
-    limit: 9,
-    page: page ? Number(page) : 1,
-  });
-  if (!data.success) {
-    throw new Error("Some thing went ");
-  }
+  let userInfo: any;
+  let data: any;
+
+  try {
+    userInfo = await me();
+    data = await getAllTourPlans({
+      limit: 9,
+      page: page ? Number(page) : 1,
+    });
+  } catch (e) {}
+
   const totalPages = Math.ceil(data.meta.total / data.meta.limit);
 
   return (
