@@ -73,7 +73,9 @@ export function TravelPlanCard({
         </div>
         <div className="flex justify-between">
           <h3 className="text-xl font-semibold">{title}</h3>
-          {userInfo?.data?.email && <TravelRequestModal travelPlanId={id} />}
+          {userInfo.success && userInfo?.data?.email && (
+            <TravelRequestModal travelPlanId={id} />
+          )}
         </div>
         <p className="text-sm text-muted-foreground line-clamp-2">
           {description}

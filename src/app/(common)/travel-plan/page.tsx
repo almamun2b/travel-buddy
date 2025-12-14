@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TravelPlanCard } from "@/components/modules/travelPlan/TravelPlanCard";
 import PaginationCommon from "@/components/shared/pagination-common";
-import { $fetch, isFetchError } from "@/lib/fetch";
-import { TravelPlansResponse } from "@/types/types";
+import { me } from "@/services/auth/me";
+import { getTravelPlans } from "@/services/travelPlans/getAllTravelPlans";
+import { TravelPlanSearchParams } from "@/types/travelPlan";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,53 +11,20 @@ export const metadata: Metadata = {
     "Connect with fellow adventurers and discover amazing travel plans around the world",
 };
 
-interface SearchParams {
-  page?: string;
-  limit?: string;
-  searchTerm?: string;
-  sortBy?: string;
-  sortOrder?: string;
-}
-
 interface ProjectPageProps {
-  searchParams: Promise<SearchParams>;
+  searchParams: Promise<TravelPlanSearchParams>;
 }
 
 const TravelPlanPage = async ({ searchParams }: ProjectPageProps) => {
   const params = await searchParams;
-  const page = params.page || "1";
-  const limit = params.limit || "20";
-  const searchTerm = params.searchTerm || "";
-  const sortBy = params.sortBy || "createdAt";
-  const sortOrder = params.sortOrder || "desc";
 
-  const query = new URLSearchParams({
-    page,
-    limit,
-    ...(searchTerm && { searchTerm }),
-    sortBy,
-    sortOrder,
-  }).toString();
+  const response = await getTravelPlans(params);
+  const userInfo = await me();
 
-  const userInfo = await $fetch.get<any>(`/auth/me`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-  });
+  if (!userInfo || !response) return;
 
-  const response = await $fetch.get<TravelPlansResponse>(
-    `/travel-plans?${query}`,
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    }
-  );
-
-  const travelPlans = isFetchError(response) ? [] : response.data;
-  const meta = isFetchError(response)
+  const travelPlans = !response.success ? [] : response.data;
+  const meta = !response.success
     ? { page: 1, limit: 20, total: 0 }
     : response.meta;
 

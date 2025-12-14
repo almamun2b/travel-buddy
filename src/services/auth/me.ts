@@ -1,21 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export async function me() {
   try {
-    const res = await $fetch.get("/auth/me", {
-      headers: { "Content-Type": "application/json" },
+    const response = await $fetch.get<any>("/auth/me", {
+      cache: "no-store",
     });
-
-    const data = await res.json();
-
-    return data;
-  } catch (err: any) {
-    return {
-      success: false,
-      message: "Something went wrong",
-    };
+    return response;
+  } catch (error) {
+    return null;
   }
 }

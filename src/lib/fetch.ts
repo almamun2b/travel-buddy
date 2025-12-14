@@ -1,13 +1,7 @@
-type FetchOptions = RequestInit & {
-  params?: Record<string, string | number | boolean>;
-};
+type Params = Record<string, string | number | boolean>;
 
-export type FetchError = {
-  success: false;
-  message: string;
-  error?: string;
-  statusCode?: number;
-  errors?: Record<string, string[]>; // For validation errors
+type FetchOptions<P = Params> = RequestInit & {
+  params?: P;
 };
 
 class FetchClient {
@@ -22,10 +16,10 @@ class FetchClient {
     };
   }
 
-  private async request<T>(
+  private async request<T, P = Params>(
     endpoint: string,
-    options: FetchOptions = {}
-  ): Promise<T | FetchError> {
+    options: FetchOptions<P> = {} as FetchOptions<P>
+  ): Promise<T | null> {
     const { params, headers, ...restOptions } = options;
 
     // Build URL with query params
@@ -54,11 +48,8 @@ class FetchClient {
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         if (!response.ok) {
-          return {
-            success: false,
-            message: `HTTP error! status: ${response.status}`,
-            statusCode: response.status,
-          } as FetchError;
+          console.error(`[Fetch Error]: HTTP ${response.status} - ${endpoint}`);
+          return null;
         }
         // For successful non-JSON responses, return empty success object
         return { success: true } as T;
@@ -67,75 +58,83 @@ class FetchClient {
       const data = await response.json();
 
       if (!response.ok) {
-        return {
-          success: false,
-          message: data.message || `HTTP error! status: ${response.status}`,
-          error: data.error,
-          statusCode: response.status,
-          errors: data.errors,
-        } as FetchError;
+        // Log API error
+        console.warn(`[API Error]: ${data?.message || response?.status}`, {
+          endpoint,
+          status: response?.status,
+          data: data,
+        });
       }
 
       return data as T;
     } catch (error) {
-      console.error("[Fetch Error]:", error);
-      return {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Network error occurred",
-        error: "CLIENT_ERROR",
-      } as FetchError;
+      // Log client/network error
+      console.error(
+        "[Network Error]:",
+        error instanceof Error ? error.message : "Unknown error",
+        {
+          endpoint,
+          error,
+        }
+      );
+      return null;
     }
   }
 
-  async get<T>(
+  async get<T, P = Params>(
     endpoint: string,
-    options?: FetchOptions
-  ): Promise<T | FetchError> {
-    return this.request<T>(endpoint, { ...options, method: "GET" });
+    options?: FetchOptions<P>
+  ): Promise<T | null> {
+    return this.request<T, P>(endpoint, {
+      ...options,
+      method: "GET",
+    });
   }
 
-  async post<T>(
+  async post<T, P = Params>(
     endpoint: string,
     body?: unknown,
-    options?: FetchOptions
-  ): Promise<T | FetchError> {
-    return this.request<T>(endpoint, {
+    options?: FetchOptions<P>
+  ): Promise<T | null> {
+    return this.request<T, P>(endpoint, {
       ...options,
       method: "POST",
       body: body ? JSON.stringify(body) : undefined,
     });
   }
 
-  async put<T>(
+  async put<T, P = Params>(
     endpoint: string,
     body?: unknown,
-    options?: FetchOptions
-  ): Promise<T | FetchError> {
-    return this.request<T>(endpoint, {
+    options?: FetchOptions<P>
+  ): Promise<T | null> {
+    return this.request<T, P>(endpoint, {
       ...options,
       method: "PUT",
       body: body ? JSON.stringify(body) : undefined,
     });
   }
 
-  async patch<T>(
+  async patch<T, P = Params>(
     endpoint: string,
     body?: unknown,
-    options?: FetchOptions
-  ): Promise<T | FetchError> {
-    return this.request<T>(endpoint, {
+    options?: FetchOptions<P>
+  ): Promise<T | null> {
+    return this.request<T, P>(endpoint, {
       ...options,
       method: "PATCH",
       body: body ? JSON.stringify(body) : undefined,
     });
   }
 
-  async delete<T>(
+  async delete<T, P = Params>(
     endpoint: string,
-    options?: FetchOptions
-  ): Promise<T | FetchError> {
-    return this.request<T>(endpoint, { ...options, method: "DELETE" });
+    options?: FetchOptions<P>
+  ): Promise<T | null> {
+    return this.request<T, P>(endpoint, {
+      ...options,
+      method: "DELETE",
+    });
   }
 
   // Method to update base URL if needed
@@ -153,17 +152,6 @@ class FetchClient {
 export const $fetch = new FetchClient(
   "https://travel-buddy-api-5xvg.onrender.com/api/v1"
 );
-
-export function isFetchError(
-  response: unknown
-): response is { success: false; message: string } {
-  return (
-    typeof response === "object" &&
-    response !== null &&
-    "success" in response &&
-    response.success === false
-  );
-}
 
 // Also export the class for custom instances
 export { FetchClient };

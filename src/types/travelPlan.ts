@@ -27,6 +27,20 @@ export interface TravelPlan {
   creator: Creator;
 }
 
+export interface TravelPlanSearchParams {
+  limit?: number;
+  page?: number;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+  searchTerm?: string;
+  destination?: string;
+  travelType?: string;
+  minBudget?: string;
+  maxBudget?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
 export interface TravelPlansResponse {
   success: boolean;
   message: string;
