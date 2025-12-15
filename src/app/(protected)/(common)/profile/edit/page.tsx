@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UpdateProfileForm } from "@/components/modules/profile/EditProfileForm";
 import { me } from "@/services/auth/me";
 import { Metadata } from "next";
@@ -9,13 +10,13 @@ export const metadata: Metadata = {
 };
 
 const EditProfilePage = async () => {
-  const res = await me();
+  const res = (await me()) as any;
 
   if (!res?.data?.email) {
     notFound();
   }
 
-  return <UpdateProfileForm user={res.data} />;
+  return <UpdateProfileForm user={res?.data} />;
 };
 
 export default EditProfilePage;
