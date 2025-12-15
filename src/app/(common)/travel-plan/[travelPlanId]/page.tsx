@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { me } from "@/services/auth/me";
-import { getTravelPlansById } from "@/services/travelPlans/getTravelPlansById";
+import { getTravelPlansById } from "@/services/travelPlans/travelPlans";
 import {
   CalendarDays,
   CheckCircle,
@@ -26,8 +26,8 @@ export const generateMetadata = async ({
   const data = await getTravelPlansById({ id: travelPlanId });
 
   return {
-    title: data.data?.title ?? "Travel Plan",
-    description: data.data?.description ?? "Travel Plan Details",
+    title: data?.data?.title ?? "Travel Plan",
+    description: data?.data?.description ?? "Travel Plan Details",
   };
 };
 
@@ -35,16 +35,13 @@ const TravelPlanDetailPage = async ({ params }: TravelPlanDetailPageProps) => {
   const { travelPlanId } = await params;
 
   const userInfo = await me();
-  const result = await getTravelPlansById({ id: travelPlanId });
-  const travelPlan = result.data;
+  const response = await getTravelPlansById({ id: travelPlanId });
 
-  if (!travelPlan) {
-    return (
-      <div className="flex justify-center py-20 text-muted-foreground">
-        Travel plan not found
-      </div>
-    );
-  }
+  if (!userInfo || !response) return;
+
+  if (!response?.success) return <div>Something went wrong</div>;
+
+  const travelPlan = response?.data;
 
   return (
     <section className="max-w-4xl mx-auto py-10 px-4 pt-32">

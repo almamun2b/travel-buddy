@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { getPublicProfile } from "@/services/user/getPublicProfile";
+import { getPublicProfile } from "@/services/user/exploreTravelers";
 interface TravelerDetailPageProps {
   params: Promise<{ travelerId: string }>;
 }
@@ -16,16 +15,18 @@ export const generateMetadata = async ({
   const data = await getPublicProfile({ id: travelerId });
 
   return {
-    title: data.data?.fullName ?? "Traveler Profile",
-    description: data.data?.bio ?? "Traveler profile",
+    title: data?.data?.fullName ?? "Traveler Profile",
+    description: data?.data?.bio ?? "Traveler profile",
   };
 };
 
 const TravelerDetailPage = async ({ params }: TravelerDetailPageProps) => {
   const { travelerId } = await params;
 
-  const result = await getPublicProfile({ id: travelerId });
-  const traveler = result.data;
+  const response = await getPublicProfile({ id: travelerId });
+
+  if (!response) return;
+  const traveler = response.data;
 
   if (!traveler) {
     return (
@@ -82,7 +83,7 @@ const TravelerDetailPage = async ({ params }: TravelerDetailPageProps) => {
             <h2 className="font-medium mb-2">Travel Interests</h2>
             <div className="flex flex-wrap gap-2">
               {traveler.travelInterests?.length > 0 ? (
-                traveler.travelInterests.map((interest: any) => (
+                traveler.travelInterests.map((interest) => (
                   <Badge
                     key={interest}
                     variant="outline"

@@ -1,7 +1,7 @@
 import { TravelPlanCard } from "@/components/modules/travelPlan/TravelPlanCard";
 import PaginationCommon from "@/components/shared/pagination-common";
 import { me } from "@/services/auth/me";
-import { getTravelPlans } from "@/services/travelPlans/getAllTravelPlans";
+import { getTravelPlans } from "@/services/travelPlans/travelPlans";
 import { TravelPlanSearchParams } from "@/types/travelPlan";
 import { Metadata } from "next";
 

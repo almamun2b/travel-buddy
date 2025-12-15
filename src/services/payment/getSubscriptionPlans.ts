@@ -1,27 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
+import { SubscriptionPlansResponse } from "@/types/payment";
 
-export const getSubscriptionPlans = async (): Promise<any> => {
-  try {
-    const res = await $fetch.get(`/payment/plans`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+export const getSubscriptionPlans = async () => {
+  const result = await $fetch.get<SubscriptionPlansResponse>(`/payment/plans`, {
+    cache: "force-cache",
+  });
 
-    const result = await res.json();
-    return result;
-  } catch (error: any) {
-    console.log("GET_ALL_TOUR_PLANS_ERROR:", error);
-
-    return {
-      success: false,
-      message:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Failed to fetch tour plans. Please try again.",
-    };
-  }
+  return result;
 };

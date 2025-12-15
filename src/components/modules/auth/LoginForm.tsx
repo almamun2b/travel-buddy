@@ -40,8 +40,7 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       const res = await loginUser(data);
-
-      if (res.success) {
+      if (res && res.success) {
         toast.success(res?.message || "Login successful");
         router.push("/");
       } else {

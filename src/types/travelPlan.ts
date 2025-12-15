@@ -56,3 +56,37 @@ export interface AuthResponse {
   success: boolean;
   message: string;
 }
+
+export interface TravelPlanDetails {
+  id: string;
+  title: string;
+  description: string;
+  destination: string;
+  startDate: string;
+  endDate: string;
+  budget: number;
+  travelType: TravelType;
+  maxMembers: number;
+  activities: string[];
+  images: string[];
+  status: TravelStatus;
+  createdAt: string;
+  updatedAt: string;
+  creator: {
+    id: string;
+    fullName: string;
+    avatar: string;
+    isVerified: boolean;
+    hasVerifiedBadge: boolean;
+  };
+  travelRequests: unknown[];
+  _count: {
+    travelRequests: number;
+  };
+}
+
+export interface TravelPlanDetailsResponse {
+  success: boolean;
+  message: string;
+  data: TravelPlan;
+}
