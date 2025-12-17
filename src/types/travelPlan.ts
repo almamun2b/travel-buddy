@@ -55,6 +55,10 @@ export interface TravelPlansResponse {
 export interface AuthResponse {
   success: boolean;
   message: string;
+  data?: {
+    accessToken?: string;
+    refreshToken?: string;
+  };
 }
 
 export interface TravelPlanDetails {
@@ -89,4 +93,14 @@ export interface TravelPlanDetailsResponse {
   success: boolean;
   message: string;
   data: TravelPlan;
+}
+
+export type Params = Record<string, string | number | boolean>;
+
+export interface TravelPlansParams extends Partial<Params> {
+  page?: string;
+  limit?: string;
+  searchTerm?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
 }

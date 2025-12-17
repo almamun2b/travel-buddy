@@ -1,85 +1,83 @@
 "use server";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { $fetch } from "@/lib/server-fetch";
+// import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
+import { AuthResponse } from "@/types/travelPlan";
 import { parse } from "cookie";
 import { setCookie } from "./tokenHandlers";
 
-export const loginUser = async (data: any) => {
-  try {
-    const payload = {
-      email: data.email,
-      password: data.password,
-    };
+export interface ParsedCookie {
+  [key: string]: string | undefined;
+}
 
-    // 🔥 call backend
-    const res = await $fetch.post("/auth/login", {
-      body: JSON.stringify(payload),
+export const loginUser = async (data: any) => {
+  const response = await $fetch.post<AuthResponse & { response?: Response }>(
+    "/auth/login",
+    {
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
-    });
-
-    const result = await res.json();
-
-    if (!result?.success) {
-      return result;
+      skipAuth: true,
+      returnResponse: true,
     }
+  );
 
-    // 🔥 extract Set-Cookie headers
-    const setCookieHeaders = res.headers.getSetCookie();
+  if (!response?.success) {
+    return { success: false, error: response?.message || "Login failed" };
+  }
 
-    if (!setCookieHeaders || setCookieHeaders.length === 0) {
-      return {
-        success: false,
-        message: "No cookies received from backend",
-      };
-    }
+  // Extract Set-Cookie headers from the response
+  const setCookieHeaders = response.response?.headers.getSetCookie();
 
-    let accessTokenObject: any = null;
-    let refreshTokenObject: any = null;
+  if (setCookieHeaders && setCookieHeaders.length > 0) {
+    let accessTokenData: ParsedCookie | null = null;
+    let refreshTokenData: ParsedCookie | null = null;
 
     setCookieHeaders.forEach((cookieString: string) => {
-      const parsed = parse(cookieString);
+      const parsed: ParsedCookie = parse(cookieString);
 
-      if (parsed.accessToken) accessTokenObject = parsed;
-      if (parsed.refreshToken) refreshTokenObject = parsed;
+      if (parsed.accessToken) {
+        accessTokenData = parsed;
+      }
+      if (parsed.refreshToken) {
+        refreshTokenData = parsed;
+      }
     });
 
-    if (!accessTokenObject || !refreshTokenObject) {
-      return {
-        success: false,
-        message: "Tokens missing in cookie response",
-      };
+    if (accessTokenData?.accessToken) {
+      await setCookie("accessToken", accessTokenData.accessToken, {
+        secure: true,
+        httpOnly: true,
+        maxAge: accessTokenData["Max-Age"]
+          ? Number.parseInt(accessTokenData["Max-Age"])
+          : 3600,
+        path: accessTokenData.Path || "/",
+        sameSite:
+          (accessTokenData.SameSite?.toLowerCase() as
+            | "strict"
+            | "lax"
+            | "none") || "lax",
+      });
     }
 
-    await setCookie("accessToken", accessTokenObject.accessToken, {
-      secure: true,
-      httpOnly: true,
-      maxAge: parseInt(accessTokenObject["Max-Age"]) || 60 * 60,
-      path: accessTokenObject.Path || "/",
-      sameSite: accessTokenObject["SameSite"] || "none",
-    });
-
-    // save refresh token
-    await setCookie("refreshToken", refreshTokenObject.refreshToken, {
-      secure: true,
-      httpOnly: true,
-      maxAge: parseInt(refreshTokenObject["Max-Age"]) || 60 * 60 * 24 * 90,
-      path: refreshTokenObject.Path || "/",
-      sameSite: refreshTokenObject["SameSite"] || "none",
-    });
-
-    return result;
-  } catch (error: any) {
-    console.error("Login Error:", error);
-
-    return {
-      success: false,
-      message:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Login failed. Incorrect email or password.",
-    };
+    if (refreshTokenData?.refreshToken) {
+      await setCookie("refreshToken", refreshTokenData.refreshToken, {
+        secure: true,
+        httpOnly: true,
+        maxAge: refreshTokenData["Max-Age"]
+          ? Number.parseInt(refreshTokenData["Max-Age"])
+          : 7776000, // 90 days default
+        path: refreshTokenData.Path || "/",
+        sameSite:
+          (refreshTokenData.SameSite?.toLowerCase() as
+            | "strict"
+            | "lax"
+            | "none") || "lax",
+      });
+    }
   }
+
+  return { success: true, message: response.message, data: response.data };
 };

@@ -43,12 +43,13 @@ export function LoginForm() {
       if (res && res.success) {
         toast.success(res?.message || "Login successful");
         router.push("/");
-      } else {
-        if (res?.error?.statusCode === 403) {
-          router.push(`/verify-email?email=${data.email}`);
-        }
-        toast.error(res?.message || "Something went wrong");
       }
+      // else {
+      //   if (res?.error?.statusCode === 403) {
+      //     router.push(`/verify-email?email=${data.email}`);
+      //   }
+      //   toast.error(res?.message || "Something went wrong");
+      // }
     } catch (err: any) {
       toast.error(err?.message || "Login failed. Please try again.");
     }
