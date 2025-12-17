@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description:
     "Connect with fellow adventurers and discover amazing travel plans around the world",
 };
-export const dynamic = "force-dynamic";
+
 interface ProjectPageProps {
   searchParams: Promise<TravelPlanSearchParams>;
 }

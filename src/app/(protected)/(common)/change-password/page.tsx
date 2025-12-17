@@ -3,7 +3,6 @@ import { me } from "@/services/auth/me";
 import { notFound } from "next/navigation";
 
 // Dynamic SSR - authenticated page
-export const dynamic = "force-dynamic";
 
 const ChangePasswordPage = async () => {
   const res = await me();

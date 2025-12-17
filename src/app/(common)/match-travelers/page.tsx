@@ -4,7 +4,6 @@ import { me } from "@/services/auth/me";
 import { matchTravelPlans } from "@/services/travelPlans/matchTravelPlans";
 import { TravelPlanSearchParams } from "@/types/travelPlan";
 import { Metadata } from "next";
-export const dynamic = "force-dynamic";
 interface MatchTravelersPageProps {
   searchParams: Promise<TravelPlanSearchParams>;
 }

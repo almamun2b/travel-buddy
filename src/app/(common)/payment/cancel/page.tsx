@@ -11,8 +11,6 @@ import {
 import { ArrowLeft, Home, XCircle } from "lucide-react";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
-
 const PaymentCancelPage = () => {
   return (
     <div className="container flex min-h-screen items-center justify-center px-4 py-16">

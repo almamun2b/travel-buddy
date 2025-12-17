@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Profile",
   description: "View and manage your profile information.",
 };
-export const dynamic = "force-dynamic";
+
 const ProfilePage = async () => {
   const res = await me();
 
