@@ -1,4 +1,4 @@
-// "use server";
+"use server";
 
 import { $fetch } from "@/lib/fetch";
 import {
