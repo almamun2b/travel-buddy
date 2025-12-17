@@ -1,6 +1,6 @@
 "use server";
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
 // import { $fetch } from "@/lib/server-fetch";
 import { $fetch } from "@/lib/fetch";
 import { AuthResponse } from "@/types/travelPlan";
@@ -12,17 +12,14 @@ export interface ParsedCookie {
 }
 
 export const loginUser = async (data: any) => {
-  const response = await $fetch.post<AuthResponse & { response?: Response }>(
-    "/auth/login",
-    {
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      skipAuth: true,
-      returnResponse: true,
-    }
-  );
+  const response = await $fetch.post<AuthResponse & any>("/auth/login", {
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    skipAuth: true,
+    returnResponse: true,
+  });
 
   if (!response?.success) {
     return { success: false, error: response?.message || "Login failed" };
@@ -32,8 +29,8 @@ export const loginUser = async (data: any) => {
   const setCookieHeaders = response.response?.headers.getSetCookie();
 
   if (setCookieHeaders && setCookieHeaders.length > 0) {
-    let accessTokenData: ParsedCookie | null = null;
-    let refreshTokenData: ParsedCookie | null = null;
+    let accessTokenData: ParsedCookie = {};
+    let refreshTokenData: ParsedCookie = {};
 
     setCookieHeaders.forEach((cookieString: string) => {
       const parsed: ParsedCookie = parse(cookieString);
@@ -46,7 +43,7 @@ export const loginUser = async (data: any) => {
       }
     });
 
-    if (accessTokenData?.accessToken) {
+    if (accessTokenData.accessToken) {
       await setCookie("accessToken", accessTokenData.accessToken, {
         secure: true,
         httpOnly: true,
@@ -62,7 +59,7 @@ export const loginUser = async (data: any) => {
       });
     }
 
-    if (refreshTokenData?.refreshToken) {
+    if (refreshTokenData.refreshToken) {
       await setCookie("refreshToken", refreshTokenData.refreshToken, {
         secure: true,
         httpOnly: true,

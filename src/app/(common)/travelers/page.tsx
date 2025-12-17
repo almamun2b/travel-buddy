@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Travelers",
   description: "Explore Travelers",
 };
-
+export const dynamic = "force-dynamic";
 const TravelersPage = async ({ searchParams }: ProjectPageProps) => {
   const params = await searchParams;
   const userInfo = await me();
