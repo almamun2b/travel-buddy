@@ -47,7 +47,7 @@ class FetchClient {
       const contentType = response.headers.get("content-type");
       if (!contentType || !contentType.includes("application/json")) {
         if (!response.ok) {
-          console.error(`[Fetch Error]: HTTP ${response.status} - ${endpoint}`);
+          console.warn(`[Fetch Error]: HTTP ${response.status} - ${endpoint}`);
           return null;
         }
         // For successful non-JSON responses, return empty success object
