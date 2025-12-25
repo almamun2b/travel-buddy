@@ -4,7 +4,7 @@
 import { $fetch } from "@/lib/server-fetch";
 export const createCheckoutSession = async (data: any): Promise<any> => {
   try {
-    const res = await $fetch.post("/payment/plans", {
+    const res = await $fetch.post("/payment/create-checkout-session", {
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
