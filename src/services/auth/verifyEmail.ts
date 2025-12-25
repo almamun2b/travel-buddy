@@ -22,7 +22,7 @@ export async function verifyEmailAction({
   } catch (err: any) {
     return {
       success: false,
-      message: "Something went wrong",
+      message: err?.message || "Something went wrong",
     };
   }
 }
@@ -40,7 +40,7 @@ export async function resendVerificationCode({ email }: { email: string }) {
   } catch (err: any) {
     return {
       success: false,
-      message: "Something went wrong",
+      message: err?.message || "Something went wrong",
     };
   }
 }
