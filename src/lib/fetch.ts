@@ -23,11 +23,33 @@ type FetchHooks = {
   onError?: <P>(error: unknown, ctx: RequestContext<P>) => void | Promise<void>;
 };
 
-function toAbsoluteUrl(url: string) {
+async function getServerOrigin(): Promise<string> {
+  // Prefer origin from the incoming request (works on Vercel/Render/NGINX, etc.)
+  try {
+    const { headers } = await import("next/headers");
+    const h = await headers();
+    const proto = h.get("x-forwarded-proto") ?? "https";
+    const host = h.get("x-forwarded-host") ?? h.get("host");
+    if (host) return `${proto}://${host}`;
+  } catch {
+    // ignore
+  }
+
+  // Fallback for environments without forwarded headers
+  const fromEnv = process.env.NEXT_PUBLIC_APP_URL ?? process.env.APP_URL;
+  if (fromEnv) return fromEnv;
+
+  const vercelUrl = process.env.VERCEL_URL;
+  if (vercelUrl) return vercelUrl.startsWith("http") ? vercelUrl : `https://${vercelUrl}`;
+
+  return "http://localhost:3000";
+}
+
+async function toAbsoluteUrl(url: string) {
   if (typeof window !== "undefined") return url;
   if (!url.startsWith("/")) return url;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-  return new URL(url, appUrl).toString();
+  const origin = await getServerOrigin();
+  return new URL(url, origin).toString();
 }
 
 async function getServerCookieHeader(): Promise<string> {
@@ -77,7 +99,7 @@ class FetchClient {
       url += `?${queryString}`;
     }
 
-    url = toAbsoluteUrl(url);
+    url = await toAbsoluteUrl(url);
 
     const serverCookieHeader = await getServerCookieHeader();
     const mergedHeaders: HeadersInit = {
@@ -173,7 +195,7 @@ class FetchClient {
 
   private async refreshAuth(): Promise<boolean> {
     try {
-      const refreshUrl = toAbsoluteUrl(`${this.baseURL}/auth/refresh-token`);
+      const refreshUrl = await toAbsoluteUrl(`${this.baseURL}/auth/refresh-token`);
       const serverCookieHeader = await getServerCookieHeader();
       const res = await fetch(refreshUrl, {
         method: "POST",
