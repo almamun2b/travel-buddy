@@ -1,62 +1,31 @@
 "use client";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { DynamicFormField } from "@/components/shared/DynamicFormField";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/password";
 import { cn } from "@/lib/utils";
-import { loginUser } from "@/services/auth/loginUser";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { loginAction, type LoginActionState } from "@/app/actions/auth";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
-import z from "zod";
-
-const loginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(6, { error: "Password is too short" }),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
-  const router = useRouter();
+  const [state, action, pending] = useActionState<LoginActionState, FormData>(
+    loginAction,
+    undefined
+  );
 
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    mode: "onChange",
-    reValidateMode: "onChange",
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const isLoading = form.formState.isSubmitting;
-
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      const res = await loginUser(data);
-      if (res && res.success) {
-        toast.success(res?.message || "Login successful");
-        router.push("/");
-      }
-      // else {
-      //   if (res?.error?.statusCode === 403) {
-      //     router.push(`/verify-email?email=${data.email}`);
-      //   }
-      //   toast.error(res?.message || "Something went wrong");
-      // }
-    } catch (err: any) {
-      toast.error(err?.message || "Login failed. Please try again.");
+  useEffect(() => {
+    if (!state) return;
+    if (state.success) {
+      toast.success(state.message || "Login successful");
+      return;
     }
-  };
+    if (state.message) toast.error(state.message);
+  }, [state]);
 
   return (
-    <div className={cn("flex flex-col gap-6")}>
+    <div className={cn("flex flex-col gap-6")}> 
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-2xl font-bold">Login to your account</h1>
         <p className="text-balance text-sm text-muted-foreground">
@@ -64,29 +33,27 @@ export function LoginForm() {
         </p>
       </div>
 
-      <div className="grid gap-6 ">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <DynamicFormField name="email" label="Email Address *">
-              {(field) => (
-                <Input {...field} placeholder="john@example.com" type="email" />
-              )}
-            </DynamicFormField>
+      <form action={action} className="grid gap-6">
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Email Address *</label>
+          <Input name="email" placeholder="john@example.com" type="email" />
+          {state?.fieldErrors?.email ? (
+            <p className="text-sm text-destructive">{state.fieldErrors.email}</p>
+          ) : null}
+        </div>
 
-            <DynamicFormField name="password" label="Password *">
-              {(field) => <Password {...field} />}
-            </DynamicFormField>
+        <div className="space-y-2">
+          <label className="text-sm font-medium">Password *</label>
+          <Password name="password" />
+          {state?.fieldErrors?.password ? (
+            <p className="text-sm text-destructive">{state.fieldErrors.password}</p>
+          ) : null}
+        </div>
 
-            <Button
-              disabled={!form.formState.isValid || isLoading}
-              type="submit"
-              className="w-full"
-            >
-              {isLoading ? "Logging in..." : "Login"}
-            </Button>
-          </form>
-        </Form>
-      </div>
+        <Button disabled={pending} type="submit" className="w-full">
+          {pending ? "Logging in..." : "Login"}
+        </Button>
+      </form>
 
       <div className="text-center text-sm">
         Don&apos;t have an account?{" "}

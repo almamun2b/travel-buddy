@@ -7,13 +7,7 @@ export const registerUser = async (data: any): Promise<any> => {
   try {
     const payload = {
       email: data.email,
-      fullName: data.fullName,
-      contactNumber: data.contactNumber,
-      currentLocation: data.currentLocation,
-      travelInterests: data.travelInterests,
-      bio: data.bio,
       password: data.password,
-      role: data.role,
     };
 
     const res = await $fetch.post("/auth/register", {

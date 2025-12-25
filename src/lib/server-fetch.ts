@@ -1,7 +1,13 @@
 import { getCookie } from "@/services/auth/tokenHandlers";
 
-const BACKEND_API_URL =
-  process.env.NEXT_PUBLIC_BASE_API_URL || "http://localhost:5000/api/v1";
+const BACKEND_API_URL = "/api/v1";
+
+function toAbsoluteUrl(url: string) {
+  if (typeof window !== "undefined") return url;
+  if (!url.startsWith("/")) return url;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+  return new URL(url, appUrl).toString();
+}
 
 const fetchHelper = async (
   endpoint: string,
@@ -15,7 +21,9 @@ const fetchHelper = async (
   //   await getNewAccessToken();
   // }
 
-  const response = await fetch(`${BACKEND_API_URL}${endpoint}`, {
+  const url = toAbsoluteUrl(`${BACKEND_API_URL}${endpoint}`);
+
+  const response = await fetch(url, {
     headers: {
       Cookie: accessToken ? `accessToken=${accessToken}` : "",
       ...headers,

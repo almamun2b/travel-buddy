@@ -1,11 +1,12 @@
 "use server";
 
-import { $fetch } from "@/lib/fetch";
 import { UserProfileResponse } from "@/types/user";
+import { $fetch } from "@/lib/server-fetch";
 
 export async function me() {
-  const response = await $fetch.get<UserProfileResponse>("/auth/me", {
-    cache: "force-cache",
+  const res = await $fetch.get("/auth/me", {
+    cache: "no-store",
   });
-  return response;
+
+  return (await res.json()) as UserProfileResponse;
 }
