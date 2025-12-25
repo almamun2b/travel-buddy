@@ -2,18 +2,10 @@
 "use server";
 
 import { $fetch } from "@/lib/server-fetch";
-
-interface SubscriptionPlan {
-  FREE: "FREE";
-  MONTHLY: "MONTHLY";
-  YEARLY: "YEARLY";
-}
-export const createCheckoutSession = async (payload: {
-  plan: SubscriptionPlan;
-}): Promise<any> => {
+export const createCheckoutSession = async (data: any): Promise<any> => {
   try {
-    const res = await $fetch.post("/payment/create-checkout-session", {
-      body: JSON.stringify(payload),
+    const res = await $fetch.post("/payment/plans", {
+      body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },

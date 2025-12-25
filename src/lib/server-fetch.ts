@@ -15,6 +15,7 @@ const fetchHelper = async (
 ): Promise<Response> => {
   const { headers, ...restOptions } = options;
   const accessToken = await getCookie("accessToken");
+  const refreshToken = await getCookie("refreshToken");
 
   //to stop recursion loop
   // if (endpoint !== "/auth/refresh-token") {
@@ -25,7 +26,12 @@ const fetchHelper = async (
 
   const response = await fetch(url, {
     headers: {
-      Cookie: accessToken ? `accessToken=${accessToken}` : "",
+      Cookie: [
+        accessToken ? `accessToken=${accessToken}` : "",
+        refreshToken ? `refreshToken=${refreshToken}` : "",
+      ]
+        .filter(Boolean)
+        .join("; "),
       ...headers,
     },
     ...restOptions,

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 const API_BASE =
   process.env.NEXT_PUBLIC_BASE_API_URL ??
-  "https://travel-buddy-api-5xvg.onrender.com/api/v1";
+  "http://localhost:5000/api/v1";
 
 function rewriteSetCookieForRequest(cookie: string, reqUrl: URL) {
   const isLocalhost =

@@ -7,8 +7,15 @@ export const registerUser = async (data: any): Promise<any> => {
   try {
     const payload = {
       email: data.email,
+      fullName: data.fullName,
+      contactNumber: data.contactNumber,
+      currentLocation: data.currentLocation,
+      travelInterests: data.travelInterests,
+      bio: data.bio,
+      gender: data.gender,
       password: data.password,
     };
+    console.log("payload:", payload);
 
     const res = await $fetch.post("/auth/register", {
       body: JSON.stringify(payload),
@@ -18,6 +25,8 @@ export const registerUser = async (data: any): Promise<any> => {
     });
 
     const result = await res.json();
+
+    console.log("result:", result);
 
     if (!result.success) {
       throw new Error(result.message || "Registration failed");
