@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client'
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -19,14 +19,12 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import TravelRequestModal from "./TravelRequestModal";
+import TravelRequestModalWrapper from "./TravelRequestModalWrapper";
 
 export function TravelPlanCard({
   travelPlan,
-  userInfo,
 }: {
   travelPlan: any;
-  userInfo: any;
 }) {
   const {
     id,
@@ -73,9 +71,7 @@ export function TravelPlanCard({
         </div>
         <div className="flex justify-between">
           <h3 className="text-xl font-semibold">{title}</h3>
-          {userInfo.success && userInfo?.data?.email && (
-            <TravelRequestModal travelPlanId={id} />
-          )}
+          <TravelRequestModalWrapper travelPlanId={id} />
         </div>
         <p className="text-sm text-muted-foreground line-clamp-2">
           {description}

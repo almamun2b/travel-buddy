@@ -1,28 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 export const createCheckoutSession = async (data: any): Promise<any> => {
   try {
-    const res = await $fetch.post("/payment/create-checkout-session", {
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = await res.json();
-
+    const result = await $fetch.post<any>("/payment/create-checkout-session", data);
     return result;
   } catch (error: any) {
-    console.log("REGISTER_ERROR:", error);
+    console.log("CREATE_CHECKOUT_SESSION_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Registration failed. Please try again.",
+          : "Checkout session creation failed. Please try again.",
     };
   }
 };

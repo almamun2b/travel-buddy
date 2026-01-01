@@ -1,16 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export async function softDelete({ id }: { id: string }) {
   try {
-    const res = await $fetch.delete(`/user/${id}`, {
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const data = await res.json();
-
+    const data = await $fetch.delete<any>(`/user/${id}`);
     return data;
   } catch (err: any) {
     return {

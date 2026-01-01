@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
 import { AuthResponse } from "@/types/travelPlan";
 import { parse } from "cookie";
 import { cookies } from "next/headers";
@@ -40,11 +39,17 @@ export async function loginAction(
     };
   }
 
-  const res = await $fetch.post("/auth/login", {
-    body: JSON.stringify({ email, password }),
+  // For login action, we need to use native fetch to get Response object for cookie handling
+  const loginUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/auth/login`;
+  
+  const res = await fetch(loginUrl, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
+    body: JSON.stringify({ email, password }),
+    credentials: "include",
+    cache: "no-store",
   });
 
   // IMPORTANT:

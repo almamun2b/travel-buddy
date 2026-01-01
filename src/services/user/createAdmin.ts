@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 import { User } from "lucide-react";
 
 type User = {
@@ -21,26 +21,28 @@ export const createAdmin = async ({
   data: User;
 }): Promise<any> => {
   try {
-    const payload = { file, data };
-    const res = await $fetch.post("/user/create-admin", {
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const formData = new FormData();
+    
+    if (file) {
+      formData.append("file", file);
+    }
+    
+    formData.append("data", JSON.stringify(data));
 
-    const result = await res.json();
+    const result = await $fetch.post<any>("/user/create-admin", {
+      body: formData,
+    });
 
     return result;
   } catch (error: any) {
-    console.log("REGISTER_ERROR:", error);
+    console.log("CREATE_ADMIN_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Registration failed. Please try again.",
+          : "Admin creation failed. Please try again.",
     };
   }
 };

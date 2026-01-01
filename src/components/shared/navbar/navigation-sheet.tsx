@@ -8,13 +8,25 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, LayoutDashboard } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import { Logo } from "./logo";
 import { NavMenu } from "./nav-menu";
 
-export const NavigationSheet = () => {
+interface NavigationSheetProps {
+  userInfo?: {
+    success: boolean;
+    data?: {
+      email: string;
+    };
+  } | null;
+}
+
+export const NavigationSheet = ({ userInfo }: NavigationSheetProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const isLoggedIn = userInfo?.data?.email;
+  
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -33,9 +45,33 @@ export const NavigationSheet = () => {
         <Logo />
         <NavMenu
           orientation="vertical"
-          className="flex flex-col justify-start items-start"
+          className="flex flex-col justify-start items-start mt-6"
           onClickMenu={() => setIsOpen(false)}
         />
+        
+        {/* Mobile Auth Buttons */}
+        <div className="flex flex-col gap-2 mt-auto pt-6 border-t">
+          {isLoggedIn ? (
+            <Button
+              asChild
+              className="w-full"
+              onClick={() => setIsOpen(false)}
+            >
+              <Link href="/dashboard">
+                <LayoutDashboard className="mr-2 h-4 w-4" />
+                Dashboard
+              </Link>
+            </Button>
+          ) : (
+            <Button
+              asChild
+              className="w-full"
+              onClick={() => setIsOpen(false)}
+            >
+              <Link href="/login">Login</Link>
+            </Button>
+          )}
+        </div>
       </SheetContent>
     </Sheet>
   );

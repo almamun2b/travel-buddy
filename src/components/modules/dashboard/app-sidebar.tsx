@@ -24,34 +24,54 @@ import {
 const data = {
   navMain: [
     {
-      title: "Projects",
+      title: "Users",
       url: "#",
       icon: Projector,
       isActive: true,
       items: [
         {
-          title: "All Projects",
-          url: "/projects",
-        },
-        {
-          title: "Create Project",
-          url: "/projects/create",
+          title: "Users",
+          url: "/users",
         },
       ],
     },
     {
-      title: "Blog Category",
+      title: "Travel Plans",
       url: "#",
       icon: Type,
       isActive: true,
       items: [
         {
-          title: "All Categories",
-          url: "/blog-category",
+          title: "Travel Plans",
+          url: "/travel-plans",
         },
         {
-          title: "Create Category",
-          url: "/blog-category/create",
+          title: "My Travel Plans",
+          url: "/my-travel-plan",
+        },
+        {
+          title: "Get my travel requests",
+          url: "/my-travel-requests",
+        },
+        {
+          title: "Get pending requests",
+          url: "/pending-requests",
+        }
+      ],
+    },
+    {
+      title: "Reviews",
+      url: "#",
+      icon: Type,
+      isActive: true,
+      items: [
+        {
+          title: "My reviews",
+          url: "/my-reviews",
+        },
+        {
+          title: "Given Reviews",
+          url: "/given-reviews",
         },
       ],
     },

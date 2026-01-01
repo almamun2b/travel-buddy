@@ -1,27 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export const getPendingRequestsForMyPlans = async (): Promise<any> => {
   try {
-    const res = await $fetch.get(`/travel-plans/requests/pending`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = await res.json();
+    const result = await $fetch.get<any>("/travel-plans/requests/pending");
     return result;
   } catch (error: any) {
-    console.log("GET_ALL_TOUR_PLANS_ERROR:", error);
+    console.log("GET_PENDING_REQUESTS_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Failed to fetch tour plans. Please try again.",
+          : "Failed to fetch pending requests. Please try again.",
     };
   }
 };

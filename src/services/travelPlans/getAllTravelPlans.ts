@@ -3,40 +3,36 @@
 
 import { $fetch } from "@/lib/fetch";
 
-interface GetAllUsersParams {
+interface GetAllTourPlans {
   limit?: number;
   page?: number;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   searchTerm?: string;
-  email?: string;
-  role?: string;
+  destination?: string;
+  travelType?: string;
   status?: string;
-  gender?: string;
-  isVerified?: boolean;
-  hasVerifiedBadge?: boolean;
-  travelInterest?: string[];
-  currentLocation?: string;
+  isDeleted?: string;
 }
 
-export const getAllUsers = async (
-  params: GetAllUsersParams = {}
+export const getAllTravelPlans = async (
+  params: GetAllTourPlans = {}
 ): Promise<any> => {
   try {
-    const result = await $fetch.get<any, GetAllUsersParams>(`/user`, {
+    const result = await $fetch.get<any, GetAllTourPlans>("/travel-plans", {
       params,
     });
 
     return result;
   } catch (error: any) {
-    console.log("GET_ALL_USERS_ERROR:", error);
+    console.log("ADMIN_GET_ALL_TRAVEL_PLANS_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Failed to fetch users. Please try again.",
+          : "Failed to fetch travel plans. Please try again.",
     };
   }
 };

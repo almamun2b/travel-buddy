@@ -1,6 +1,5 @@
 import { TravelPlanCard } from "@/components/modules/travelPlan/TravelPlanCard";
 import PaginationCommon from "@/components/shared/pagination-common";
-import { me } from "@/services/auth/me";
 import { matchTravelPlans } from "@/services/travelPlans/matchTravelPlans";
 import { TravelPlanSearchParams } from "@/types/travelPlan";
 import { Metadata } from "next";
@@ -18,10 +17,17 @@ const MatchTravelersPage = async ({
 }: MatchTravelersPageProps) => {
   const params = await searchParams;
 
-  const userInfo = await me();
   const response = await matchTravelPlans(params);
 
-  if (!userInfo || !response) return;
+  if (!response) {
+    return (
+      <div className="mx-auto px-6 py-20 pt-32">
+        <div className="text-center text-muted-foreground">
+          Unable to load travel plans. Please try again later.
+        </div>
+      </div>
+    );
+  }
 
   console.log(response);
 
@@ -39,8 +45,7 @@ const MatchTravelersPage = async ({
           <TravelPlanCard
             key={travel.id}
             travelPlan={travel}
-            userInfo={userInfo}
-          ></TravelPlanCard>
+          />
         ))}
       </div>
 

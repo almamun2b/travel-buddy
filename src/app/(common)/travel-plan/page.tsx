@@ -1,6 +1,5 @@
 import { TravelPlanCard } from "@/components/modules/travelPlan/TravelPlanCard";
 import PaginationCommon from "@/components/shared/pagination-common";
-import { me } from "@/services/auth/me";
 import { getTravelPlans } from "@/services/travelPlans/travelPlans";
 import { TravelPlanSearchParams } from "@/types/travelPlan";
 import { Metadata } from "next";
@@ -19,9 +18,19 @@ const TravelPlanPage = async ({ searchParams }: ProjectPageProps) => {
   const params = await searchParams;
 
   const response = await getTravelPlans(params);
-  const userInfo = await me();
 
-  if (!userInfo || !response) return;
+  if (!response) {
+    return (
+      <section className="mx-auto px-6 py-20 pt-32">
+        <h2 className="text-3xl font-bold mb-4 text-center">
+          Explore Travel Plan
+        </h2>
+        <div className="text-center text-muted-foreground">
+          Unable to load travel plans. Please try again later.
+        </div>
+      </section>
+    );
+  }
 
   const travelPlans = !response.success ? [] : response.data;
   const meta = !response.success
@@ -40,8 +49,7 @@ const TravelPlanPage = async ({ searchParams }: ProjectPageProps) => {
           <TravelPlanCard
             key={travel.id}
             travelPlan={travel}
-            userInfo={userInfo}
-          ></TravelPlanCard>
+          />
         ))}
       </div>
 

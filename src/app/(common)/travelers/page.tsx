@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { TravelerCard } from "@/components/modules/user/TravelerCard";
 import PaginationCommon from "@/components/shared/pagination-common";
-import { me } from "@/services/auth/me";
 import { exploreTravelers } from "@/services/user/exploreTravelers";
 import { GetAllTravelersParams } from "@/types/user";
 import { Metadata } from "next";
@@ -17,10 +16,17 @@ export const metadata: Metadata = {
 
 const TravelersPage = async ({ searchParams }: ProjectPageProps) => {
   const params = await searchParams;
-  const userInfo = await me();
   const response = await exploreTravelers(params);
 
-  if (!userInfo || !response) return;
+  if (!response) {
+    return (
+      <section className="mx-auto px-6 py-20 pt-32">
+        <div className="text-center text-muted-foreground">
+          Unable to load travelers. Please try again later.
+        </div>
+      </section>
+    );
+  }
 
   if (!response.success) {
     throw new Error("Some thing went ");
@@ -34,8 +40,7 @@ const TravelersPage = async ({ searchParams }: ProjectPageProps) => {
           <TravelerCard
             key={user.id}
             traveler={user}
-            userInfo={userInfo}
-          ></TravelerCard>
+          />
         ))}
       </div>
 

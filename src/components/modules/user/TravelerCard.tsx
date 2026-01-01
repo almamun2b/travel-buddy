@@ -35,10 +35,8 @@ type Traveler = {
 
 export function TravelerCard({
   traveler,
-  userInfo,
 }: {
   traveler: Traveler;
-  userInfo: any;
 }) {
   const {
     id,

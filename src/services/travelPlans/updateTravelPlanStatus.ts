@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export async function updateTravelPlanStatus({
   id,
@@ -13,13 +13,7 @@ export async function updateTravelPlanStatus({
   };
 }) {
   try {
-    const res = await $fetch.patch(`/travel-plans/${id}/status`, {
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...payload }),
-    });
-
-    const data = await res.json();
-
+    const data = await $fetch.patch<any>(`/travel-plans/${id}/status`, payload);
     return data;
   } catch (err: any) {
     return {
