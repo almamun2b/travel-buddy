@@ -1,6 +1,5 @@
 import { TravelPlanCard } from "@/components/modules/travelPlan/TravelPlanCard";
 import PaginationCommon from "@/components/shared/pagination-common";
-import { me } from "@/services/auth/me";
 import { getTravelPlans } from "@/services/travelPlans/travelPlans";
 import { TravelPlanSearchParams } from "@/types/travelPlan";
 import { Metadata } from "next";
@@ -17,10 +16,7 @@ interface PageProps {
 export default async function TravelPlansPage({ searchParams }: PageProps) {
   const params = await searchParams;
 
-  const [response, userInfo] = await Promise.all([
-    getTravelPlans(params),
-    me().catch(() => null),
-  ]);
+  const response = await getTravelPlans(params);
 
   const travelPlans = response?.success ? response.data : [];
   const meta = response?.success
@@ -28,7 +24,6 @@ export default async function TravelPlansPage({ searchParams }: PageProps) {
     : { page: 1, limit: Number(params?.limit ?? 20), total: 0 };
 
   const totalPages = Math.ceil(meta.total / meta.limit);
-  const safeUserInfo = userInfo ?? { success: false, data: null };
 
   return (
     <section className="mx-auto px-6 py-20 pt-32">
@@ -44,7 +39,6 @@ export default async function TravelPlansPage({ searchParams }: PageProps) {
           <TravelPlanCard
             key={travel.id}
             travelPlan={travel}
-            userInfo={safeUserInfo}
           />
         ))}
       </div>

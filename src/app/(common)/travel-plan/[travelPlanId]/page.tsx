@@ -1,8 +1,7 @@
-import TravelRequestModal from "@/components/modules/travelPlan/TravelRequestModal";
+import TravelRequestModalWrapper from "@/components/modules/travelPlan/TravelRequestModalWrapper";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { me } from "@/services/auth/me";
 import { getTravelPlansById } from "@/services/travelPlans/travelPlans";
 import {
   CalendarDays,
@@ -34,10 +33,17 @@ export const generateMetadata = async ({
 const TravelPlanDetailPage = async ({ params }: TravelPlanDetailPageProps) => {
   const { travelPlanId } = await params;
 
-  const userInfo = await me();
   const response = await getTravelPlansById({ id: travelPlanId });
 
-  if (!userInfo || !response) return;
+  if (!response) {
+    return (
+      <div className="mx-auto px-6 py-20 pt-32">
+        <div className="text-center text-muted-foreground">
+          Unable to load travel plan. Please try again later.
+        </div>
+      </div>
+    );
+  }
 
   if (!response?.success) return <div>Something went wrong</div>;
 
@@ -49,9 +55,7 @@ const TravelPlanDetailPage = async ({ params }: TravelPlanDetailPageProps) => {
 
       <div className="flex justify-between">
         <h1 className="text-3xl font-bold mb-2">{travelPlan.title}</h1>
-        {userInfo?.data?.email && (
-          <TravelRequestModal travelPlanId={travelPlan.id} />
-        )}
+        <TravelRequestModalWrapper travelPlanId={travelPlan.id} />
       </div>
       <p className="text-muted-foreground mb-6">{travelPlan.description}</p>
 
