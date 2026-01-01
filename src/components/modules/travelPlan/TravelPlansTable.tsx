@@ -253,7 +253,17 @@ export default function TravelPlansTable({ travelPlans, meta, searchParams }: Pr
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Travel Plan</TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleSort('title')}
+                      className="h-auto p-0 font-semibold"
+                    >
+                      Travel Plan
+                      {getSortIcon('title')}
+                    </Button>
+                  </TableHead>
                   <TableHead>Creator</TableHead>
                   <TableHead>
                     <Button
