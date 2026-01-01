@@ -1,68 +1,89 @@
-'use client'
-
-import { Suspense } from 'react'
-import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import UsersTable from "@/components/modules/user/UsersTable";
+import dynamic from 'next/dynamic';
 import { getAllUsers } from "@/services/user/getAllUsers";
-import type { User } from "@/components/modules/user/UsersTable";
+import { Suspense } from 'react';
 
-function UsersPageContent() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [users, setUsers] = useState<User[]>([])
-  const [meta, setMeta] = useState({ page: 1, limit: 20, total: 0 })
-  const [loading, setLoading] = useState(true)
+const UsersTable = dynamic(() => import("@/components/modules/user/UsersTable"));
 
-  const currentPage = Number(searchParams.get('page')) || 1
-  const search = searchParams.get('search') || ''
+export const userFilterableFields = [
+  "email",
+  "role", 
+  "status",
+  "gender",
+  "isVerified",
+  "hasVerifiedBadge",
+  "searchTerm",
+] as const;
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      setLoading(true)
-      try {
-        const result = await getAllUsers({
-          page: currentPage,
-          limit: 20,
-          searchTerm: search,
-        })
-        if (result?.success) {
-          setUsers(result.data || [])
-          setMeta(result.meta || { page: 1, limit: 20, total: 0 })
-        }
-      } catch (error) {
-        console.error('Failed to fetch users:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+interface UsersPageProps {
+  searchParams: Promise<{
+    page?: string;
+    search?: string;
+    email?: string;
+    role?: string;
+    status?: string;
+    gender?: string;
+    isVerified?: string;
+    hasVerifiedBadge?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }>;
+}
 
-    fetchUsers()
-  }, [currentPage, search])
+export default async function UsersPage({ searchParams }: UsersPageProps) {
+  const params = await searchParams;
+  const currentPage = Number(params.page) || 1;
+  
+  // Build query parameters
+  const queryParams: {
+    page: number;
+    limit: number;
+    sortBy: string;
+    sortOrder: 'asc' | 'desc';
+    searchTerm?: string;
+    email?: string;
+    role?: string;
+    status?: string;
+    gender?: string;
+    isVerified?: boolean;
+    hasVerifiedBadge?: boolean;
+  } = {
+    page: currentPage,
+    limit: 14,
+    sortBy: params.sortBy || 'createdAt',
+    sortOrder: (params.sortOrder as 'asc' | 'desc') || 'desc',
+  };
 
-  const updateQuery = (updates: Record<string, string | number>) => {
-    const newParams = new URLSearchParams(searchParams.toString())
-    Object.entries(updates).forEach(([key, value]) => {
-      newParams.set(key, String(value))
-    })
-    router.push(`?${newParams.toString()}`)
+  // Only include filters if they have values
+  if (params.search) queryParams.searchTerm = params.search;
+  if (params.email) queryParams.email = params.email;
+  if (params.role && params.role !== 'all') queryParams.role = params.role;
+  if (params.status && params.status !== 'all') queryParams.status = params.status;
+  if (params.gender && params.gender !== 'all') queryParams.gender = params.gender;
+  if (params.isVerified && params.isVerified !== 'all') {
+    queryParams.isVerified = params.isVerified === 'true' ? true : false;
+  }
+  if (params.hasVerifiedBadge && params.hasVerifiedBadge !== 'all') {
+    queryParams.hasVerifiedBadge = params.hasVerifiedBadge === 'true' ? true : false;
   }
 
-  if (loading) {
-    return (
-      <div className="container mx-auto py-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-64 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-96 mb-6"></div>
-          <div className="space-y-2">
-            {[...Array(10)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
+  // Create searchParams for UsersTable component
+  const tableSearchParams = {
+    searchTerm: params.search || '',
+    email: params.email || '',
+    role: params.role || '',
+    status: params.status || '',
+    gender: params.gender || '',
+    isVerified: params.isVerified === 'true' ? true : (params.isVerified === 'false' ? false : undefined),
+    hasVerifiedBadge: params.hasVerifiedBadge === 'true' ? true : (params.hasVerifiedBadge === 'false' ? false : undefined),
+    sortBy: params.sortBy || 'createdAt',
+    sortOrder: (params.sortOrder as 'asc' | 'desc') || 'desc',
+  };
+
+  // Fetch users on server
+  const result = await getAllUsers(queryParams);
+
+  const users = result?.success ? (result.data || []) : [];
+  const meta = result?.success ? (result.meta || { page: 1, limit: 14, total: 0 }) : { page: 1, limit: 14, total: 0 };
 
   return (
     <div className="container mx-auto py-6">
@@ -70,32 +91,20 @@ function UsersPageContent() {
         <h1 className="text-3xl font-bold">Users Management</h1>
         <p className="text-muted-foreground">View and manage all users in the system</p>
       </div>
-      <UsersTable 
-        users={users} 
-        meta={meta} 
-        search={search}
-        onUpdateQuery={updateQuery}
-      />
-    </div>
-  )
-}
-
-export default function UsersPage() {
-  return (
-    <Suspense fallback={
-      <div className="container mx-auto py-6">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-64 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-96 mb-6"></div>
-          <div className="space-y-2">
-            {[...Array(10)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded"></div>
-            ))}
-          </div>
+      
+      {!result?.success ? (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Failed to load users. Please try again later.</p>
         </div>
-      </div>
-    }>
-      <UsersPageContent />
-    </Suspense>
-  )
+      ) : (
+        <Suspense fallback={<div>Loading users table...</div>}>
+          <UsersTable 
+            users={users} 
+            meta={meta} 
+            searchParams={tableSearchParams}
+          />
+        </Suspense>
+      )}
+    </div>
+  );
 }

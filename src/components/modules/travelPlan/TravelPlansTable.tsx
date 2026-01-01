@@ -11,39 +11,50 @@ import {
 } from '@/components/ui/table'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ShieldCheck, ArrowUpDown, ArrowUp, ArrowDown, Mail, User, CheckCircle, XCircle } from 'lucide-react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { CalendarDays, MapPin, DollarSign, Users, ShieldCheck, ArrowUpDown, ArrowUp, ArrowDown } from 'lucide-react'
 import { format } from 'date-fns'
 import { useCallback, useTransition } from 'react'
 
-export type User = {
+export type TravelPlan = {
   id: string
-  email: string
-  role: string
-  fullName: string
-  contactNumber: string | null
+  title: string
+  description: string
+  destination: string
+  startDate: string
+  endDate: string
+  budget: number
+  travelType: string
+  maxMembers: number
+  activities: string[]
+  images: string[]
   status: string
-  isVerified: boolean
-  hasVerifiedBadge: boolean
-  gender?: string
   createdAt: string
+  updatedAt: string
+  creator: {
+    id: string
+    fullName: string
+    avatar: string | null
+    isVerified: boolean
+    hasVerifiedBadge: boolean
+  }
 }
 
-export type UserResponse = {
+export type TravelPlanResponse = {
   success: boolean
   meta: {
     page: number
     limit: number
     total: number
   }
-  data: User[]
+  data: TravelPlan[]
 }
 
-type Props = {
-  users: User[]
+interface Props {
+  travelPlans: TravelPlan[]
   meta: {
     page: number
     limit: number
@@ -51,26 +62,25 @@ type Props = {
   }
   searchParams: {
     searchTerm: string
-    email: string
-    role: string
+    destination: string
+    travelType: string
+    minBudget: string
+    maxBudget: string
+    startDate: string
+    endDate: string
     status: string
-    gender: string
-    isVerified: boolean | undefined
-    hasVerifiedBadge: boolean | undefined
     sortBy: string
     sortOrder: 'asc' | 'desc'
   }
 }
 
-export default function UsersTable({ users, meta, searchParams }: Props) {
+export default function TravelPlansTable({ travelPlans, meta, searchParams }: Props) {
   const router = useRouter()
   const params = useSearchParams()
   const [, startTransition] = useTransition()
 
-  const totalPages = Math.ceil(meta.total / meta.limit)
-
   const updateQuery = useCallback(
-    (updates: Record<string, string | number | boolean | undefined>) => {
+    (updates: Record<string, string | number>) => {
       const newParams = new URLSearchParams(params.toString())
       Object.entries(updates).forEach(([key, value]) => {
         if (value === '' || value === undefined) {
@@ -110,63 +120,50 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
     return currentOrder === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
   }
 
+  const totalPages = Math.ceil(meta.total / meta.limit)
+
   return (
     <div className="space-y-6">
       {/* Filters */}
       <Card>
-        <CardHeader className='flex items-center justify-between'>
+        <CardHeader>
           <CardTitle>Filters</CardTitle>
-          <div className="flex gap-2 mt-4">
-            <Button
-              variant="outline"
-              onClick={() => updateQuery({
-                searchTerm: '',
-                email: '',
-                role: 'all',
-                status: 'all',
-                gender: 'all',
-                isVerified: undefined,
-                hasVerifiedBadge: undefined,
-                page: 1
-              })}
-            >
-              Clear Filters
-            </Button>
-          </div>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-between gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-medium">Search</label>
               <Input
-                placeholder="Search users..."
+                placeholder="Search travel plans..."
                 value={searchParams.searchTerm}
                 onChange={(e) => updateQuery({ searchTerm: e.target.value, page: 1 })}
               />
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">Email</label>
+              <label className="text-sm font-medium">Destination</label>
               <Input
-                placeholder="Email address..."
-                value={searchParams.email}
-                onChange={(e) => updateQuery({ email: e.target.value, page: 1 })}
+                placeholder="Destination..."
+                value={searchParams.destination}
+                onChange={(e) => updateQuery({ destination: e.target.value, page: 1 })}
               />
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">Role</label>
+              <label className="text-sm font-medium">Travel Type</label>
               <Select
-                value={searchParams.role}
-                onValueChange={(value) => updateQuery({ role: value, page: 1 })}
+                value={searchParams.travelType}
+                onValueChange={(value) => updateQuery({ travelType: value, page: 1 })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select role" />
+                  <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Roles</SelectItem>
-                  <SelectItem value="USER">User</SelectItem>
-                  <SelectItem value="ADMIN">Admin</SelectItem>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="SOLO">Solo</SelectItem>
+                  <SelectItem value="COUPLE">Couple</SelectItem>
+                  <SelectItem value="FAMILY">Family</SelectItem>
+                  <SelectItem value="GROUP">Group</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -182,67 +179,70 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="ACTIVE">Active</SelectItem>
-                  <SelectItem value="INACTIVE">Inactive</SelectItem>
-                  <SelectItem value="SUSPENDED">Suspended</SelectItem>
+                  <SelectItem value="OPEN">Open</SelectItem>
+                  <SelectItem value="CLOSED">Closed</SelectItem>
+                  <SelectItem value="CANCELLED">Cancelled</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">Gender</label>
-              <Select
-                value={searchParams.gender}
-                onValueChange={(value) => updateQuery({ gender: value, page: 1 })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select gender" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Genders</SelectItem>
-                  <SelectItem value="MALE">Male</SelectItem>
-                  <SelectItem value="FEMALE">Female</SelectItem>
-                  <SelectItem value="OTHER">Other</SelectItem>
-                </SelectContent>
-              </Select>
+              <label className="text-sm font-medium">Min Budget</label>
+              <Input
+                type="number"
+                placeholder="Min budget..."
+                value={searchParams.minBudget}
+                onChange={(e) => updateQuery({ minBudget: e.target.value, page: 1 })}
+              />
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">Verified</label>
-              <Select
-                value={searchParams.isVerified === undefined ? 'all' : searchParams.isVerified ? 'true' : 'false'}
-                onValueChange={(value) => updateQuery({ isVerified: value === 'all' ? undefined : (value === 'true' ? true : false), page: 1 })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select verification" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Users</SelectItem>
-                  <SelectItem value="true">Verified</SelectItem>
-                  <SelectItem value="false">Not Verified</SelectItem>
-                </SelectContent>
-              </Select>
+              <label className="text-sm font-medium">Max Budget</label>
+              <Input
+                type="number"
+                placeholder="Max budget..."
+                value={searchParams.maxBudget}
+                onChange={(e) => updateQuery({ maxBudget: e.target.value, page: 1 })}
+              />
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-medium">Verified Badge</label>
-              <Select
-                value={searchParams.hasVerifiedBadge === undefined ? 'all' : searchParams.hasVerifiedBadge ? 'true' : 'false'}
-                onValueChange={(value) => updateQuery({ hasVerifiedBadge: value === 'all' ? undefined : (value === 'true' ? true : false), page: 1 })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select badge status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Users</SelectItem>
-                  <SelectItem value="true">Has Badge</SelectItem>
-                  <SelectItem value="false">No Badge</SelectItem>
-                </SelectContent>
-              </Select>
+              <label className="text-sm font-medium">Start Date</label>
+              <Input
+                type="date"
+                value={searchParams.startDate}
+                onChange={(e) => updateQuery({ startDate: e.target.value, page: 1 })}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">End Date</label>
+              <Input
+                type="date"
+                value={searchParams.endDate}
+                onChange={(e) => updateQuery({ endDate: e.target.value, page: 1 })}
+              />
             </div>
           </div>
           
-          
+          <div className="flex gap-2 mt-4">
+            <Button
+              variant="outline"
+              onClick={() => updateQuery({
+                searchTerm: '',
+                destination: '',
+                travelType: 'all',
+                minBudget: '',
+                maxBudget: '',
+                startDate: '',
+                endDate: '',
+                status: 'all',
+                page: 1
+              })}
+            >
+              Clear Filters
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -253,52 +253,43 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead>Travel Plan</TableHead>
+                  <TableHead>Creator</TableHead>
                   <TableHead>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSort('fullName')}
+                      onClick={() => handleSort('destination')}
                       className="h-auto p-0 font-semibold"
                     >
-                      User
-                      {getSortIcon('fullName')}
+                      Destination
+                      {getSortIcon('destination')}
                     </Button>
                   </TableHead>
                   <TableHead>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSort('email')}
+                      onClick={() => handleSort('budget')}
                       className="h-auto p-0 font-semibold"
                     >
-                      Email
-                      {getSortIcon('email')}
+                      Budget
+                      {getSortIcon('budget')}
                     </Button>
                   </TableHead>
                   <TableHead>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSort('role')}
+                      onClick={() => handleSort('startDate')}
                       className="h-auto p-0 font-semibold"
                     >
-                      Role
-                      {getSortIcon('role')}
+                      Start Date
+                      {getSortIcon('startDate')}
                     </Button>
                   </TableHead>
-                  <TableHead>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleSort('status')}
-                      className="h-auto p-0 font-semibold"
-                    >
-                      Status
-                      {getSortIcon('status')}
-                    </Button>
-                  </TableHead>
-                  <TableHead>Verified</TableHead>
-                  <TableHead>Badge</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>
                     <Button
                       variant="ghost"
@@ -306,73 +297,84 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                       onClick={() => handleSort('createdAt')}
                       className="h-auto p-0 font-semibold"
                     >
-                      Joined
+                      Created
                       {getSortIcon('createdAt')}
                     </Button>
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {users.map((user) => (
-                  <TableRow key={user.id}>
+                {travelPlans.map((plan) => (
+                  <TableRow key={plan.id}>
                     <TableCell>
-                      <div className="flex items-center gap-3">
+                      <div className="space-y-2">
+                        <div className="font-medium">{plan.title}</div>
+                        <div className="text-sm text-muted-foreground line-clamp-2">
+                          {plan.description}
+                        </div>
+                        <div className="flex gap-1 flex-wrap">
+                          {plan.activities.slice(0, 2).map((activity, index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {activity}
+                            </Badge>
+                          ))}
+                          {plan.activities.length > 2 && (
+                            <Badge variant="outline" className="text-xs">
+                              +{plan.activities.length - 2}
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
                         <Avatar className="h-8 w-8">
+                          <AvatarImage src={plan.creator.avatar || ''} />
                           <AvatarFallback>
-                            {user.fullName?.substring(0, 2).toUpperCase()}
+                            {plan.creator.fullName?.substring(0, 2).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <div className="font-medium">{user.fullName}</div>
-                          <div className="text-sm text-muted-foreground">{user.contactNumber || 'No phone'}</div>
+                          <div className="font-medium text-sm">{plan.creator.fullName}</div>
+                          {plan.creator.hasVerifiedBadge && (
+                            <div className="flex items-center gap-1">
+                              <ShieldCheck className="h-3 w-3 text-blue-500" />
+                              <span className="text-xs text-blue-500">Verified</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1">
-                        <Mail className="h-4 w-4" />
-                        {user.email}
+                        <MapPin className="h-4 w-4" />
+                        {plan.destination}
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'}>
-                        {user.role}
-                      </Badge>
+                      <div className="flex items-center gap-1">
+                        <DollarSign className="h-4 w-4" />
+                        {plan.budget.toLocaleString()}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <CalendarDays className="h-4 w-4" />
+                        {format(new Date(plan.startDate), 'MMM dd, yyyy')}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{plan.travelType}</Badge>
                     </TableCell>
                     <TableCell>
                       <Badge
-                        variant={
-                          user.status === 'ACTIVE' ? 'default' :
-                          user.status === 'SUSPENDED' ? 'destructive' : 'secondary'
-                        }
+                        variant={plan.status === 'OPEN' ? 'default' : 'secondary'}
                       >
-                        {user.status}
+                        {plan.status}
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
-                        {user.isVerified ? (
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                        ) : (
-                          <XCircle className="h-4 w-4 text-red-500" />
-                        )}
-                        <span className="text-sm">
-                          {user.isVerified ? 'Verified' : 'Not Verified'}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {user.hasVerifiedBadge && (
-                        <div className="flex items-center gap-1">
-                          <ShieldCheck className="h-4 w-4 text-blue-500" />
-                          <Badge variant="outline" className="text-xs">
-                            Verified
-                          </Badge>
-                        </div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {format(new Date(user.createdAt), 'MMM dd, yyyy')}
+                      {format(new Date(plan.createdAt), 'MMM dd, yyyy')}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -380,9 +382,9 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
             </Table>
           </div>
           
-          {users.length === 0 && (
+          {travelPlans.length === 0 && (
             <div className="text-center py-8">
-              <p className="text-muted-foreground">No users found matching your criteria.</p>
+              <p className="text-muted-foreground">No travel plans found matching your criteria.</p>
             </div>
           )}
         </CardContent>

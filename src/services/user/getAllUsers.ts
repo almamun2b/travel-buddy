@@ -9,41 +9,23 @@ interface GetAllUsersParams {
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   searchTerm?: string;
+  email?: string;
+  role?: string;
+  status?: string;
+  gender?: string;
+  isVerified?: boolean;
+  hasVerifiedBadge?: boolean;
   travelInterest?: string[];
   currentLocation?: string;
-  hasVerifiedBadge?: string;
 }
 
 export const getAllUsers = async (
   params: GetAllUsersParams = {}
 ): Promise<any> => {
   try {
-    const {
-      limit = 20,
-      page = 1,
-      sortBy = "createdAt",
-      sortOrder = "desc",
-      searchTerm = "",
-      travelInterest = [],
-      currentLocation = "",
-      hasVerifiedBadge = "",
-    } = params;
-
-    const result = await $fetch.get<any, GetAllUsersParams>(
-      `/user`,
-      {
-        params: {
-          limit,
-          page,
-          sortBy,
-          sortOrder,
-          searchTerm,
-          travelInterest,
-          currentLocation,
-          hasVerifiedBadge,
-        },
-      }
-    );
+    const result = await $fetch.get<any, GetAllUsersParams>(`/user`, {
+      params,
+    });
 
     return result;
   } catch (error: any) {

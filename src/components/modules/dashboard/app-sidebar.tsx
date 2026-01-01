@@ -43,19 +43,19 @@ const data = {
       items: [
         {
           title: "Travel Plans",
-          url: "/blog-category",
+          url: "/travel-plans",
         },
         {
           title: "My Travel Plans",
-          url: "/blog-category/create",
+          url: "/my-travel-plan",
         },
         {
           title: "Get my travel requests",
-          url: "/blog-category/create",
+          url: "/my-travel-requests",
         },
         {
           title: "Get pending requests",
-          url: "/blog-category/create",
+          url: "/pending-requests",
         }
       ],
     },
@@ -67,11 +67,11 @@ const data = {
       items: [
         {
           title: "My reviews",
-          url: "/blog-category",
+          url: "/my-reviews",
         },
         {
           title: "Given Reviews",
-          url: "/blog-category/create",
+          url: "/given-reviews",
         },
       ],
     },

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import { $fetch } from "@/lib/fetch";
 import TravelRequestModal from "./TravelRequestModal";
 
 interface UserInfo {
@@ -20,18 +21,14 @@ export default function TravelRequestModalWrapper({ travelPlanId }: TravelReques
   useEffect(() => {
     const fetchUserInfo = async () => {
       try {
-        const response = await fetch('/api/v1/auth/me', {
-          credentials: 'include',
-          cache: 'no-store'
-        });
-        if (response.ok) {
-          const data = await response.json();
+        const data = await $fetch.get<UserInfo>("/auth/me");
+        
+        if (data) {
           setUserInfo(data);
         } else {
           setUserInfo(null);
         }
-      } catch (error) {
-        console.error("Error fetching user info:", error);
+      } catch {
         setUserInfo(null);
       }
     };

@@ -11,7 +11,7 @@ export default function CommonLayout({
   return (
     <>
       <ErrorBoundary>
-        <Suspense fallback={<div className="h-14 w-full bg-background border-b" />}>
+        <Suspense fallback={<div className="h-0 w-full bg-background border-b" />}>
           <Navbar />
         </Suspense>
       </ErrorBoundary>

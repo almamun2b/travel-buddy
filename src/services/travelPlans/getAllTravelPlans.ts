@@ -15,34 +15,12 @@ interface GetAllTourPlans {
   isDeleted?: string;
 }
 
-export const adminGetAllTravelPlans = async (
+export const getAllTravelPlans = async (
   params: GetAllTourPlans = {}
 ): Promise<any> => {
   try {
-    const {
-      limit = 20,
-      page = 1,
-      sortBy = "createdAt",
-      sortOrder = "desc",
-      searchTerm = "",
-      destination = "",
-      travelType = "",
-      status = "",
-      isDeleted = "",
-    } = params;
-
     const result = await $fetch.get<any, GetAllTourPlans>("/travel-plans", {
-      params: {
-        limit,
-        page,
-        sortBy,
-        sortOrder,
-        searchTerm,
-        destination,
-        travelType,
-        status,
-        isDeleted,
-      },
+      params,
     });
 
     return result;
