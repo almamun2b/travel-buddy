@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 type User = {
   email: string;
@@ -35,11 +35,10 @@ export const updateMyProfile = async ({
       }
     });
 
-    const res = await $fetch.patch("/user/profile/update", {
+    const result = await $fetch.patch<any>("/user/profile/update", {
       body: formData,
     });
 
-    const result = await res.json();
     return result;
   } catch (error: any) {
     console.log("UPDATE_PROFILE_ERROR:", error);

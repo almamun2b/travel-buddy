@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 interface ICreateReviewPayload {
   travelPlanId: string;
@@ -13,25 +13,17 @@ export const createReview = async (
   payload: ICreateReviewPayload
 ): Promise<any> => {
   try {
-    const res = await $fetch.post("/reviews", {
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = await res.json();
-
+    const result = await $fetch.post<any>("/reviews", payload);
     return result;
   } catch (error: any) {
-    console.log("REGISTER_ERROR:", error);
+    console.log("CREATE_REVIEW_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Registration failed. Please try again.",
+          : "Review creation failed. Please try again.",
     };
   }
 };

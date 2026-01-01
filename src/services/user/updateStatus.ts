@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export async function updateStatus({
   id,
@@ -15,13 +15,7 @@ export async function updateStatus({
   };
 }) {
   try {
-    const res = await $fetch.patch(`/user/${id}/status`, {
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...payload }),
-    });
-
-    const data = await res.json();
-
+    const data = await $fetch.patch<any>(`/user/${id}/status`, payload);
     return data;
   } catch (err: any) {
     return {

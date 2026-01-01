@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export const registerUser = async (data: any): Promise<any> => {
   try {
@@ -9,32 +9,12 @@ export const registerUser = async (data: any): Promise<any> => {
       email: data.email,
       fullName: data.fullName,
       contactNumber: data.contactNumber,
-      currentLocation: data.currentLocation,
-      travelInterests: data.travelInterests,
-      bio: data.bio,
-      gender: data.gender,
-      password: data.password,
     };
-    console.log("payload:", payload);
-
-    const res = await $fetch.post("/auth/register", {
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = await res.json();
-
-    console.log("result:", result);
-
-    if (!result.success) {
-      throw new Error(result.message || "Registration failed");
-    }
+    
+    const result = await $fetch.post<any>("/auth/register", payload);
     return result;
   } catch (error: any) {
-    console.log("REGISTER_ERROR:", error);
-
+    console.log("REGISTER_USER_ERROR:", error);
     return {
       success: false,
       message:

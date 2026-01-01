@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 interface TravelPlan {
   title: string;
@@ -24,26 +24,30 @@ export const updateTravelPlans = async ({
   data: TravelPlan;
 }): Promise<any> => {
   try {
-    const payload = { images, data };
-    const res = await $fetch.patch(`/travel-plans/${id}`, {
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const formData = new FormData();
+    
+    if (images && images.length > 0) {
+      images.forEach((image) => {
+        formData.append("images", image);
+      });
+    }
+    
+    formData.append("data", JSON.stringify(data));
 
-    const result = await res.json();
+    const result = await $fetch.patch<any>(`/travel-plans/${id}`, {
+      body: formData,
+    });
 
     return result;
   } catch (error: any) {
-    console.log("REGISTER_ERROR:", error);
+    console.log("UPDATE_TRAVEL_PLANS_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Registration failed. Please try again.",
+          : "Travel plan update failed. Please try again.",
     };
   }
 };

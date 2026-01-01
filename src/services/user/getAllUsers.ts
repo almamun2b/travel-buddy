@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { toQueryParams } from "@/lib/queryParams";
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 interface GetAllUsersParams {
   limit?: number;
@@ -30,24 +29,21 @@ export const getAllUsers = async (
       hasVerifiedBadge = "",
     } = params;
 
-    const query = toQueryParams({
-      limit,
-      page,
-      sortBy,
-      sortOrder,
-      searchTerm,
-      travelInterest,
-      currentLocation,
-      hasVerifiedBadge,
-    });
-
-    const res = await $fetch.get(`/user?${query}`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = await res.json();
+    const result = await $fetch.get<any, GetAllUsersParams>(
+      `/user`,
+      {
+        params: {
+          limit,
+          page,
+          sortBy,
+          sortOrder,
+          searchTerm,
+          travelInterest,
+          currentLocation,
+          hasVerifiedBadge,
+        },
+      }
+    );
 
     return result;
   } catch (error: any) {

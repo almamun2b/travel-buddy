@@ -24,33 +24,53 @@ import {
 const data = {
   navMain: [
     {
-      title: "Projects",
+      title: "Users",
       url: "#",
       icon: Projector,
       isActive: true,
       items: [
         {
-          title: "All Projects",
-          url: "/projects",
-        },
-        {
-          title: "Create Project",
-          url: "/projects/create",
+          title: "Users",
+          url: "/users",
         },
       ],
     },
     {
-      title: "Blog Category",
+      title: "Travel Plans",
       url: "#",
       icon: Type,
       isActive: true,
       items: [
         {
-          title: "All Categories",
+          title: "Travel Plans",
           url: "/blog-category",
         },
         {
-          title: "Create Category",
+          title: "My Travel Plans",
+          url: "/blog-category/create",
+        },
+        {
+          title: "Get my travel requests",
+          url: "/blog-category/create",
+        },
+        {
+          title: "Get pending requests",
+          url: "/blog-category/create",
+        }
+      ],
+    },
+    {
+      title: "Reviews",
+      url: "#",
+      icon: Type,
+      isActive: true,
+      items: [
+        {
+          title: "My reviews",
+          url: "/blog-category",
+        },
+        {
+          title: "Given Reviews",
           url: "/blog-category/create",
         },
       ],

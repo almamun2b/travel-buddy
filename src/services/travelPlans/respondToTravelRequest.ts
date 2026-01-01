@@ -1,32 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export const respondToTravelRequest = async (
-  requestId: string
+  requestId: string,
+  action: "ACCEPT" | "REJECT"
 ): Promise<any> => {
   try {
-    const res = await $fetch.get(
-      `/travel-plans/requests/${requestId}/respond`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    const result = await res.json();
+    const result = await $fetch.post<any>(`/travel-plans/requests/${requestId}/respond`, {
+      action,
+    });
     return result;
   } catch (error: any) {
-    console.log("GET_ALL_TOUR_PLANS_ERROR:", error);
+    console.log("RESPOND_TO_TRAVEL_REQUEST_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Failed to fetch tour plans. Please try again.",
+          : "Failed to respond to travel request. Please try again.",
     };
   }
 };

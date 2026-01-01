@@ -1,16 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
-export async function getPublicProfile() {
+export async function getDashboardStats() {
   try {
-    const res = await $fetch.get(`/user/dashboard-stats`, {
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const data = await res.json();
-
+    const data = await $fetch.get<any>("/user/dashboard-stats");
     return data;
   } catch (err: any) {
     return {

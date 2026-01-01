@@ -1,34 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export const changePassword = async (data: any): Promise<any> => {
   try {
-    const payload = {
-      oldPassword: data.oldPassword,
+    const result = await $fetch.post<any>("/auth/change-password", {
+      currentPassword: data.currentPassword,
       newPassword: data.newPassword,
-    };
-
-    const res = await $fetch.post("/auth/change-password", {
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
-
-    const result = await res.json();
-
     return result;
   } catch (error: any) {
-    console.log("REGISTER_ERROR:", error);
-
+    console.log("CHANGE_PASSWORD_ERROR:", error);
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Registration failed. Please try again.",
+          : "Failed to change password. Please try again.",
     };
   }
 };

@@ -9,8 +9,8 @@ export default function CommonLayout({
 }>) {
   return (
     <>
-      <Suspense fallback={<div className="h-14 w-full border-b bg-background" />}>
-        <Navbar />
+      <Suspense fallback={<div className="w-full bg-background" />}>
+      <Navbar />
       </Suspense>
       <main className="min-h-dvh container mx-auto px-6">{children}</main>
       <Footer />

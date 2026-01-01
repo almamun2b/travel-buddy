@@ -1,31 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export const confirmSubscription = async (payload: {
   sessionId: string;
 }): Promise<any> => {
   try {
-    const res = await $fetch.post("/payment/subscription/confirm", {
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = await res.json();
-
+    const result = await $fetch.post<any>("/payment/subscription/confirm", payload);
     return result;
   } catch (error: any) {
-    console.log("REGISTER_ERROR:", error);
+    console.log("CONFIRM_SUBSCRIPTION_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Registration failed. Please try again.",
+          : "Subscription confirmation failed. Please try again.",
     };
   }
 };

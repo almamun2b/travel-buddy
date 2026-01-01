@@ -135,7 +135,7 @@ class FetchClient {
     } catch (error) {
       await this.hooks.onError?.(error, reqCtx);
       // Log client/network error
-      console.error(
+      console.warn(
         "[Network Error]:",
         error instanceof Error ? error.message : "Unknown error",
         {
@@ -159,7 +159,7 @@ class FetchClient {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error(`[API Error]: ${data?.message || response.status}`, {
+      console.warn(`[API Error]: ${data?.message || response.status}`, {
         endpoint,
         status: response.status,
         error: data?.error,

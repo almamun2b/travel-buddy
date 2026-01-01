@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 // import { verifyAccessToken } from "@/lib/jwtHanlders";
-import { $fetch } from "@/lib/server-fetch";
 import { parse } from "cookie";
 import { deleteCookie, getCookie, setCookie } from "./tokenHandlers";
 
@@ -58,11 +57,15 @@ export async function getNewAccessToken() {
     let accessTokenObject: any = null;
     let refreshTokenObject: any = null;
 
-    // API Call - $fetch will skip getNewAccessToken for /auth/refresh-token endpoint
-    const response = await $fetch.post("/auth/refresh-token", {
+    // Use native fetch for this specific case to get Response object for cookie handling
+    const refreshUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/auth/refresh-token`;
+    const response = await fetch(refreshUrl, {
+      method: "POST",
       headers: {
         Cookie: `refreshToken=${refreshToken}`,
       },
+      credentials: "include",
+      cache: "no-store",
     });
 
     const result = await response.json();

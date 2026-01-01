@@ -1,27 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export const getSubscriptionStatus = async (): Promise<any> => {
   try {
-    const res = await $fetch.get(`/payment/subscription/status`, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = await res.json();
+    const result = await $fetch.get<any>("/payment/subscription/status");
     return result;
   } catch (error: any) {
-    console.log("GET_ALL_TOUR_PLANS_ERROR:", error);
+    console.log("GET_SUBSCRIPTION_STATUS_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Failed to fetch tour plans. Please try again.",
+          : "Failed to fetch subscription status. Please try again.",
     };
   }
 };

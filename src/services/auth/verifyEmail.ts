@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 export async function verifyEmailAction({
   email,
@@ -11,12 +11,10 @@ export async function verifyEmailAction({
   code: string;
 }) {
   try {
-    const res = await $fetch.post("/auth/verify-email", {
-      body: JSON.stringify({ email, code }),
-      headers: { "Content-Type": "application/json" },
+    const data = await $fetch.post<any>("/auth/verify-email", {
+      email,
+      code,
     });
-
-    const data = await res.json();
 
     return data;
   } catch (err: any) {
@@ -29,12 +27,9 @@ export async function verifyEmailAction({
 
 export async function resendVerificationCode({ email }: { email: string }) {
   try {
-    const res = await $fetch.post("/auth/resend-verification-code", {
-      body: JSON.stringify({ email }),
-      headers: { "Content-Type": "application/json" },
+    const data = await $fetch.post<any>("/auth/resend-verification-code", {
+      email,
     });
-
-    const data = await res.json();
 
     return data;
   } catch (err: any) {

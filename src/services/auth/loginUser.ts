@@ -1,7 +1,7 @@
 "use server";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 import { AuthResponse } from "@/types/travelPlan";
 
 export interface ParsedCookie {
@@ -9,17 +9,10 @@ export interface ParsedCookie {
 }
 
 export const loginUser = async (data: any) => {
-  const res = await $fetch.post("/auth/login", {
-    body: JSON.stringify({
-      email: data?.email,
-      password: data?.password,
-    }),
-    headers: {
-      "Content-Type": "application/json",
-    },
+  const result = await $fetch.post<AuthResponse>("/auth/login", {
+    email: data?.email,
+    password: data?.password,
   });
-
-  const result = (await res.json()) as AuthResponse;
 
   if (!result?.success) {
     return {

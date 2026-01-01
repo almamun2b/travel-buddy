@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { toQueryParams } from "@/lib/queryParams";
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 interface GetAllTourPlans {
   limit?: number;
@@ -22,29 +21,25 @@ export const getMyReviews = async (
       sortOrder = "desc",
     } = params;
 
-    const query = toQueryParams({
-      limit,
-      page,
-      sortBy,
-      sortOrder,
-    });
-    const res = await $fetch.get(`/reviews/my${query}`, {
-      headers: {
-        "Content-Type": "application/json",
+    const result = await $fetch.get<any, GetAllTourPlans>("/reviews/my", {
+      params: {
+        limit,
+        page,
+        sortBy,
+        sortOrder,
       },
     });
 
-    const result = await res.json();
     return result;
   } catch (error: any) {
-    console.log("GET_ALL_TOUR_PLANS_ERROR:", error);
+    console.log("GET_MY_REVIEWS_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Failed to fetch tour plans. Please try again.",
+          : "Failed to fetch reviews. Please try again.",
     };
   }
 };

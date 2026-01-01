@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { $fetch } from "@/lib/server-fetch";
+import { $fetch } from "@/lib/fetch";
 
 interface TravelPlan {
   title: string;
@@ -22,26 +22,28 @@ export const createTravelPlans = async ({
   data: TravelPlan;
 }): Promise<any> => {
   try {
-    const payload = { images, data };
-    const res = await $fetch.post("/travel-plans", {
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const formData = new FormData();
+    
+    images.forEach((image, index) => {
+      formData.append(`images`, image);
     });
+    
+    formData.append("data", JSON.stringify(data));
 
-    const result = await res.json();
+    const result = await $fetch.post<any>("/travel-plans", {
+      body: formData,
+    });
 
     return result;
   } catch (error: any) {
-    console.log("REGISTER_ERROR:", error);
+    console.log("CREATE_TRAVEL_PLANS_ERROR:", error);
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
           ? error.message
-          : "Registration failed. Please try again.",
+          : "Travel plan creation failed. Please try again.",
     };
   }
 };
