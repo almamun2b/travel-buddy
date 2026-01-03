@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { format } from "date-fns";
@@ -33,11 +32,7 @@ type Traveler = {
   };
 };
 
-export function TravelerCard({
-  traveler,
-}: {
-  traveler: Traveler;
-}) {
+export function TravelerCard({ traveler }: { traveler: Traveler }) {
   const {
     id,
     fullName,
@@ -45,7 +40,6 @@ export function TravelerCard({
     bio,
     currentLocation,
     travelInterests = [],
-    visitedCountries = [],
     isVerified,
     hasVerifiedBadge,
     createdAt,
