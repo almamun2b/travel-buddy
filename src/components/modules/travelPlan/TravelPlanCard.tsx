@@ -45,10 +45,16 @@ export function TravelPlanCard({
   const formattedEnd = new Date(endDate).toLocaleDateString();
 
   return (
-    <Card className="overflow-hidden border rounded-xl shadow-sm hover:shadow-lg transition bg-card ">
+    <Card className="overflow-hidden border rounded-xl shadow-sm hover:shadow-lg transition bg-card pt-0">
       {/* Cover Image */}
       <div className="relative h-48 w-full">
-        <Image src={firstImage} alt={title} fill className="object-cover" />
+        <Image
+          src={firstImage}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover w-full h-auto"
+        />
       </div>
 
       {/* Content */}
