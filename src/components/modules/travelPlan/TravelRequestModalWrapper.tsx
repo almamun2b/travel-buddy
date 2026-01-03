@@ -1,42 +1,17 @@
-'use client'
-
-import { useEffect, useState } from "react";
-import { $fetch } from "@/lib/fetch";
+import { me } from "@/services/auth/me";
 import TravelRequestModal from "./TravelRequestModal";
-
-interface UserInfo {
-  success: boolean;
-  data?: {
-    email: string;
-  };
-}
 
 interface TravelRequestModalWrapperProps {
   travelPlanId: string;
 }
 
-export default function TravelRequestModalWrapper({ travelPlanId }: TravelRequestModalWrapperProps) {
-  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
+export default async function TravelRequestModalWrapper({
+  travelPlanId,
+}: TravelRequestModalWrapperProps) {
+  const userInfo = await me();
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const data = await $fetch.get<UserInfo>("/auth/me");
-        
-        if (data) {
-          setUserInfo(data);
-        } else {
-          setUserInfo(null);
-        }
-      } catch {
-        setUserInfo(null);
-      }
-    };
-
-    fetchUserInfo();
-  }, []);
-
-  if (!userInfo?.data?.email) {
+  // Don't render if user is not authenticated or has no email
+  if (!userInfo?.success || !userInfo?.data?.email) {
     return null;
   }
 

@@ -3,15 +3,9 @@
 
 import { $fetch } from "@/lib/fetch";
 
-export const registerUser = async (data: any): Promise<any> => {
+export const registerUser = async (payload: any): Promise<any> => {
   try {
-    const payload = {
-      email: data.email,
-      fullName: data.fullName,
-      contactNumber: data.contactNumber,
-    };
-    
-    const result = await $fetch.post<any>("/auth/register", payload);
+    const result = await $fetch.post<any>("/auth/register", { ...payload });
     return result;
   } catch (error: any) {
     console.log("REGISTER_USER_ERROR:", error);

@@ -11,6 +11,7 @@ import {
   Users2,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface TravelPlanDetailPageProps {
   params: Promise<{ travelPlanId: string }>;
@@ -148,7 +149,10 @@ const TravelPlanDetailPage = async ({ params }: TravelPlanDetailPageProps) => {
       <div>
         <h2 className="text-xl font-semibold mb-4">Created By</h2>
 
-        <div className="flex items-center gap-4">
+        <Link
+          href={`/travelers/${travelPlan.creator.id}`}
+          className="flex items-center gap-4"
+        >
           <Avatar className="h-14 w-14">
             <AvatarImage
               src={travelPlan.creator.avatar ?? ""}
@@ -170,7 +174,7 @@ const TravelPlanDetailPage = async ({ params }: TravelPlanDetailPageProps) => {
               {travelPlan.creator.isVerified ? "Verified User" : "Traveler"}
             </p>
           </div>
-        </div>
+        </Link>
       </div>
 
       <div className="h-20" />

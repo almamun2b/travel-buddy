@@ -26,8 +26,6 @@ export const registerSchema = z
       .min(3, { message: "Full name is too short" })
       .max(50, { message: "Full name is too long" }),
 
-    contactNumber: z.string().optional(),
-    currentLocation: z.string().max(100).optional(),
     travelInterests: z.array(z.string()).optional(),
 
     password: z
@@ -52,8 +50,6 @@ export function RegisterForm() {
     defaultValues: {
       email: "",
       fullName: "",
-      contactNumber: "",
-      currentLocation: "",
       travelInterests: [],
       password: "",
       confirmPassword: "",
@@ -66,8 +62,6 @@ export function RegisterForm() {
     const userInfo: Record<string, any> = {
       email: data.email,
       fullName: data.fullName,
-      contactNumber: data.contactNumber,
-      currentLocation: data.currentLocation,
       travelInterests: data.travelInterests,
       password: data.password,
     };
@@ -106,16 +100,6 @@ export function RegisterForm() {
               {(field) => (
                 <Input {...field} type="email" placeholder="you@example.com" />
               )}
-            </DynamicFormField>
-
-            {/* Contact Number */}
-            <DynamicFormField name="contactNumber" label="Contact Number">
-              {(field) => <Input {...field} placeholder="Your phone number" />}
-            </DynamicFormField>
-
-            {/* Current Location */}
-            <DynamicFormField name="currentLocation" label="Current Location">
-              {(field) => <Input {...field} placeholder="Where are you now?" />}
             </DynamicFormField>
 
             {/* Travel Interests (Multi Select) */}

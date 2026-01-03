@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client'
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -9,7 +7,6 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { sendTravelRequest } from "@/services/travelPlans/sendTravelRequest";
 import {
   CalendarDays,
   DollarSign,
@@ -24,7 +21,7 @@ import TravelRequestModalWrapper from "./TravelRequestModalWrapper";
 export function TravelPlanCard({
   travelPlan,
 }: {
-  travelPlan: any;
+  travelPlan: Record<string, any>;
 }) {
   const {
     id,
@@ -47,15 +44,17 @@ export function TravelPlanCard({
   const formattedStart = new Date(startDate).toLocaleDateString();
   const formattedEnd = new Date(endDate).toLocaleDateString();
 
-  const requestToJoin = async () => {
-    const res = sendTravelRequest({ travelPlanId: "id", message: "sd" });
-  };
-
   return (
-    <Card className="overflow-hidden border rounded-xl shadow-sm hover:shadow-lg transition bg-card ">
+    <Card className="overflow-hidden border rounded-xl shadow-sm hover:shadow-lg transition bg-card pt-0">
       {/* Cover Image */}
       <div className="relative h-48 w-full">
-        <Image src={firstImage} alt={title} fill className="object-cover" />
+        <Image
+          src={firstImage}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover w-full h-auto"
+        />
       </div>
 
       {/* Content */}
