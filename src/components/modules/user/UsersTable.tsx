@@ -1,6 +1,17 @@
-'use client'
+"use client";
 
-import { useRouter, useSearchParams } from 'next/navigation'
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -8,127 +19,159 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { ShieldCheck, ArrowUpDown, ArrowUp, ArrowDown, Mail, User, CheckCircle, XCircle } from 'lucide-react'
-import { format } from 'date-fns'
-import { useCallback, useTransition } from 'react'
+} from "@/components/ui/table";
+import { format } from "date-fns";
+import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
+  CheckCircle,
+  Mail,
+  ShieldCheck,
+  XCircle,
+} from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type User = {
-  id: string
-  email: string
-  role: string
-  fullName: string
-  contactNumber: string | null
-  status: string
-  isVerified: boolean
-  hasVerifiedBadge: boolean
-  gender?: string
-  createdAt: string
-}
+  id: string;
+  email: string;
+  role: string;
+  fullName: string;
+  contactNumber: string | null;
+  status: string;
+  isVerified: boolean;
+  hasVerifiedBadge: boolean;
+  gender?: string;
+  createdAt: string;
+};
 
 export type UserResponse = {
-  success: boolean
+  success: boolean;
   meta: {
-    page: number
-    limit: number
-    total: number
-  }
-  data: User[]
-}
+    page: number;
+    limit: number;
+    total: number;
+  };
+  data: User[];
+};
 
 type Props = {
-  users: User[]
+  users: User[];
   meta: {
-    page: number
-    limit: number
-    total: number
-  }
+    page: number;
+    limit: number;
+    total: number;
+  };
   searchParams: {
-    searchTerm: string
-    email: string
-    role: string
-    status: string
-    gender: string
-    isVerified: boolean | undefined
-    hasVerifiedBadge: boolean | undefined
-    sortBy: string
-    sortOrder: 'asc' | 'desc'
-  }
-}
+    searchTerm: string;
+    role: string;
+    status: string;
+    gender: string;
+    isVerified: boolean | undefined;
+    hasVerifiedBadge: boolean | undefined;
+    sortBy: string;
+    sortOrder: "asc" | "desc";
+  };
+};
 
 export default function UsersTable({ users, meta, searchParams }: Props) {
-  const router = useRouter()
-  const params = useSearchParams()
-  const [, startTransition] = useTransition()
+  const router = useRouter();
+  const params = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.searchTerm);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(
+    searchParams.searchTerm
+  );
+  const previousDebouncedSearchTerm = useRef(searchParams.searchTerm);
 
-  const totalPages = Math.ceil(meta.total / meta.limit)
+  const totalPages = Math.ceil(meta.total / meta.limit);
 
   const updateQuery = useCallback(
     (updates: Record<string, string | number | boolean | undefined>) => {
-      const newParams = new URLSearchParams(params.toString())
+      const newParams = new URLSearchParams(params.toString());
       Object.entries(updates).forEach(([key, value]) => {
-        if (value === '' || value === undefined) {
-          newParams.delete(key)
+        if (value === "" || value === undefined) {
+          newParams.delete(key);
         } else {
-          newParams.set(key, String(value))
+          newParams.set(key, String(value));
         }
-      })
-      router.push(`?${newParams.toString()}`)
+      });
+      router.push(`?${newParams.toString()}`);
     },
     [params, router]
-  )
+  );
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Update URL when debounced search term changes
+  useEffect(() => {
+    // Only update if debouncedSearchTerm is different from previous AND different from current URL
+    if (
+      debouncedSearchTerm !== previousDebouncedSearchTerm.current &&
+      debouncedSearchTerm !== searchParams.searchTerm
+    ) {
+      updateQuery({ searchTerm: debouncedSearchTerm, page: 1 });
+      previousDebouncedSearchTerm.current = debouncedSearchTerm;
+    }
+  }, [debouncedSearchTerm, searchParams.searchTerm, updateQuery]);
 
   const handleSort = (field: string) => {
-    const currentSort = searchParams.sortBy
-    const currentOrder = searchParams.sortOrder
-    
-    let newOrder: 'asc' | 'desc' = 'desc'
+    const currentSort = searchParams.sortBy;
+    const currentOrder = searchParams.sortOrder;
+
+    let newOrder: "asc" | "desc" = "desc";
     if (currentSort === field) {
-      newOrder = currentOrder === 'asc' ? 'desc' : 'asc'
+      newOrder = currentOrder === "asc" ? "desc" : "asc";
     }
-    
+
     updateQuery({
       sortBy: field,
       sortOrder: newOrder,
-    })
-  }
+    });
+  };
 
   const getSortIcon = (field: string) => {
-    const currentSort = searchParams.sortBy
-    const currentOrder = searchParams.sortOrder
-    
+    const currentSort = searchParams.sortBy;
+    const currentOrder = searchParams.sortOrder;
+
     if (currentSort !== field) {
-      return <ArrowUpDown className="h-4 w-4" />
+      return <ArrowUpDown className="h-4 w-4" />;
     }
-    
-    return currentOrder === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />
-  }
+
+    return currentOrder === "asc" ? (
+      <ArrowUp className="h-4 w-4" />
+    ) : (
+      <ArrowDown className="h-4 w-4" />
+    );
+  };
 
   return (
     <div className="space-y-6">
       {/* Filters */}
       <Card>
-        <CardHeader className='flex items-center justify-between'>
+        <CardHeader className="flex items-center justify-between">
           <CardTitle>Filters</CardTitle>
           <div className="flex gap-2 mt-4">
             <Button
               variant="outline"
-              onClick={() => updateQuery({
-                searchTerm: '',
-                email: '',
-                role: 'all',
-                status: 'all',
-                gender: 'all',
-                isVerified: undefined,
-                hasVerifiedBadge: undefined,
-                page: 1
-              })}
+              onClick={() =>
+                updateQuery({
+                  searchTerm: "",
+                  role: "all",
+                  status: "all",
+                  gender: "all",
+                  isVerified: undefined,
+                  hasVerifiedBadge: undefined,
+                  page: 1,
+                })
+              }
             >
               Clear Filters
             </Button>
@@ -140,20 +183,11 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
               <label className="text-sm font-medium">Search</label>
               <Input
                 placeholder="Search users..."
-                value={searchParams.searchTerm}
-                onChange={(e) => updateQuery({ searchTerm: e.target.value, page: 1 })}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium">Email</label>
-              <Input
-                placeholder="Email address..."
-                value={searchParams.email}
-                onChange={(e) => updateQuery({ email: e.target.value, page: 1 })}
-              />
-            </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Role</label>
               <Select
@@ -170,12 +204,14 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Status</label>
               <Select
                 value={searchParams.status}
-                onValueChange={(value) => updateQuery({ status: value, page: 1 })}
+                onValueChange={(value) =>
+                  updateQuery({ status: value, page: 1 })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select status" />
@@ -184,16 +220,19 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="ACTIVE">Active</SelectItem>
                   <SelectItem value="INACTIVE">Inactive</SelectItem>
-                  <SelectItem value="SUSPENDED">Suspended</SelectItem>
+                  <SelectItem value="BLOCKED">Blocked</SelectItem>
+                  <SelectItem value="DELETED">Deleted</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Gender</label>
               <Select
                 value={searchParams.gender}
-                onValueChange={(value) => updateQuery({ gender: value, page: 1 })}
+                onValueChange={(value) =>
+                  updateQuery({ gender: value, page: 1 })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select gender" />
@@ -206,12 +245,28 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Verified</label>
               <Select
-                value={searchParams.isVerified === undefined ? 'all' : searchParams.isVerified ? 'true' : 'false'}
-                onValueChange={(value) => updateQuery({ isVerified: value === 'all' ? undefined : (value === 'true' ? true : false), page: 1 })}
+                value={
+                  searchParams.isVerified === undefined
+                    ? "all"
+                    : searchParams.isVerified
+                    ? "true"
+                    : "false"
+                }
+                onValueChange={(value) =>
+                  updateQuery({
+                    isVerified:
+                      value === "all"
+                        ? undefined
+                        : value === "true"
+                        ? true
+                        : false,
+                    page: 1,
+                  })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select verification" />
@@ -223,12 +278,28 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Verified Badge</label>
               <Select
-                value={searchParams.hasVerifiedBadge === undefined ? 'all' : searchParams.hasVerifiedBadge ? 'true' : 'false'}
-                onValueChange={(value) => updateQuery({ hasVerifiedBadge: value === 'all' ? undefined : (value === 'true' ? true : false), page: 1 })}
+                value={
+                  searchParams.hasVerifiedBadge === undefined
+                    ? "all"
+                    : searchParams.hasVerifiedBadge
+                    ? "true"
+                    : "false"
+                }
+                onValueChange={(value) =>
+                  updateQuery({
+                    hasVerifiedBadge:
+                      value === "all"
+                        ? undefined
+                        : value === "true"
+                        ? true
+                        : false,
+                    page: 1,
+                  })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select badge status" />
@@ -241,8 +312,6 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
               </Select>
             </div>
           </div>
-          
-          
         </CardContent>
       </Card>
 
@@ -257,44 +326,44 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSort('fullName')}
+                      onClick={() => handleSort("fullName")}
                       className="h-auto p-0 font-semibold"
                     >
                       User
-                      {getSortIcon('fullName')}
+                      {getSortIcon("fullName")}
                     </Button>
                   </TableHead>
                   <TableHead>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSort('email')}
+                      onClick={() => handleSort("email")}
                       className="h-auto p-0 font-semibold"
                     >
                       Email
-                      {getSortIcon('email')}
+                      {getSortIcon("email")}
                     </Button>
                   </TableHead>
                   <TableHead>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSort('role')}
+                      onClick={() => handleSort("role")}
                       className="h-auto p-0 font-semibold"
                     >
                       Role
-                      {getSortIcon('role')}
+                      {getSortIcon("role")}
                     </Button>
                   </TableHead>
                   <TableHead>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSort('status')}
+                      onClick={() => handleSort("status")}
                       className="h-auto p-0 font-semibold"
                     >
                       Status
-                      {getSortIcon('status')}
+                      {getSortIcon("status")}
                     </Button>
                   </TableHead>
                   <TableHead>Verified</TableHead>
@@ -303,11 +372,11 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleSort('createdAt')}
+                      onClick={() => handleSort("createdAt")}
                       className="h-auto p-0 font-semibold"
                     >
                       Joined
-                      {getSortIcon('createdAt')}
+                      {getSortIcon("createdAt")}
                     </Button>
                   </TableHead>
                 </TableRow>
@@ -324,7 +393,9 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                         </Avatar>
                         <div>
                           <div className="font-medium">{user.fullName}</div>
-                          <div className="text-sm text-muted-foreground">{user.contactNumber || 'No phone'}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {user.contactNumber || "No phone"}
+                          </div>
                         </div>
                       </div>
                     </TableCell>
@@ -335,15 +406,22 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={user.role === 'ADMIN' ? 'default' : 'secondary'}>
+                      <Badge
+                        variant={
+                          user.role === "ADMIN" ? "default" : "secondary"
+                        }
+                      >
                         {user.role}
                       </Badge>
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant={
-                          user.status === 'ACTIVE' ? 'default' :
-                          user.status === 'SUSPENDED' ? 'destructive' : 'secondary'
+                          user.status === "ACTIVE"
+                            ? "default"
+                            : user.status === "BLOCKED"
+                            ? "destructive"
+                            : "secondary"
                         }
                       >
                         {user.status}
@@ -357,7 +435,7 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                           <XCircle className="h-4 w-4 text-red-500" />
                         )}
                         <span className="text-sm">
-                          {user.isVerified ? 'Verified' : 'Not Verified'}
+                          {user.isVerified ? "Verified" : "Not Verified"}
                         </span>
                       </div>
                     </TableCell>
@@ -372,17 +450,19 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                       )}
                     </TableCell>
                     <TableCell>
-                      {format(new Date(user.createdAt), 'MMM dd, yyyy')}
+                      {format(new Date(user.createdAt), "MMM dd, yyyy")}
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </div>
-          
+
           {users.length === 0 && (
             <div className="text-center py-8">
-              <p className="text-muted-foreground">No users found matching your criteria.</p>
+              <p className="text-muted-foreground">
+                No users found matching your criteria.
+              </p>
             </div>
           )}
         </CardContent>
@@ -392,7 +472,9 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
       {totalPages > 1 && (
         <div className="flex items-center justify-between">
           <div className="text-sm text-muted-foreground">
-            Showing {((meta.page - 1) * meta.limit) + 1} to {Math.min(meta.page * meta.limit, meta.total)} of {meta.total} results
+            Showing {(meta.page - 1) * meta.limit + 1} to{" "}
+            {Math.min(meta.page * meta.limit, meta.total)} of {meta.total}{" "}
+            results
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -405,23 +487,23 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
             </Button>
             <div className="flex items-center gap-1">
               {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                const pageNum = i + 1
+                const pageNum = i + 1;
                 return (
                   <Button
                     key={pageNum}
-                    variant={meta.page === pageNum ? 'default' : 'outline'}
+                    variant={meta.page === pageNum ? "default" : "outline"}
                     size="sm"
                     onClick={() => updateQuery({ page: pageNum })}
                   >
                     {pageNum}
                   </Button>
-                )
+                );
               })}
               {totalPages > 5 && (
                 <>
                   <span className="px-2">...</span>
                   <Button
-                    variant={meta.page === totalPages ? 'default' : 'outline'}
+                    variant={meta.page === totalPages ? "default" : "outline"}
                     size="sm"
                     onClick={() => updateQuery({ page: totalPages })}
                   >
@@ -442,5 +524,5 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
         </div>
       )}
     </div>
-  )
+  );
 }
