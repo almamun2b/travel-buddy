@@ -9,7 +9,6 @@ interface GetAllUsersParams {
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   searchTerm?: string;
-  email?: string;
   role?: string;
   status?: string;
   gender?: string;
@@ -23,8 +22,25 @@ export const getAllUsers = async (
   params: GetAllUsersParams = {}
 ): Promise<any> => {
   try {
+    // Convert boolean parameters to strings "true"/"false" for API compatibility
+    const processedParams: Record<string, any> = { ...params };
+
+    // Convert boolean values to strings that API expects
+    if (typeof processedParams.isVerified === "boolean") {
+      processedParams.isVerified = processedParams.isVerified
+        ? "true"
+        : "false";
+    }
+    if (typeof processedParams.hasVerifiedBadge === "boolean") {
+      processedParams.hasVerifiedBadge = processedParams.hasVerifiedBadge
+        ? "true"
+        : "false";
+    }
+
+    console.log(processedParams, "processedParams");
+
     const result = await $fetch.get<any, GetAllUsersParams>(`/user`, {
-      params,
+      params: processedParams,
     });
 
     return result;

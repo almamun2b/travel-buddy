@@ -101,26 +101,74 @@ class FetchClient {
         headers: mergedHeaders,
       });
 
+      console.log("[Fetch]: Response received", {
+        endpoint,
+        status: response.status,
+        ok: response.ok,
+        url: response.url,
+      });
+
       // axios-like: if unauthorized, attempt refresh once then retry
+      const isAuthError =
+        response.status === 401 ||
+        (response.status === 500 &&
+          response.headers.get("content-type")?.includes("application/json"));
+
       if (
-        response.status === 401 &&
+        isAuthError &&
         endpoint !== "/auth/refresh-token" &&
         options.skipAuthRefresh !== true
       ) {
-        const refreshed = await this.refreshAuth();
-        if (refreshed) {
-          const retryRes = await fetch(url, {
-            ...restOptions,
-            credentials: "include",
-            headers: mergedHeaders,
-          });
-          await this.hooks.onResponse?.({
+        // For 500 errors, check if the response contains auth-related error message
+        let shouldRefresh = response.status === 401;
+
+        if (response.status === 500) {
+          try {
+            const errorData = await response.clone().json();
+            const errorMessage = errorData?.message || errorData?.error || "";
+            shouldRefresh =
+              errorMessage.toLowerCase().includes("not authorized") ||
+              errorMessage.toLowerCase().includes("unauthorized") ||
+              errorMessage.toLowerCase().includes("authentication");
+          } catch {
+            shouldRefresh = false;
+          }
+        }
+
+        if (shouldRefresh) {
+          console.log(
+            "[Auth]: Auth error detected, attempting token refresh for endpoint:",
             endpoint,
-            url,
-            options,
-            response: retryRes,
-          });
-          return await this.parseResponse<T>(endpoint, retryRes);
+            { status: response.status }
+          );
+          const refreshed = await this.refreshAuth();
+          if (refreshed) {
+            console.log("[Auth]: Token refresh successful, retrying request");
+            // Get updated server cookie header after refresh
+            const updatedServerCookieHeader = await getServerCookieHeader();
+            const updatedMergedHeaders: HeadersInit = {
+              ...this.defaultHeaders,
+              ...(typeof headers === "object" ? (headers as HeadersInit) : {}),
+              ...(updatedServerCookieHeader
+                ? { Cookie: updatedServerCookieHeader }
+                : {}),
+            };
+
+            const retryRes = await fetch(url, {
+              ...restOptions,
+              credentials: "include",
+              headers: updatedMergedHeaders,
+            });
+            await this.hooks.onResponse?.({
+              endpoint,
+              url,
+              options,
+              response: retryRes,
+            });
+            return await this.parseResponse<T>(endpoint, retryRes);
+          } else {
+            console.log("[Auth]: Token refresh failed, returning null");
+          }
         }
       }
 
@@ -146,7 +194,10 @@ class FetchClient {
     }
   }
 
-  private async parseResponse<T>(endpoint: string, response: Response): Promise<T | null> {
+  private async parseResponse<T>(
+    endpoint: string,
+    response: Response
+  ): Promise<T | null> {
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
       if (!response.ok) {
@@ -175,6 +226,12 @@ class FetchClient {
     try {
       const refreshUrl = toAbsoluteUrl(`${this.baseURL}/auth/refresh-token`);
       const serverCookieHeader = await getServerCookieHeader();
+      console.log("[Refresh Auth]: Attempting refresh to", refreshUrl);
+      console.log(
+        "[Refresh Auth]: Cookie header present",
+        !!serverCookieHeader
+      );
+
       const res = await fetch(refreshUrl, {
         method: "POST",
         credentials: "include",
@@ -184,8 +241,23 @@ class FetchClient {
         },
         cache: "no-store",
       });
-      return res.ok;
-    } catch {
+
+      console.log("[Refresh Auth]: Response status", res.status);
+
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        console.warn("[Refresh Auth]: Failed to refresh token", {
+          status: res.status,
+          error: errorData?.message || "Unknown error",
+        });
+        return false;
+      }
+
+      const data = await res.json();
+      console.log("[Refresh Auth]: Refresh successful", data);
+      return true;
+    } catch (error) {
+      console.error("[Refresh Auth]: Exception during refresh", error);
       return false;
     }
   }
@@ -273,9 +345,7 @@ class FetchClient {
 }
 
 // Create and export the default instance
-export const $fetch = new FetchClient(
-  "/api/v1"
-);
+export const $fetch = new FetchClient("/api/v1");
 
 // Also export the class for custom instances
 export { FetchClient };
