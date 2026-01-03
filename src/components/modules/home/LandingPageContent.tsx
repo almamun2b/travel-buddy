@@ -248,10 +248,10 @@ export default function LandingPageContent() {
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchDestination) params.set("destination", searchDestination);
-    if (searchDate) params.set("date", searchDate);
-    if (searchType) params.set("type", searchType);
+    if (searchDate) params.set("startDate", searchDate);
+    if (searchType) params.set("travelType", searchType);
 
-    router.push(`/explore?${params.toString()}`);
+    router.push(`/travel-plan?${params.toString()}`);
   };
 
   return (
@@ -302,7 +302,7 @@ export default function LandingPageContent() {
                       </Label>
                       <Input
                         id="date"
-                        type="month"
+                        type="date"
                         value={searchDate}
                         onChange={(e) => setSearchDate(e.target.value)}
                         className="bg-background"
@@ -318,10 +318,10 @@ export default function LandingPageContent() {
                           <SelectValue placeholder="Any type" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="solo">Solo</SelectItem>
-                          <SelectItem value="friends">Friends</SelectItem>
-                          <SelectItem value="family">Family</SelectItem>
-                          <SelectItem value="couple">Couple</SelectItem>
+                          <SelectItem value="SOLO">Solo</SelectItem>
+                          <SelectItem value="FAMILY">Family</SelectItem>
+                          <SelectItem value="COUPLE">Couple</SelectItem>
+                          <SelectItem value="GROUP">Group</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

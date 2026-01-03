@@ -38,7 +38,7 @@ const Navbar = () => {
             About
           </Link>
           <Link
-            href="/match-travelers"
+            href="/matching-plan"
             className="hover:text-foreground/80 transition-colors whitespace-nowrap"
           >
             Match

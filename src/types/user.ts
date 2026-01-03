@@ -50,6 +50,10 @@ export interface PublicUserProfile {
   isVerified: boolean;
   hasVerifiedBadge: boolean;
   createdAt: string; // ISO 8601 date string
+  _count: {
+    reviewsReceived: number;
+    travelPlans: number;
+  };
 }
 
 export interface PublicUserProfileResponse {

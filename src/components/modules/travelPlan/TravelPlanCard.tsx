@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,6 +9,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import {
+  ArrowRight,
   CalendarDays,
   DollarSign,
   MapPin,
@@ -114,7 +116,10 @@ export function TravelPlanCard({
 
       {/* Creator */}
       <CardFooter className="flex items-center justify-between border-t pt-4">
-        <div className="flex items-center gap-2">
+        <Link
+          href={`/travelers/${creator.id}`}
+          className="flex items-center gap-2"
+        >
           <Avatar>
             <AvatarImage src={creator.avatar} />
             <AvatarFallback>
@@ -132,14 +137,17 @@ export function TravelPlanCard({
               {creator.isVerified ? "Verified" : "Unverified"}
             </p>
           </div>
-        </div>
-
-        <Link
-          href={`/travel-plan/${id}`}
-          className="text-primary text-sm font-medium hover:underline"
-        >
-          View
         </Link>
+
+        <Button type="button" asChild size="sm">
+          <Link
+            href={`/travel-plan/${id}`}
+            className="text-primary text-sm font-medium hover:underline flex items-center gap-1"
+          >
+            View
+            <ArrowRight size={14} className="ml-1" />
+          </Link>
+        </Button>
       </CardFooter>
     </Card>
   );

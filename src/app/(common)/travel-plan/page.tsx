@@ -1,4 +1,5 @@
 import { TravelPlanCard } from "@/components/modules/travelPlan/TravelPlanCard";
+import { TravelPlanFilters } from "@/components/modules/travelPlan/TravelPlanFilters";
 import PaginationCommon from "@/components/shared/pagination-common";
 import { getTravelPlans } from "@/services/travelPlans/travelPlans";
 import { TravelPlanSearchParams } from "@/types/travelPlan";
@@ -16,6 +17,9 @@ interface ProjectPageProps {
 
 const TravelPlanPage = async ({ searchParams }: ProjectPageProps) => {
   const params = await searchParams;
+  if (!params.sortOrder) {
+    params.sortOrder = "asc";
+  }
 
   const response = await getTravelPlans(params);
 
@@ -44,12 +48,12 @@ const TravelPlanPage = async ({ searchParams }: ProjectPageProps) => {
       <h2 className="text-3xl font-bold mb-4 text-center">
         Explore Travel Plan
       </h2>
+
+      <TravelPlanFilters searchParams={params} />
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {travelPlans.map((travel) => (
-          <TravelPlanCard
-            key={travel.id}
-            travelPlan={travel}
-          />
+          <TravelPlanCard key={travel.id} travelPlan={travel} />
         ))}
       </div>
 
