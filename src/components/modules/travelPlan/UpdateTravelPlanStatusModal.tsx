@@ -134,9 +134,14 @@ const UpdateTravelPlanStatusModal: React.FC<
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         {trigger || (
-          <button className="p-1 border hover:border-gray-100 rounded">
-            <Edit className="h-4 w-4" />
-          </button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="border text-sm rounded"
+          >
+            Status Update
+          </Button>
         )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]">
