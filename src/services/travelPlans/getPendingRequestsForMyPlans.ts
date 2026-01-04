@@ -2,20 +2,31 @@
 "use server";
 
 import { $fetch } from "@/lib/fetch";
+import type { PendingRequestsResponse } from "@/types/travelPlan";
 
-export const getPendingRequestsForMyPlans = async (): Promise<any> => {
-  try {
-    const result = await $fetch.get<any>("/travel-plans/requests/pending");
-    return result;
-  } catch (error: any) {
-    console.log("GET_PENDING_REQUESTS_ERROR:", error);
+export const getPendingRequestsForMyPlans =
+  async (): Promise<PendingRequestsResponse> => {
+    try {
+      const result = await $fetch.get<PendingRequestsResponse>(
+        "/travel-plans/requests/pending"
+      );
+      return (
+        result || {
+          success: false,
+          message: "No response received from server",
+          data: [],
+        }
+      );
+    } catch (error: any) {
+      console.log("GET_PENDING_REQUESTS_ERROR:", error);
 
-    return {
-      success: false,
-      message:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Failed to fetch pending requests. Please try again.",
-    };
-  }
-};
+      return {
+        success: false,
+        message:
+          process.env.NODE_ENV === "development"
+            ? error.message
+            : "Failed to fetch pending requests. Please try again.",
+        data: [],
+      };
+    }
+  };

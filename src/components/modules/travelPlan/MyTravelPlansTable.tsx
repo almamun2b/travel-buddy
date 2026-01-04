@@ -16,6 +16,7 @@ import {
   ArrowDown,
   ArrowUp,
   ArrowUpDown,
+  CheckCircle,
   DollarSign,
   Edit,
   Eye,
@@ -26,6 +27,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import ApprovedRequestsModal from "./ApprovedRequestsModal";
 import TravelPlanFormModal from "./TravelPlanFormModal";
 import UpdateTravelPlanStatusModal from "./UpdateTravelPlanStatusModal";
 
@@ -48,6 +50,10 @@ const MyTravelPlansTable: React.FC<MyTravelPlansTableProps> = ({
 }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingPlan, setEditingPlan] = useState<string | null>(null);
+  const [isApprovedRequestsModalOpen, setIsApprovedRequestsModalOpen] =
+    useState(false);
+  const [selectedPlanForApprovedRequests, setSelectedPlanForApprovedRequests] =
+    useState<TravelPlan | null>(null);
 
   const getSortIcon = (field: string) => {
     if (sortField !== field) return <ArrowUpDown className="h-4 w-4" />;
@@ -82,6 +88,16 @@ const MyTravelPlansTable: React.FC<MyTravelPlansTableProps> = ({
     setIsEditModalOpen(false);
     setEditingPlan(null);
     onRefresh();
+  };
+
+  const handleApprovedRequestsClick = (plan: TravelPlan) => {
+    setSelectedPlanForApprovedRequests(plan);
+    setIsApprovedRequestsModalOpen(true);
+  };
+
+  const handleApprovedRequestsClose = () => {
+    setIsApprovedRequestsModalOpen(false);
+    setSelectedPlanForApprovedRequests(null);
   };
 
   return (
@@ -215,6 +231,13 @@ const MyTravelPlansTable: React.FC<MyTravelPlansTableProps> = ({
                     <Button
                       variant="outline"
                       size="sm"
+                      onClick={() => handleApprovedRequestsClick(plan)}
+                    >
+                      <CheckCircle className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={() => handleEdit(plan.id)}
                     >
                       <Edit className="h-4 w-4" />
@@ -251,6 +274,14 @@ const MyTravelPlansTable: React.FC<MyTravelPlansTableProps> = ({
         }}
         travelPlanId={editingPlan || undefined}
         onSuccess={handleEditSuccess}
+      />
+
+      {/* Approved Requests Modal */}
+      <ApprovedRequestsModal
+        isOpen={isApprovedRequestsModalOpen}
+        onClose={handleApprovedRequestsClose}
+        travelPlanId={selectedPlanForApprovedRequests?.id || ""}
+        travelPlanTitle={selectedPlanForApprovedRequests?.title || ""}
       />
     </>
   );
