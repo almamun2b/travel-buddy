@@ -47,16 +47,16 @@ const data = {
         },
         {
           title: "My Travel Plans",
-          url: "/my-travel-plan",
+          url: "/travel-plans/my-travel-plan",
         },
         {
           title: "Get my travel requests",
-          url: "/my-travel-requests",
+          url: "/travel-plans/my-travel-requests",
         },
         {
           title: "Get pending requests",
-          url: "/pending-requests",
-        }
+          url: "/travel-plans/pending-requests",
+        },
       ],
     },
     {
@@ -67,11 +67,11 @@ const data = {
       items: [
         {
           title: "My reviews",
-          url: "/my-reviews",
+          url: "/reviews/my-reviews",
         },
         {
           title: "Given Reviews",
-          url: "/given-reviews",
+          url: "/reviews/given-reviews",
         },
       ],
     },

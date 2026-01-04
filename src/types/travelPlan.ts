@@ -1,5 +1,10 @@
 export type TravelType = "SOLO" | "GROUP" | "FAMILY" | "COUPLE";
-export type TravelStatus = "OPEN" | "CLOSED" | "FULL";
+export type TravelStatus =
+  | "OPEN"
+  | "CLOSED"
+  | "FULL"
+  | "COMPLETED"
+  | "CANCELLED";
 
 export interface Creator {
   id: string;
@@ -25,6 +30,9 @@ export interface TravelPlan {
   createdAt: string;
   updatedAt: string;
   creator: Creator;
+  _count: {
+    travelRequests: number;
+  };
 }
 
 export interface TravelPlanSearchParams {
@@ -92,7 +100,7 @@ export interface TravelPlanDetails {
 export interface TravelPlanDetailsResponse {
   success: boolean;
   message: string;
-  data: TravelPlan;
+  data: TravelPlanDetails;
 }
 
 export type Params = Record<string, string | number | boolean>;

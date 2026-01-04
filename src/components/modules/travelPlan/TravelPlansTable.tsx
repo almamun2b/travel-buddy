@@ -31,6 +31,9 @@ import {
 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import DeleteTravelPlanModal from "./DeleteTravelPlanModal";
+import UpdateTravelPlanStatusModal from "./UpdateTravelPlanStatusModal";
+import ViewTravelPlanModal from "./ViewTravelPlanModal";
 
 export type TravelPlan = {
   id: string;
@@ -406,6 +409,7 @@ export default function TravelPlansTable({
                       {getSortIcon("createdAt")}
                     </Button>
                   </TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -494,6 +498,23 @@ export default function TravelPlansTable({
                     </TableCell>
                     <TableCell>
                       {format(new Date(plan.createdAt), "MMM dd, yyyy")}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-end gap-2">
+                        <ViewTravelPlanModal travelPlanId={plan.id} />
+                        <UpdateTravelPlanStatusModal
+                          travelPlanId={plan.id}
+                          onSuccess={() => {
+                            // The revalidateTag in the service will handle data refresh
+                          }}
+                        />
+                        <DeleteTravelPlanModal
+                          travelPlanId={plan.id}
+                          onSuccess={() => {
+                            // The revalidateTag in the service will handle data refresh
+                          }}
+                        />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

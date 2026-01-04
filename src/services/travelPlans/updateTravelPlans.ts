@@ -25,18 +25,16 @@ export const updateTravelPlans = async ({
 }): Promise<any> => {
   try {
     const formData = new FormData();
-    
+
     if (images && images.length > 0) {
       images.forEach((image) => {
         formData.append("images", image);
       });
     }
-    
+
     formData.append("data", JSON.stringify(data));
 
-    const result = await $fetch.patch<any>(`/travel-plans/${id}`, {
-      body: formData,
-    });
+    const result = await $fetch.patch<any>(`/travel-plans/${id}`, formData);
 
     return result;
   } catch (error: any) {

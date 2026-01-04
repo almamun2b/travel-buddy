@@ -23,16 +23,14 @@ export const createTravelPlans = async ({
 }): Promise<any> => {
   try {
     const formData = new FormData();
-    
+
     images.forEach((image, index) => {
       formData.append(`images`, image);
     });
-    
+
     formData.append("data", JSON.stringify(data));
 
-    const result = await $fetch.post<any>("/travel-plans", {
-      body: formData,
-    });
+    const result = await $fetch.post<any>("/travel-plans", formData);
 
     return result;
   } catch (error: any) {
