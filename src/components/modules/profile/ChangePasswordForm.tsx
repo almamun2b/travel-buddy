@@ -52,7 +52,7 @@ export function ChangePasswordForm() {
     mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
-      oldPassword: "", // Changed from currentPassword
+      oldPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
@@ -62,12 +62,10 @@ export function ChangePasswordForm() {
     try {
       setIsSubmitting(true);
 
-      // Create payload matching API expectation
       const payload = {
-        oldPassword: values.oldPassword, // Changed from currentPassword
+        oldPassword: values.oldPassword,
         newPassword: values.newPassword,
       };
-      console.log(payload, "payload");
       const result = await changePassword(payload);
 
       if (result.success) {

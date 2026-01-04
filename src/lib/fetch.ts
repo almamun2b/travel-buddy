@@ -23,6 +23,16 @@ type FetchHooks = {
   onError?: <P>(error: unknown, ctx: RequestContext<P>) => void | Promise<void>;
 };
 
+function isFormData(body: unknown): body is FormData {
+  return typeof FormData !== "undefined" && body instanceof FormData;
+}
+
+function buildRequestBody(body: unknown): BodyInit | undefined {
+  if (body === undefined || body === null) return undefined;
+  if (isFormData(body)) return body;
+  return JSON.stringify(body);
+}
+
 function toAbsoluteUrl(url: string) {
   if (typeof window !== "undefined") return url;
   if (!url.startsWith("/")) return url;
@@ -151,6 +161,12 @@ async function request<T, P = Record<string, string | number | boolean>>(
     ...(serverCookieHeader ? { Cookie: serverCookieHeader } : {}),
   };
 
+  const finalHeaders = new Headers(mergedHeaders);
+  if (isFormData(restOptions.body)) {
+    finalHeaders.delete("Content-Type");
+    finalHeaders.delete("content-type");
+  }
+
   const reqCtx: RequestContext<P> = {
     endpoint,
     url,
@@ -163,7 +179,7 @@ async function request<T, P = Record<string, string | number | boolean>>(
     const response = await fetch(url, {
       ...restOptions,
       credentials: "include", // Include cookies for auth
-      headers: mergedHeaders,
+      headers: finalHeaders,
     });
 
     // axios-like: if unauthorized, attempt refresh once then retry
@@ -212,10 +228,16 @@ async function request<T, P = Record<string, string | number | boolean>>(
               : {}),
           };
 
+          const updatedFinalHeaders = new Headers(updatedMergedHeaders);
+          if (isFormData(restOptions.body)) {
+            updatedFinalHeaders.delete("Content-Type");
+            updatedFinalHeaders.delete("content-type");
+          }
+
           const retryRes = await fetch(url, {
             ...restOptions,
             credentials: "include",
-            headers: updatedMergedHeaders,
+            headers: updatedFinalHeaders,
           });
           await hooks.onResponse?.({
             endpoint,
@@ -271,7 +293,7 @@ export async function post<T, P = Record<string, string | number | boolean>>(
   return request<T, P>(endpoint, {
     ...options,
     method: "POST",
-    body: body ? JSON.stringify(body) : undefined,
+    body: buildRequestBody(body),
   } as FetchOptions<P>);
 }
 
@@ -283,7 +305,7 @@ export async function put<T, P = Record<string, string | number | boolean>>(
   return request<T, P>(endpoint, {
     ...options,
     method: "PUT",
-    body: body ? JSON.stringify(body) : undefined,
+    body: buildRequestBody(body),
   } as FetchOptions<P>);
 }
 
@@ -295,17 +317,19 @@ export async function patch<T, P = Record<string, string | number | boolean>>(
   return request<T, P>(endpoint, {
     ...options,
     method: "PATCH",
-    body: body ? JSON.stringify(body) : undefined,
+    body: buildRequestBody(body),
   } as FetchOptions<P>);
 }
 
 export async function del<T, P = Record<string, string | number | boolean>>(
   endpoint: string,
+  body?: unknown,
   options?: FetchOptions<P>
 ): Promise<T | null> {
   return request<T, P>(endpoint, {
     ...options,
     method: "DELETE",
+    body: buildRequestBody(body),
   } as FetchOptions<P>);
 }
 

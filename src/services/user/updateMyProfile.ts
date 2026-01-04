@@ -2,6 +2,7 @@
 "use server";
 
 import { $fetch } from "@/lib/fetch";
+import { revalidateTag } from "next/cache";
 
 type User = {
   email: string;
@@ -11,6 +12,8 @@ type User = {
   travelInterests?: string;
   bio?: string;
   gender?: "MALE" | "FEMALE";
+  dateOfBirth?: string;
+  visitedCountries?: string[];
 };
 
 export const updateMyProfile = async ({
@@ -18,7 +21,7 @@ export const updateMyProfile = async ({
   data,
 }: {
   file: File | null;
-  data: User;
+  data: Partial<User>;
 }): Promise<any> => {
   try {
     const formData = new FormData();
@@ -35,9 +38,11 @@ export const updateMyProfile = async ({
       }
     });
 
-    const result = await $fetch.patch<any>("/user/profile/update", {
-      body: formData,
-    });
+    const result = await $fetch.patch<any>("/user/profile/update", formData);
+
+    if (result.success) {
+      revalidateTag("user", "");
+    }
 
     return result;
   } catch (error: any) {
