@@ -2,17 +2,24 @@
 "use server";
 
 import { $fetch } from "@/lib/fetch";
+import { revalidateTag } from "next/cache";
 
-interface TravelPlan {
+interface UpdateTravelPlanData {
   title: string;
   description: string;
   destination: string;
-  startDate: string; // or Date if parsed
-  endDate: string; // or Date
+  startDate: string;
+  endDate: string;
   budget?: number;
   travelType: string;
   maxMembers?: number;
   activities: string[];
+}
+
+interface UpdateTravelPlanResponse {
+  success: boolean;
+  message: string;
+  data?: any;
 }
 export const updateTravelPlans = async ({
   id,
@@ -21,24 +28,35 @@ export const updateTravelPlans = async ({
 }: {
   id: string;
   images?: File[];
-  data: TravelPlan;
-}): Promise<any> => {
+  data: UpdateTravelPlanData;
+}): Promise<UpdateTravelPlanResponse> => {
   try {
     const formData = new FormData();
-    
+
     if (images && images.length > 0) {
       images.forEach((image) => {
         formData.append("images", image);
       });
     }
-    
+
     formData.append("data", JSON.stringify(data));
 
-    const result = await $fetch.patch<any>(`/travel-plans/${id}`, {
-      body: formData,
-    });
+    const result = await $fetch.patch<UpdateTravelPlanResponse>(
+      `/travel-plans/${id}`,
+      formData
+    );
 
-    return result;
+    if (result?.success) {
+      revalidateTag("travel-plans", "");
+    }
+
+    return (
+      result ||
+      ({
+        success: false,
+        message: "Travel plan update failed. Please try again.",
+      } as UpdateTravelPlanResponse)
+    );
   } catch (error: any) {
     console.log("UPDATE_TRAVEL_PLANS_ERROR:", error);
 
@@ -48,6 +66,6 @@ export const updateTravelPlans = async ({
         process.env.NODE_ENV === "development"
           ? error.message
           : "Travel plan update failed. Please try again.",
-    };
+    } as UpdateTravelPlanResponse;
   }
 };

@@ -1,5 +1,5 @@
 import TravelPlansTable from "@/components/modules/travelPlan/TravelPlansTable";
-import { getAllTravelPlans } from "@/services/travelPlans/getAllTravelPlans";
+import { getAdminTravelPlans } from "@/services/travelPlans/travelPlans";
 
 interface TravelPlanPageProps {
   searchParams: Promise<{
@@ -56,7 +56,7 @@ export default async function TravelPlanPage({
   console.log(queryParams, "queryParams");
 
   // Fetch travel plans on server
-  const result = await getAllTravelPlans(queryParams);
+  const result = await getAdminTravelPlans(queryParams);
 
   const travelPlans = result?.success ? result.data || [] : [];
   const meta = result?.success
@@ -65,11 +65,13 @@ export default async function TravelPlanPage({
 
   return (
     <div className="container mx-auto py-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Travel Plans Admin</h1>
-        <p className="text-muted-foreground">
-          Manage all travel plans in the system
-        </p>
+      <div className="mb-6 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Travel Plans Admin</h1>
+          <p className="text-muted-foreground">
+            Manage all travel plans in the system
+          </p>
+        </div>
       </div>
 
       {!result?.success ? (

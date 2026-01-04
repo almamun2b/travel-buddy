@@ -18,6 +18,17 @@ export async function getTravelPlans(params: TravelPlanSearchParams = {}) {
 
   return response;
 }
+export async function getAdminTravelPlans(params: TravelPlanSearchParams = {}) {
+  const response = await $fetch.get<
+    TravelPlansResponse,
+    TravelPlanSearchParams
+  >(`/travel-plans/admin/all`, {
+    cache: "no-store",
+    params: params,
+  });
+
+  return response;
+}
 
 export async function getTravelPlansById({ id }: { id: string }) {
   const res = await $fetch.get<TravelPlanDetailsResponse | null>(

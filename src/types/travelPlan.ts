@@ -1,5 +1,10 @@
 export type TravelType = "SOLO" | "GROUP" | "FAMILY" | "COUPLE";
-export type TravelStatus = "OPEN" | "CLOSED" | "FULL";
+export type TravelStatus =
+  | "OPEN"
+  | "CLOSED"
+  | "FULL"
+  | "COMPLETED"
+  | "CANCELLED";
 
 export interface Creator {
   id: string;
@@ -25,6 +30,9 @@ export interface TravelPlan {
   createdAt: string;
   updatedAt: string;
   creator: Creator;
+  _count: {
+    travelRequests: number;
+  };
 }
 
 export interface TravelPlanSearchParams {
@@ -92,10 +100,86 @@ export interface TravelPlanDetails {
 export interface TravelPlanDetailsResponse {
   success: boolean;
   message: string;
-  data: TravelPlan;
+  data: TravelPlanDetails;
 }
 
 export type Params = Record<string, string | number | boolean>;
+
+export type TravelRequestStatus = "PENDING" | "ACCEPTED" | "REJECTED";
+
+export interface User {
+  id: string;
+  fullName: string;
+  avatar: string | null;
+  bio: string | null;
+  travelInterests: string[];
+  isVerified: boolean;
+}
+
+export interface TravelRequest {
+  id: string;
+  travelPlanId: string;
+  userId: string;
+  message: string;
+  status: TravelRequestStatus;
+  createdAt: string;
+  updatedAt: string;
+  travelPlan: TravelPlan;
+}
+
+export interface PendingRequest {
+  id: string;
+  travelPlanId: string;
+  userId: string;
+  message: string;
+  status: TravelRequestStatus;
+  createdAt: string;
+  updatedAt: string;
+  travelPlan: {
+    id: string;
+    title: string;
+    destination: string;
+  };
+  user: User;
+}
+
+export interface TravelRequestsResponse {
+  success: boolean;
+  message: string;
+  data: TravelRequest[];
+}
+
+export interface PendingRequestsResponse {
+  success: boolean;
+  message: string;
+  data: PendingRequest[];
+}
+
+export interface ApprovedRequest {
+  id: string;
+  travelPlanId: string;
+  message: string;
+  user: {
+    id: string;
+    fullName: string;
+    avatar: string | null;
+    isVerified: boolean;
+    travelInterests: string[];
+    bio: string | null;
+    email: string;
+    contactNumber: string | null;
+    gender: string | null;
+    dateOfBirth: string | null;
+    currentLocation: string | null;
+    visitedCountries: string[];
+  };
+}
+
+export interface ApprovedRequestsResponse {
+  success: boolean;
+  message: string;
+  data: ApprovedRequest[];
+}
 
 export interface TravelPlansParams extends Partial<Params> {
   page?: string;

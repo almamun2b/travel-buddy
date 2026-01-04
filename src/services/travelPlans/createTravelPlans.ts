@@ -2,39 +2,60 @@
 "use server";
 
 import { $fetch } from "@/lib/fetch";
+import { revalidateTag } from "next/cache";
 
-interface TravelPlan {
+interface CreateTravelPlanData {
   title: string;
   description: string;
   destination: string;
-  startDate: string; // or Date if parsed
-  endDate: string; // or Date
+  startDate: string;
+  endDate: string;
   budget?: number;
   travelType: string;
   maxMembers?: number;
   activities: string[];
+}
+
+interface CreateTravelPlanResponse {
+  success: boolean;
+  message: string;
+  data?: any;
 }
 export const createTravelPlans = async ({
   images,
   data,
 }: {
   images: File[];
-  data: TravelPlan;
-}): Promise<any> => {
+  data: CreateTravelPlanData;
+}): Promise<CreateTravelPlanResponse> => {
   try {
+    console.log(images, data, "images, data");
     const formData = new FormData();
-    
-    images.forEach((image, index) => {
+
+    images.forEach((image) => {
       formData.append(`images`, image);
     });
-    
+
     formData.append("data", JSON.stringify(data));
 
-    const result = await $fetch.post<any>("/travel-plans", {
-      body: formData,
-    });
+    const result = await $fetch.post<CreateTravelPlanResponse>(
+      "/travel-plans",
+      formData
+    );
 
-    return result;
+    console.log(result, "result");
+
+    if (result?.success) {
+      revalidateTag("travel-plans", "");
+    }
+
+    return (
+      result ||
+      ({
+        success: false,
+        message: "Travel plan creation failed. Please try again.",
+      } as CreateTravelPlanResponse)
+    );
   } catch (error: any) {
     console.log("CREATE_TRAVEL_PLANS_ERROR:", error);
 
@@ -44,6 +65,6 @@ export const createTravelPlans = async ({
         process.env.NODE_ENV === "development"
           ? error.message
           : "Travel plan creation failed. Please try again.",
-    };
+    } as CreateTravelPlanResponse;
   }
 };
