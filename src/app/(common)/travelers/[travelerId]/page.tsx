@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { getReviewById } from "@/services/review/getReviewById";
 import { getPublicProfile } from "@/services/user/exploreTravelers";
-import { User } from "lucide-react";
+import { BadgeCheck, Star, User } from "lucide-react";
 
 type Review = {
   id: string;
@@ -153,8 +153,15 @@ const TravelerDetailPage = async ({ params }: TravelerDetailPageProps) => {
               </span>
 
               <span className="flex items-center gap-1">
+                {/* Reviews icon */}
+                <BadgeCheck className="h-3.5 w-3.5" />
                 <strong>{traveler?._count?.reviewsReceived ?? 0}</strong>
                 <span className="text-muted-foreground">reviews</span>
+              </span>
+              <span className="flex items-center gap-1">
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                <strong>{traveler?.avgRating?.toFixed(1) ?? "N/A"}</strong>
+                <span>Average Rating</span>
               </span>
             </div>
           </div>

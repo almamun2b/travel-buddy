@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { Check, MapPin, User } from "lucide-react";
+import { Check, MapPin, Star, User } from "lucide-react";
 import Link from "next/link";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -30,6 +30,7 @@ type Traveler = {
     reviewsReceived?: number;
     travelPlans?: number;
   };
+  avgRating?: number;
 };
 
 export function TravelerCard({ traveler }: { traveler: Traveler }) {
@@ -44,6 +45,7 @@ export function TravelerCard({ traveler }: { traveler: Traveler }) {
     hasVerifiedBadge,
     createdAt,
     _count,
+    avgRating,
   } = traveler;
 
   const initials = fullName
@@ -133,6 +135,11 @@ export function TravelerCard({ traveler }: { traveler: Traveler }) {
               <span className="flex items-center gap-1">
                 <strong>{_count?.reviewsReceived ?? 0}</strong>
                 <span className="text-muted-foreground">reviews</span>
+              </span>
+
+              <span className="flex items-center gap-1">
+                <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                <strong>{avgRating?.toFixed(1) ?? "N/A"}</strong>
               </span>
             </div>
           </div>

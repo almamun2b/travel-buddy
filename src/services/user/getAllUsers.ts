@@ -18,9 +18,7 @@ interface GetAllUsersParams {
   currentLocation?: string;
 }
 
-export const getAllUsers = async (
-  params: GetAllUsersParams = {}
-): Promise<any> => {
+export const getAllUsers = async (params: GetAllUsersParams = {}) => {
   try {
     // Convert boolean parameters to strings "true"/"false" for API compatibility
     const processedParams: Record<string, any> = { ...params };
@@ -46,13 +44,6 @@ export const getAllUsers = async (
     return result;
   } catch (error: any) {
     console.log("GET_ALL_USERS_ERROR:", error);
-
-    return {
-      success: false,
-      message:
-        process.env.NODE_ENV === "development"
-          ? error.message
-          : "Failed to fetch users. Please try again.",
-    };
+    throw new Error(error?.message || "Failed to fetch users");
   }
 };

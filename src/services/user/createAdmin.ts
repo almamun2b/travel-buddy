@@ -1,48 +1,65 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { $fetch } from "@/lib/fetch";
-import { User } from "lucide-react";
 
-type User = {
+export interface CreateAdminData {
   email: string;
   fullName: string;
   contactNumber?: string;
-  currentLocation?: string;
-  travelInterests?: string;
-  bio?: string;
   password: string;
-};
+}
+
+export interface CreateAdminResponse {
+  success: boolean;
+  message: string;
+  data?: {
+    id: string;
+    email: string;
+    fullName: string;
+    role: string;
+    createdAt: string;
+  };
+  meta?: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}
+
 export const createAdmin = async ({
   file,
   data,
 }: {
-  file: File;
-  data: User;
-}): Promise<any> => {
+  file: File | null;
+  data: CreateAdminData;
+}) => {
   try {
     const formData = new FormData();
-    
+
     if (file) {
       formData.append("file", file);
     }
-    
+
     formData.append("data", JSON.stringify(data));
 
-    const result = await $fetch.post<any>("/user/create-admin", {
-      body: formData,
-    });
+    const result = await $fetch.post<CreateAdminResponse>(
+      "/user/create-admin",
+      formData
+    );
 
     return result;
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.log("CREATE_ADMIN_ERROR:", error);
+
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
 
     return {
       success: false,
       message:
         process.env.NODE_ENV === "development"
-          ? error.message
+          ? errorMessage
           : "Admin creation failed. Please try again.",
-    };
+    } as CreateAdminResponse;
   }
 };

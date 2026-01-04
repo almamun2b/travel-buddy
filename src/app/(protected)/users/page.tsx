@@ -6,6 +6,9 @@ import { Suspense } from "react";
 const UsersTable = dynamic(
   () => import("@/components/modules/user/UsersTable")
 );
+const CreateAdminModal = dynamic(
+  () => import("@/components/modules/user/CreateAdminModal")
+);
 
 export const userFilterableFields = [
   "role",
@@ -96,10 +99,13 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
 
   // Fetch users on server
   const result = await getAllUsers(queryParams);
+  if (!result) {
+    return <div>Failed to load users</div>;
+  }
 
-  const users = result?.success ? result.data || [] : [];
+  const users = result?.success && result?.data ? result?.data : [];
   const meta = result?.success
-    ? result.meta || { page: 1, limit: 14, total: 0 }
+    ? result?.meta
     : { page: 1, limit: 14, total: 0 };
 
   return (
@@ -111,7 +117,9 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
             View and manage all users in the system
           </p>
         </div>
-        <Button>Create Admin</Button>
+        <CreateAdminModal
+          trigger={<Button className="gap-2">Create Admin</Button>}
+        />
       </div>
 
       {!result?.success ? (

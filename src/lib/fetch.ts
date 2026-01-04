@@ -80,7 +80,7 @@ async function parseResponse<T>(
       console.warn(`[Fetch Error]: HTTP ${response.status} - ${endpoint}`);
       return null;
     }
-    return { success: true } as T;
+    return { success: true, message: "Data fetched successfully" } as T;
   }
 
   const data = await response.json();
