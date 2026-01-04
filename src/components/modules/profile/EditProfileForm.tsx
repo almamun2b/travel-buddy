@@ -21,6 +21,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 import { DynamicFormField } from "@/components/shared/DynamicFormField";
+import { StringListInput } from "@/components/shared/StringListInput";
 import { updateMyProfile } from "@/services/user/updateMyProfile";
 import { useRouter } from "next/navigation";
 import z from "zod";
@@ -34,6 +35,20 @@ const updateProfileSchema = z.object({
   bio: z.string().max(500).optional(),
   travelInterests: z.array(z.string()).optional(),
   visitedCountries: z.array(z.string()).optional(),
+  dateOfBirth: z
+    .string()
+    .optional()
+    .refine(
+      (date) => {
+        if (!date || date === "") return true;
+        // Accept YYYY-MM-DD format from date input
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(date)) return false;
+        const parsed = new Date(date);
+        return !isNaN(parsed.getTime());
+      },
+      { message: "Invalid date format. Please use YYYY-MM-DD format" }
+    ),
 });
 
 export type UpdateProfileFormData = z.infer<typeof updateProfileSchema>;
@@ -49,6 +64,7 @@ interface UpdateProfileFormProps {
     bio?: string;
     travelInterests?: string[];
     visitedCountries?: string[];
+    dateOfBirth?: string;
     role: string;
     status: string;
     hasVerifiedBadge: boolean;
@@ -77,6 +93,9 @@ export function UpdateProfileForm({ user }: UpdateProfileFormProps) {
       bio: user.bio ?? "",
       travelInterests: user.travelInterests ?? [],
       visitedCountries: user.visitedCountries ?? [],
+      dateOfBirth: user.dateOfBirth
+        ? new Date(user.dateOfBirth).toISOString().split("T")[0]
+        : "",
     },
   });
 
@@ -101,9 +120,17 @@ export function UpdateProfileForm({ user }: UpdateProfileFormProps) {
   };
 
   const onSubmit = async (data: UpdateProfileFormData) => {
+    // Convert dateOfBirth to ISO-8601 format if present
+    const processedData = {
+      ...data,
+      dateOfBirth: data.dateOfBirth
+        ? new Date(data.dateOfBirth).toISOString()
+        : undefined,
+    };
+    console.log(processedData, "processedData");
     const res = await updateMyProfile({
       file: avatarFile,
-      data: data as any,
+      data: processedData as any,
     });
 
     if (res.success) {
@@ -151,7 +178,7 @@ export function UpdateProfileForm({ user }: UpdateProfileFormProps) {
           <DynamicFormField name="gender" label="Gender">
             {(field) => (
               <Select value={field.value} onValueChange={field.onChange}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select gender" />
                 </SelectTrigger>
                 <SelectContent>
@@ -169,6 +196,10 @@ export function UpdateProfileForm({ user }: UpdateProfileFormProps) {
           <DynamicFormField name="currentLocation" label="Current Location">
             {(field) => <Input {...field} />}
           </DynamicFormField>
+
+          <DynamicFormField name="dateOfBirth" label="Date of Birth">
+            {(field) => <Input {...field} type="date" />}
+          </DynamicFormField>
         </div>
 
         {/* Bio */}
@@ -185,34 +216,20 @@ export function UpdateProfileForm({ user }: UpdateProfileFormProps) {
         {/* Interests */}
         <DynamicFormField name="travelInterests" label="Travel Interests">
           {(field) => (
-            <Input
-              placeholder="Sea, Forest, Hills"
-              value={field.value?.join(", ") ?? ""}
-              onChange={(e) =>
-                field.onChange(
-                  e.target.value
-                    .split(",")
-                    .map((v) => v.trim())
-                    .filter(Boolean)
-                )
-              }
+            <StringListInput
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="e.g. Sea, Forest, Hills"
             />
           )}
         </DynamicFormField>
 
         <DynamicFormField name="visitedCountries" label="Visited Countries">
           {(field) => (
-            <Input
-              placeholder="Bangladesh, Nepal"
-              value={field.value?.join(", ") ?? ""}
-              onChange={(e) =>
-                field.onChange(
-                  e.target.value
-                    .split(",")
-                    .map((v) => v.trim())
-                    .filter(Boolean)
-                )
-              }
+            <StringListInput
+              value={field.value}
+              onChange={field.onChange}
+              placeholder="e.g. Bangladesh, Nepal"
             />
           )}
         </DynamicFormField>

@@ -54,6 +54,7 @@ export interface PublicUserProfile {
     reviewsReceived: number;
     travelPlans: number;
   };
+  avgRating: number;
 }
 
 export interface PublicUserProfileResponse {
@@ -94,4 +95,81 @@ export interface UserProfileResponse {
   success: boolean;
   message: string;
   data: UserProfile;
+}
+
+// Admin User Management Types
+export type UserStatus = "ACTIVE" | "INACTIVE" | "BLOCKED" | "DELETED";
+
+export interface AdminUser {
+  id: string;
+  email: string;
+  role: Role;
+  fullName: string;
+  avatar: string | null;
+  contactNumber: string | null;
+  bio: string | null;
+  dateOfBirth: string | null;
+  gender: string | null;
+  currentLocation: string | null;
+  travelInterests: string[];
+  visitedCountries: string[];
+  isVerified: boolean;
+  hasVerifiedBadge: boolean;
+  status: UserStatus;
+  isDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  _count: {
+    reviewsReceived: number;
+    travelPlans: number;
+  };
+  subscription: {
+    id: string;
+    plan: string;
+    status: string;
+    startDate: string;
+    endDate: string;
+  } | null;
+  avgRating: number;
+}
+
+export interface AdminUserResponse {
+  success: boolean;
+  message: string;
+  data?: AdminUser;
+}
+
+export interface UpdateUserStatusPayload {
+  status?: UserStatus;
+  isVerified?: boolean;
+  hasVerifiedBadge?: boolean;
+}
+
+export interface UpdateUserStatusResponse {
+  success: boolean;
+  message: string;
+  data?: AdminUser;
+}
+
+export interface DeleteUserResponse {
+  success: boolean;
+  message: string;
+  data?: AdminUser;
+}
+
+export interface EditUserPayload {
+  fullName?: string;
+  contactNumber?: string;
+  bio?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  currentLocation?: string;
+  travelInterests?: string[];
+  visitedCountries?: string[];
+}
+
+export interface EditUserResponse {
+  success: boolean;
+  message: string;
+  data?: AdminUser;
 }

@@ -167,6 +167,15 @@ export function ProfileContent({ user }: ProfileContentProps) {
                     {user.bio || "No bio provided"}
                   </p>
                 </div>
+                {/* Bio */}
+                <div className="sm:col-span-2 space-y-1">
+                  <LabelWithIcon icon={UserIcon} label="DateOfBirth" />
+                  <p className="text-muted-foreground">
+                    {user?.dateOfBirth
+                      ? formatDate(user.dateOfBirth)
+                      : "No provided"}
+                  </p>
+                </div>
 
                 {/* Travel Interests */}
                 <TagList

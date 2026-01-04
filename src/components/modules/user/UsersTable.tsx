@@ -1,5 +1,8 @@
 "use client";
 
+import DeleteUserModal from "@/components/modules/user/DeleteUserModal";
+import EditUserModal from "@/components/modules/user/EditUserModal";
+import ViewUserModal from "@/components/modules/user/ViewUserModal";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -379,6 +382,7 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                       {getSortIcon("createdAt")}
                     </Button>
                   </TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -451,6 +455,23 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                     </TableCell>
                     <TableCell>
                       {format(new Date(user.createdAt), "MMM dd, yyyy")}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-end gap-2">
+                        <ViewUserModal userId={user.id} />
+                        <EditUserModal
+                          userId={user.id}
+                          onSuccess={() => {
+                            // The revalidateTag in the service will handle data refresh
+                          }}
+                        />
+                        <DeleteUserModal
+                          userId={user.id}
+                          onSuccess={() => {
+                            // The revalidateTag in the service will handle data refresh
+                          }}
+                        />
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}

@@ -3,11 +3,10 @@
 
 import { $fetch } from "@/lib/fetch";
 
-export const changePassword = async (data: any): Promise<any> => {
+export const changePassword = async (payload: any): Promise<any> => {
   try {
     const result = await $fetch.post<any>("/auth/change-password", {
-      currentPassword: data.currentPassword,
-      newPassword: data.newPassword,
+      ...payload,
     });
     return result;
   } catch (error: any) {
