@@ -405,12 +405,6 @@ export default function LandingPageContent() {
                 Where our community is traveling next
               </p>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/explore">
-                View All
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
           </div>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -453,21 +447,13 @@ export default function LandingPageContent() {
                       asChild
                       className="gap-2 hover:bg-primary/10"
                     >
-                      <Link
-                        href={`/explore?destination=${encodeURIComponent(
-                          destination.name
-                        )}`}
-                      >
+                      <Link href={`/travel-plan`}>
                         <Search className="h-4 w-4" />
                         Find Buddies
                       </Link>
                     </Button>
                     <Button size="sm" asChild className="gap-2">
-                      <Link
-                        href={`/travel-plans/add?destination=${encodeURIComponent(
-                          destination.name
-                        )}`}
-                      >
+                      <Link href={`/travel-plans/my-travel-plan`}>
                         <Calendar className="h-4 w-4" />
                         Create Plan
                       </Link>
@@ -497,11 +483,7 @@ export default function LandingPageContent() {
               <Card
                 key={category.id}
                 className="group cursor-pointer border-0 bg-card shadow-sm transition-all hover:shadow-lg hover:border-primary/50"
-                onClick={() =>
-                  router.push(
-                    `/explore?interest=${category.name.toLowerCase()}`
-                  )
-                }
+                onClick={() => router.push(`/travel-plan`)}
               >
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
@@ -537,12 +519,6 @@ export default function LandingPageContent() {
                 Connect with our most trusted community members
               </p>
             </div>
-            <Button variant="outline" asChild>
-              <Link href="/explore/travelers">
-                View All
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
           </div>
 
           <div className="mt-8 grid gap-6 md:grid-cols-3">
@@ -593,7 +569,7 @@ export default function LandingPageContent() {
                         </p>
                       </div>
 
-                      <div className="mt-4 flex gap-2">
+                      <div className="mt-4  gap-2 hidden">
                         <Button
                           size="sm"
                           variant="outline"
@@ -703,7 +679,7 @@ export default function LandingPageContent() {
                     </Link>
                   </Button>
                   <Button size="lg" variant="outline" asChild>
-                    <Link href="/explore">Browse Travel Plans</Link>
+                    <Link href="/travel-plan">Browse Travel Plans</Link>
                   </Button>
                 </div>
                 <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">

@@ -8,11 +8,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu, LayoutDashboard } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { LayoutDashboard, Menu, User, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "./logo";
-import { NavMenu } from "./nav-menu";
 
 interface NavigationSheetProps {
   userInfo?: {
@@ -25,51 +26,104 @@ interface NavigationSheetProps {
 
 export const NavigationSheet = ({ userInfo }: NavigationSheetProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
   const isLoggedIn = userInfo?.data?.email;
-  
+
+  const navMenus = [
+    { label: "Home", href: "/", icon: null },
+    { label: "About", href: "/about", icon: null },
+    { label: "Matching Plan", href: "/matching-plan", icon: null },
+    { label: "Pricing", href: "/pricing", icon: null },
+    { label: "Travel Plans", href: "/travel-plan", icon: null },
+    { label: "Travelers", href: "/travelers", icon: null },
+  ];
+
+  // Function to check if a route is active
+  const isActiveRoute = (href: string): boolean => {
+    if (href === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(href);
+  };
+
+  const handleLinkClick = () => {
+    setIsOpen(false);
+  };
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button variant="outline" size="icon" className="rounded-sm">
-          <Menu />
+          <Menu className="h-4 w-4" />
         </Button>
       </SheetTrigger>
-      <SheetTitle className="sr-only">Menu</SheetTitle>
+      <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
       <SheetDescription className="sr-only">
-        This is the content of the sheet.
+        Mobile navigation menu with links to all pages
       </SheetDescription>
-      <SheetContent
-        side="left"
-        className="flex flex-col justify-start p-4 pt-2"
-      >
-        <Logo />
-        <NavMenu
-          orientation="vertical"
-          className="flex flex-col justify-start items-start mt-6"
-          onClickMenu={() => setIsOpen(false)}
-        />
-        
-        {/* Mobile Auth Buttons */}
-        <div className="flex flex-col gap-2 mt-auto pt-6 border-t">
+      <SheetContent side="left" className="w-80 sm:w-96 p-0">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b">
+          <Logo />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setIsOpen(false)}
+            className="rounded-sm"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+
+        {/* Navigation Links */}
+        <div className="flex-1 overflow-y-auto">
+          <nav className="p-4 space-y-2">
+            {navMenus.map((menu) => {
+              const isActive = isActiveRoute(menu.href);
+              return (
+                <Link
+                  key={menu.label}
+                  href={menu.href}
+                  onClick={handleLinkClick}
+                  className={cn(
+                    "flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors",
+                    "hover:bg-accent hover:text-accent-foreground",
+                    isActive && "bg-accent text-accent-foreground font-semibold"
+                  )}
+                >
+                  {menu.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Footer with Auth */}
+        <div className="p-6 border-t bg-muted/30">
           {isLoggedIn ? (
-            <Button
-              asChild
-              className="w-full"
-              onClick={() => setIsOpen(false)}
-            >
-              <Link href="/dashboard">
+            <Button asChild className="w-full" onClick={handleLinkClick}>
+              <Link href="/dashboard" className="flex items-center">
                 <LayoutDashboard className="mr-2 h-4 w-4" />
                 Dashboard
               </Link>
             </Button>
           ) : (
-            <Button
-              asChild
-              className="w-full"
-              onClick={() => setIsOpen(false)}
-            >
-              <Link href="/login">Login</Link>
-            </Button>
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                asChild
+                className="w-full"
+                onClick={handleLinkClick}
+              >
+                <Link href="/login" className="flex items-center">
+                  <User className="mr-2 h-4 w-4" />
+                  Login
+                </Link>
+              </Button>
+              <Button asChild className="w-full" onClick={handleLinkClick}>
+                <Link href="/register">Sign Up</Link>
+              </Button>
+            </div>
           )}
         </div>
       </SheetContent>
