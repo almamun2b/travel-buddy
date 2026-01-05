@@ -73,6 +73,10 @@ const data = {
           title: "Given Reviews",
           url: "/reviews/given-reviews",
         },
+        {
+          title: "To Review Plans",
+          url: "/reviews/to-review-plans",
+        },
       ],
     },
   ],

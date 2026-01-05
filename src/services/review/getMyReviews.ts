@@ -2,17 +2,14 @@
 "use server";
 
 import { $fetch } from "@/lib/fetch";
-
-interface GetAllTourPlans {
-  limit?: number;
-  page?: number;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-}
+import {
+  type GetMyReviewsParams,
+  type GetMyReviewsResponse,
+} from "@/types/review";
 
 export const getMyReviews = async (
-  params: GetAllTourPlans = {}
-): Promise<any> => {
+  params: GetMyReviewsParams = {}
+): Promise<GetMyReviewsResponse> => {
   try {
     const {
       limit = 20,
@@ -21,16 +18,30 @@ export const getMyReviews = async (
       sortOrder = "desc",
     } = params;
 
-    const result = await $fetch.get<any, GetAllTourPlans>("/reviews/my", {
-      params: {
-        limit,
-        page,
-        sortBy,
-        sortOrder,
-      },
-    });
+    const result = await $fetch.get<GetMyReviewsResponse, GetMyReviewsParams>(
+      "/reviews/my",
+      {
+        params: {
+          limit,
+          page,
+          sortBy,
+          sortOrder,
+        },
+      }
+    );
 
-    return result;
+    return (
+      result || {
+        success: false,
+        message: "No response received",
+        meta: {
+          page: 1,
+          limit: 20,
+          total: 0,
+        },
+        data: [],
+      }
+    );
   } catch (error: any) {
     console.log("GET_MY_REVIEWS_ERROR:", error);
 
@@ -40,6 +51,12 @@ export const getMyReviews = async (
         process.env.NODE_ENV === "development"
           ? error.message
           : "Failed to fetch reviews. Please try again.",
+      meta: {
+        page: 1,
+        limit: 20,
+        total: 0,
+      },
+      data: [],
     };
   }
 };
