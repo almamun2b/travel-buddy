@@ -1,5 +1,7 @@
 import TravelPlansTable from "@/components/modules/travelPlan/TravelPlansTable";
+import { me } from "@/services/auth/me";
 import { getAdminTravelPlans } from "@/services/travelPlans/travelPlans";
+import { redirect } from "next/navigation";
 
 interface TravelPlanPageProps {
   searchParams: Promise<{
@@ -21,6 +23,12 @@ export default async function TravelPlanPage({
 }: TravelPlanPageProps) {
   const params = await searchParams;
   const currentPage = Number(params.page) || 1;
+
+  const user = await me();
+
+  if (user?.success && user.data && user.data.role !== "ADMIN") {
+    redirect("/");
+  }
 
   // Build query parameters
   const queryParams: {
