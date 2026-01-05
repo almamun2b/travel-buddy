@@ -3,7 +3,14 @@ import UserDashboard from "@/components/modules/dashboard/UserDashboard";
 import { me } from "@/services/auth/me";
 import { getDashboardStats } from "@/services/user/dashboardStats";
 import type { AdminData, UserData } from "@/types/dashboard";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Dashboard - Travel Buddy",
+  description:
+    "Access your Travel Buddy dashboard to manage your travel plans, profile, and connect with fellow travelers.",
+};
 
 export default async function DashboardPage() {
   const user = await me();

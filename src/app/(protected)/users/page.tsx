@@ -1,9 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { me } from "@/services/auth/me";
 import { getAllUsers } from "@/services/user/getAllUsers";
+import { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Users Management - Travel Buddy",
+  description:
+    "Admin dashboard for managing all Travel Buddy users. Monitor user activity, manage roles, and maintain platform safety.",
+};
 
 const UsersTable = dynamic(
   () => import("@/components/modules/user/UsersTable")

@@ -11,8 +11,9 @@ interface MatchTravelersPageProps {
 }
 
 export const metadata: Metadata = {
-  title: "Explore Travel Plan",
-  description: "Explore Travel Plan",
+  title: "Matching Travel Plans - Travel Buddy",
+  description:
+    "Find personalized travel plan matches based on your interests and preferences. Connect with travelers who share your travel style.",
 };
 
 const MatchTravelersPage = async ({

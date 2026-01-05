@@ -15,6 +15,13 @@ import { getReviewsGivenByMe } from "@/services/review/getReviewsGivenByMe";
 import { type Review } from "@/types/review";
 import { format } from "date-fns";
 import { Calendar, MapPin, Star } from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Given Reviews - Travel Buddy",
+  description:
+    "View reviews you've written for other travelers on Travel Buddy. Manage your feedback and help build trust in the travel community.",
+};
 
 interface PageProps {
   searchParams: Promise<{

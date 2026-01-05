@@ -1,6 +1,13 @@
 import { ChangePasswordForm } from "@/components/modules/profile/ChangePasswordForm";
 import { me } from "@/services/auth/me";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Change Password - Travel Buddy",
+  description:
+    "Securely update your Travel Buddy account password. Keep your travel profile protected with a strong password.",
+};
 
 // Dynamic SSR - authenticated page
 

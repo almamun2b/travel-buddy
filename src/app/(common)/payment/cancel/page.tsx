@@ -9,7 +9,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ArrowLeft, Home, XCircle } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Payment Cancelled - Travel Buddy",
+  description:
+    "Your Travel Buddy payment was cancelled. No charges were made. Return to pricing or homepage to continue your travel journey.",
+};
 
 const PaymentCancelPage = () => {
   return (

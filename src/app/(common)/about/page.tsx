@@ -20,7 +20,14 @@ import {
   Target,
   Users,
 } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "About Us - Travel Buddy",
+  description:
+    "Learn about Travel Buddy's mission to connect travelers worldwide. Meet our team and discover how we're making travel better together.",
+};
 
 const teamMembers = [
   {
