@@ -9,6 +9,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { me } from "@/services/auth/me"; // moved up
+import { UserProfileResponse } from "@/types/user";
 import {
   GalleryVerticalEnd,
   Lock,
@@ -18,9 +20,51 @@ import {
   User,
 } from "lucide-react";
 import * as React from "react";
+import { useEffect, useState } from "react"; // moved up
 
-const data = {
-  navMain: [
+const settings = [
+  {
+    name: "Profile",
+    url: "/profile",
+    icon: User,
+  },
+  {
+    name: "Update Profile",
+    url: "/profile/edit",
+    icon: Upload,
+  },
+  {
+    name: "Update Password",
+    url: "/change-password",
+    icon: Lock,
+  },
+];
+
+const getNavData = (userRole: string) => {
+  const baseNav = [
+    {
+      title: "Reviews",
+      url: "#",
+      icon: Type,
+      isActive: true,
+      items: [
+        {
+          title: "My reviews",
+          url: "/reviews/my-reviews",
+        },
+        {
+          title: "Given Reviews",
+          url: "/reviews/given-reviews",
+        },
+        {
+          title: "To Review Plans",
+          url: "/reviews/to-review-plans",
+        },
+      ],
+    },
+  ];
+
+  const adminNav = [
     {
       title: "Users",
       url: "#",
@@ -57,47 +101,56 @@ const data = {
         },
       ],
     },
+  ];
+
+  const userNav = [
     {
-      title: "Reviews",
+      title: "Travel Plans",
       url: "#",
       icon: Type,
       isActive: true,
       items: [
         {
-          title: "My reviews",
-          url: "/reviews/my-reviews",
+          title: "My Travel Plans",
+          url: "/travel-plans/my-travel-plan",
         },
         {
-          title: "Given Reviews",
-          url: "/reviews/given-reviews",
+          title: "Get my travel requests",
+          url: "/travel-plans/my-travel-requests",
         },
         {
-          title: "To Review Plans",
-          url: "/reviews/to-review-plans",
+          title: "Get pending requests",
+          url: "/travel-plans/pending-requests",
         },
       ],
     },
-  ],
-  settings: [
-    {
-      name: "Profile",
-      url: "/profile",
-      icon: User,
-    },
-    {
-      name: "Update Profile",
-      url: "/profile/edit",
-      icon: Upload,
-    },
-    {
-      name: "Update Password",
-      url: "/change-password",
-      icon: Lock,
-    },
-  ],
+  ];
+
+  if (userRole === "ADMIN") {
+    return [...adminNav, ...baseNav];
+  } else if (userRole === "USER") {
+    return [...userNav, ...baseNav];
+  }
+  return baseNav;
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const [userInfo, setUserInfo] = useState<UserProfileResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      setLoading(true);
+      const res = await me();
+      setUserInfo(res);
+      setLoading(false);
+    };
+
+    fetchUser();
+  }, []);
+
+  const navMain = loading ? [] : getNavData(userInfo?.data?.role || "");
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="h-16 mb-2 border-b flex flex-row">
@@ -111,8 +164,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </div>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavSettings settings={data.settings} />
+        <NavMain items={navMain} />
+        <NavSettings settings={settings} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

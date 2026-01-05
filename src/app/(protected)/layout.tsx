@@ -19,6 +19,7 @@ export default async function DashboardLayout({
   if (!user?.success || !user.data) {
     redirect("/login");
   }
+
   return (
     <SidebarProvider>
       <AppSidebar />
