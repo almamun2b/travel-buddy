@@ -2,19 +2,26 @@
 "use server";
 
 import { $fetch } from "@/lib/fetch";
+import {
+  type CreateReviewPayload,
+  type CreateReviewResponse,
+} from "@/types/review";
+import { revalidateTag } from "next/cache";
 
-interface ICreateReviewPayload {
-  travelPlanId: string;
-  revieweeId: string;
-  rating: number;
-  comment: string;
-}
 export const createReview = async (
-  payload: ICreateReviewPayload
-): Promise<any> => {
+  payload: CreateReviewPayload
+): Promise<CreateReviewResponse> => {
   try {
-    const result = await $fetch.post<any>("/reviews", payload);
-    return result;
+    const result = await $fetch.post<CreateReviewResponse>("/reviews", payload);
+    if (result?.success) {
+      revalidateTag("to-review-plans", "");
+    }
+    return (
+      result || {
+        success: false,
+        message: "No response received",
+      }
+    );
   } catch (error: any) {
     console.log("CREATE_REVIEW_ERROR:", error);
 
