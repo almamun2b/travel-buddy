@@ -1,25 +1,27 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
-const PROTECTED_PATHS = ["/reviews", "/users", "/travel-plans"];
+const PROTECTED_PREFIXES = ["/user", "/admin", "/protected"];
 
 export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+  const { pathname, search } = req.nextUrl;
 
-  const isProtected = PROTECTED_PATHS.some((path) => pathname.startsWith(path));
-
+  const isProtected = PROTECTED_PREFIXES.some((p) => pathname.startsWith(p));
   if (!isProtected) return NextResponse.next();
 
   const accessToken = req.cookies.get("accessToken")?.value;
+  const refreshToken = req.cookies.get("refreshToken")?.value;
 
-  if (!accessToken) {
-    const loginUrl = new URL("/login", req.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
+  if (!accessToken && !refreshToken) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/login";
+    url.searchParams.set("next", `${pathname}${search}`);
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/reviews/:path*", "/users/:path*", "/travel-plans/:path*"],
+  matcher: ["/user/:path*", "/admin/:path*", "/protected/:path*"],
 };

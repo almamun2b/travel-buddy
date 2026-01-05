@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { me } from "@/services/auth/me";
 import { getAllUsers } from "@/services/user/getAllUsers";
 import dynamic from "next/dynamic";
-import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 const UsersTable = dynamic(
@@ -38,12 +36,6 @@ interface UsersPageProps {
 export default async function UsersPage({ searchParams }: UsersPageProps) {
   const params = await searchParams;
   const currentPage = Number(params.page) || 1;
-
-  const user = await me();
-
-  if (user?.success && user.data && user.data.role !== "ADMIN") {
-    redirect("/");
-  }
 
   // Build query parameters
   const queryParams: {
