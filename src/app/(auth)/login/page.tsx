@@ -1,8 +1,15 @@
 import loginImage from "@/assets/images/login.jpg";
 import { LoginForm } from "@/components/modules/auth/LoginForm";
 import { Logo } from "@/components/shared/navbar/logo";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Login - Travel Buddy",
+  description:
+    "Sign in to your Travel Buddy account to connect with fellow travelers and discover amazing travel plans",
+};
 
 export default function LoginPage() {
   return (

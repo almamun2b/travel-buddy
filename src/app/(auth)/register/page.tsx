@@ -1,8 +1,15 @@
 import registerImage from "@/assets/images/register.jpg";
 import { RegisterForm } from "@/components/modules/auth/RegisterForm";
 import { Logo } from "@/components/shared/navbar/logo";
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Register - Travel Buddy",
+  description:
+    "Create your Travel Buddy account and start connecting with fellow travelers around the world",
+};
 
 export default function RegisterPage() {
   return (

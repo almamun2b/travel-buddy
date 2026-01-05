@@ -10,8 +10,9 @@ interface ProjectPageProps {
 }
 
 export const metadata: Metadata = {
-  title: "Travelers",
-  description: "Explore Travelers",
+  title: "Explore Travelers - Travel Buddy",
+  description:
+    "Discover and connect with amazing travelers from around the world. Find travel companions who share your interests and travel style.",
 };
 
 const TravelersPage = async ({ searchParams }: ProjectPageProps) => {
@@ -37,10 +38,7 @@ const TravelersPage = async ({ searchParams }: ProjectPageProps) => {
       <h2 className="text-3xl font-bold mb-4 text-center">Explore Travelers</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {response.data.map((user: any) => (
-          <TravelerCard
-            key={user.id}
-            traveler={user}
-          />
+          <TravelerCard key={user.id} traveler={user} />
         ))}
       </div>
 

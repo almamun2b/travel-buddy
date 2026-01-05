@@ -1,7 +1,14 @@
 import TravelPlansTable from "@/components/modules/travelPlan/TravelPlansTable";
 import { me } from "@/services/auth/me";
 import { getAdminTravelPlans } from "@/services/travelPlans/travelPlans";
+import { Metadata } from "next";
 import { redirect } from "next/navigation";
+
+export const metadata: Metadata = {
+  title: "Travel Plans Admin - Travel Buddy",
+  description:
+    "Admin dashboard for managing all travel plans in Travel Buddy. Monitor, approve, and manage user-submitted travel plans.",
+};
 
 interface TravelPlanPageProps {
   searchParams: Promise<{

@@ -20,7 +20,14 @@ import {
   Sparkles,
   User,
 } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Payment Successful - Travel Buddy",
+  description:
+    "Welcome to Travel Buddy Premium! Your subscription has been activated successfully. Start enjoying premium travel features.",
+};
 
 interface PaymentSuccessPageProps {
   searchParams: Promise<{ session_id?: string }>;

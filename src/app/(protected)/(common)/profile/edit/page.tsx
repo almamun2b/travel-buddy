@@ -5,8 +5,9 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Edit Profile",
-  description: "Update your profile information.",
+  title: "Edit Profile - Travel Buddy",
+  description:
+    "Update your Travel Buddy profile information, travel preferences, and personal details to enhance your travel matching experience.",
 };
 
 const EditProfilePage = async () => {

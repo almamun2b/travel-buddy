@@ -6,7 +6,14 @@ import { getToReviewPlans } from "@/services/review/toReviewPlans";
 import { type ToReviewPlan } from "@/types/review";
 import { format } from "date-fns";
 import { Calendar, Clock, DollarSign, MapPin, Users } from "lucide-react";
+import { Metadata } from "next";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: "Plans to Review - Travel Buddy",
+  description:
+    "Review travel plans on Travel Buddy. Help improve the community by providing feedback on travel plans waiting for your review.",
+};
 
 const ToReviewPlansPage = async () => {
   const plansData = await getToReviewPlans();

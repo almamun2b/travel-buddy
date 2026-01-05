@@ -1,5 +1,12 @@
 import MyTravelPlansClient from "@/components/modules/travelPlan/MyTravelPlansClient";
 import { getMyTravelPlans } from "@/services/travelPlans/getMyTravelPlans";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "My Travel Plans - Travel Buddy",
+  description:
+    "Manage your travel plans on Travel Buddy. Create, edit, and organize your upcoming travel adventures.",
+};
 
 interface TravelPlanPageProps {
   searchParams: Promise<{
