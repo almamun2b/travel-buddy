@@ -1,24 +1,17 @@
-import CommonBreadcrumb from "@/components/modules/dashboard/CommonBreadcrumb";
 import { AppSidebar } from "@/components/modules/dashboard/app-sidebar";
+import CommonBreadcrumb from "@/components/modules/dashboard/CommonBreadcrumb";
 import { Separator } from "@/components/ui/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { me } from "@/services/auth/me";
-import { redirect } from "next/navigation";
 
-export default async function DashboardLayout({
+export default function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await me();
-
-  if (!user?.success || !user.data) {
-    redirect("/login");
-  }
   return (
     <SidebarProvider>
       <AppSidebar />
