@@ -255,13 +255,13 @@ const PaymentSuccessPage = async ({
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <Button asChild className="w-full gap-2">
-                      <Link href="/travel-plans/add">
+                      <Link href="/travel-plans/my-travel-plan">
                         <Sparkles className="h-4 w-4" />
                         Create Travel Plan
                       </Link>
                     </Button>
                     <Button asChild variant="outline" className="w-full gap-2">
-                      <Link href="/explore">
+                      <Link href="/travel-plan">
                         <User className="h-4 w-4" />
                         Find Travel Buddies
                       </Link>
@@ -317,7 +317,7 @@ const PaymentSuccessPage = async ({
                   </p>
                   <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
                     <Button asChild size="lg" className="gap-2">
-                      <Link href="/explore">
+                      <Link href="/travelers">
                         Explore Travelers
                         <ArrowRight className="h-4 w-4" />
                       </Link>
