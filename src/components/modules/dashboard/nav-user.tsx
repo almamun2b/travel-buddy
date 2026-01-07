@@ -34,7 +34,7 @@ export function NavUser() {
   useEffect(() => {
     const fetchUser = async () => {
       setLoading(true);
-      const res = await me(); // ✅ allowed
+      const res = await me();
       setUserInfo(res);
       setLoading(false);
     };

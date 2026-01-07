@@ -52,7 +52,6 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
     redirect("/");
   }
 
-  // Build query parameters
   const queryParams: {
     page: number;
     limit: number;
@@ -71,14 +70,13 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
     sortOrder: (params.sortOrder as "asc" | "desc") || "desc",
   };
 
-  // Only include filters if they have values
   if (params.searchTerm) queryParams.searchTerm = params.searchTerm;
   if (params.role && params.role !== "all") queryParams.role = params.role;
   if (params.status && params.status !== "all")
     queryParams.status = params.status;
   if (params.gender && params.gender !== "all")
     queryParams.gender = params.gender;
-  // Include boolean filters when they are explicitly set (true or false)
+
   if (params.isVerified === "true") {
     queryParams.isVerified = true;
   } else if (params.isVerified === "false") {
@@ -90,7 +88,6 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
     queryParams.hasVerifiedBadge = false;
   }
 
-  // Create searchParams for UsersTable component
   const tableSearchParams = {
     searchTerm: params.searchTerm || "",
     role: params.role || "all",
@@ -112,7 +109,6 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
     sortOrder: (params.sortOrder as "asc" | "desc") || "desc",
   };
 
-  // Fetch users on server
   const result = await getAllUsers(queryParams);
   if (!result) {
     return <div>Failed to load users</div>;

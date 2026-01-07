@@ -9,7 +9,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { me } from "@/services/auth/me"; // moved up
+import { me } from "@/services/auth/me";
 import { UserProfileResponse } from "@/types/user";
 import {
   GalleryVerticalEnd,
@@ -20,7 +20,7 @@ import {
   User,
 } from "lucide-react";
 import * as React from "react";
-import { useEffect, useState } from "react"; // moved up
+import { useEffect, useState } from "react";
 
 const settings = [
   {

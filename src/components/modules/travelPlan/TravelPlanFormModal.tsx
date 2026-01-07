@@ -116,7 +116,6 @@ const TravelPlanFormModal: React.FC<TravelPlanFormModalProps> = ({
           activities: result.data.activities,
         });
 
-        // Load existing images
         if (result.data.images && result.data.images.length > 0) {
           const existingImages = result.data.images.map((url) => ({
             url,
@@ -147,7 +146,6 @@ const TravelPlanFormModal: React.FC<TravelPlanFormModalProps> = ({
     }
   }, [isOpen, isEditing, fetchTravelPlan, form]);
 
-  // Cleanup preview URLs on unmount
   useEffect(() => {
     return () => {
       imagePreviews.forEach((preview) => {
@@ -163,7 +161,6 @@ const TravelPlanFormModal: React.FC<TravelPlanFormModalProps> = ({
 
     if (files.length === 0) return;
 
-    // Calculate how many more images we can add
     const remainingSlots = MAX_IMAGES - imagePreviews.length;
 
     if (remainingSlots <= 0) {
@@ -171,13 +168,11 @@ const TravelPlanFormModal: React.FC<TravelPlanFormModalProps> = ({
       return;
     }
 
-    // Limit files to remaining slots
     const filesToAdd = files.slice(0, remainingSlots);
 
-    // Validate file types and sizes
     const validFiles = filesToAdd.filter((file) => {
       const isValidType = file.type.startsWith("image/");
-      const isValidSize = file.size <= 5 * 1024 * 1024; // 5MB max
+      const isValidSize = file.size <= 5 * 1024 * 1024;
 
       if (!isValidType) {
         toast.error(`${file.name} is not a valid image file`);
@@ -192,7 +187,6 @@ const TravelPlanFormModal: React.FC<TravelPlanFormModalProps> = ({
 
     if (validFiles.length === 0) return;
 
-    // Create new previews
     const newPreviews = validFiles.map((file) => ({
       file,
       url: URL.createObjectURL(file),
@@ -201,7 +195,6 @@ const TravelPlanFormModal: React.FC<TravelPlanFormModalProps> = ({
 
     setImagePreviews((prev) => [...prev, ...newPreviews]);
 
-    // Clear input value to allow selecting the same file again
     e.target.value = "";
 
     if (filesToAdd.length > remainingSlots) {
@@ -212,7 +205,7 @@ const TravelPlanFormModal: React.FC<TravelPlanFormModalProps> = ({
   const removeImage = (index: number) => {
     setImagePreviews((prev) => {
       const preview = prev[index];
-      // Cleanup object URL if it's a new file
+
       if (!preview.isExisting && preview.url) {
         URL.revokeObjectURL(preview.url);
       }
@@ -240,13 +233,11 @@ const TravelPlanFormModal: React.FC<TravelPlanFormModalProps> = ({
     try {
       setIsLoading(true);
 
-      // Handle budget field - convert empty string to null
       const processedData = {
         ...data,
         budget: data.budget && !isNaN(data.budget) ? data.budget : 0,
       };
 
-      // Extract new files from previews
       const newImages = imagePreviews
         .filter((preview) => !preview.isExisting && preview.file)
         .map((preview) => preview.file!);

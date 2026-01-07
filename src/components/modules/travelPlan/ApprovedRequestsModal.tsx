@@ -39,7 +39,6 @@ const ApprovedRequestsModal: React.FC<ApprovedRequestsModalProps> = ({
     if (isOpen && travelPlanId) {
       fetchApprovedRequests();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, travelPlanId]);
 
   const fetchApprovedRequests = async () => {

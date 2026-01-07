@@ -51,14 +51,12 @@ async function getServerCookieHeader(): Promise<string> {
   return all.map((c) => `${c.name}=${c.value}`).join("; ");
 }
 
-// Configuration state
 let baseURL = "/api/v1";
 let defaultHeaders: HeadersInit = {
   "Content-Type": "application/json",
 };
 let hooks: FetchHooks = {};
 
-// Configuration functions
 export function configureFetch(config: {
   baseURL?: string;
   defaultHeaders?: HeadersInit;
@@ -274,7 +272,6 @@ async function request<T, P = Record<string, string | number | boolean>>(
   }
 }
 
-// HTTP method functions
 export async function get<T, P = Record<string, string | number | boolean>>(
   endpoint: string,
   options?: FetchOptions<P>
@@ -333,7 +330,6 @@ export async function del<T, P = Record<string, string | number | boolean>>(
   } as FetchOptions<P>);
 }
 
-// Create a default export object that mimics the class interface
 export const $fetch = {
   get,
   post,
@@ -351,5 +347,4 @@ export const $fetch = {
   },
 };
 
-// Export types
 export type { FetchHooks, FetchOptions };

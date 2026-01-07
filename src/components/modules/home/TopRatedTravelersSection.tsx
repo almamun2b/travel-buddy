@@ -1,99 +1,130 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { MapPin, Star } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { UserProfileResponse } from "@/types/user";
+import { CalendarDays, MapPin, Star, UserCheck } from "lucide-react";
+import Link from "next/link";
 
-const TopRatedTravelersSection = () => {
-  const travelers = [
-    {
-      name: "Sarah Chen",
-      location: "San Francisco, CA",
-      rating: 4.9,
-      trips: 24,
-      avatar: "SC",
-      interests: ["Photography", "Hiking"],
-    },
-    {
-      name: "Marcus Johnson",
-      location: "London, UK",
-      rating: 4.8,
-      trips: 18,
-      avatar: "MJ",
-      interests: ["Food Tours", "Culture"],
-    },
-    {
-      name: "Emma Rodriguez",
-      location: "Barcelona, Spain",
-      rating: 5.0,
-      trips: 32,
-      avatar: "ER",
-      interests: ["Adventure", "Beach"],
-    },
-    {
-      name: "Yuki Tanaka",
-      location: "Tokyo, Japan",
-      rating: 4.9,
-      trips: 27,
-      avatar: "YT",
-      interests: ["Art", "Cafe Hopping"],
-    },
-  ];
+const topTravelers = [
+  {
+    id: 1,
+    name: "Alex Morgan",
+    location: "London, UK",
+    rating: 4.9,
+    reviews: 24,
+    interests: ["Hiking", "Photography"],
+    avatar: "https://picsum.photos/seed/travel-destination/400/300",
+    upcomingTrip: "Japan, March 2024",
+  },
+  {
+    id: 2,
+    name: "Sarah Chen",
+    location: "Singapore",
+    rating: 4.8,
+    reviews: 18,
+    interests: ["Food Tours", "Culture"],
+    avatar: "https://picsum.photos/seed/travel-destination/400/300",
+    upcomingTrip: "Italy, April 2024",
+  },
+  {
+    id: 3,
+    name: "David Park",
+    location: "Seoul, Korea",
+    rating: 5.0,
+    reviews: 32,
+    interests: ["Hiking", "Photography"],
+    avatar: "https://picsum.photos/seed/travel-destination/400/300",
+    upcomingTrip: "Japan, March 2024",
+  },
+];
 
+interface TopRatedTravelersSectionProps {
+  user: UserProfileResponse | null;
+}
+
+export default function TopRatedTravelersSection({
+  user,
+}: TopRatedTravelersSectionProps) {
   return (
-    <section className="py-20 px-4 bg-neutral-50 dark:bg-neutral-950">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <Badge className="mb-4">Community Stars</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Top-Rated Travelers
-          </h2>
-          <p className="text-xl text-muted-foreground">
-            Connect with experienced and trusted travel companions
-          </p>
+    <section className="py-32">
+      <div className="container px-4 md:px-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight">
+              Top Rated Travelers
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Connect with our most trusted community members
+            </p>
+          </div>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {travelers.map((traveler, index) => (
-            <Card key={index} className="hover:shadow-xl transition-shadow">
-              <CardHeader className="text-center">
-                <Avatar className="w-24 h-24 mx-auto mb-4 border-4 border-blue-500 dark:border-blue-600">
-                  <AvatarFallback className="text-2xl bg-gradient-to-br from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 text-white">
-                    {traveler.avatar}
-                  </AvatarFallback>
-                </Avatar>
-                <CardTitle className="text-xl">{traveler.name}</CardTitle>
-                <CardDescription className="flex items-center justify-center gap-1 text-sm">
-                  <MapPin className="w-3 h-3" />
-                  {traveler.location}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 dark:fill-yellow-500 dark:text-yellow-500" />
-                    <span className="font-semibold">{traveler.rating}</span>
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {topTravelers.map((traveler) => (
+            <Card key={traveler.id} className="border-0 shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-start gap-4">
+                  <Avatar className="h-16 w-16 border-2 border-primary/20">
+                    <AvatarImage src={traveler.avatar} alt={traveler.name} />
+                    <AvatarFallback>
+                      {traveler.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold">{traveler.name}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          <MapPin className="mr-1 inline h-3 w-3" />
+                          {traveler.location}
+                        </p>
+                      </div>
+                      <Badge variant="secondary" className="gap-1">
+                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                        {traveler.rating}
+                      </Badge>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {traveler.interests.map((interest) => (
+                        <Badge
+                          key={interest}
+                          variant="outline"
+                          className="text-xs"
+                        >
+                          {interest}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    <div className="mt-4 text-sm">
+                      <p className="text-muted-foreground">
+                        <CalendarDays className="mr-1 inline h-3 w-3" />
+                        Next trip: {traveler.upcomingTrip}
+                      </p>
+                    </div>
+
+                    {user?.data && user.data.email && (
+                      <div className="mt-4 flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1 gap-2"
+                          asChild
+                        >
+                          <Link href={`/travelers`}>
+                            <UserCheck className="h-4 w-4" />
+                            View Profile
+                          </Link>
+                        </Button>
+                      </div>
+                    )}
                   </div>
-                  <span className="text-sm text-muted-foreground">
-                    {traveler.trips} trips
-                  </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {traveler.interests.map((interest, i) => (
-                    <Badge key={i} variant="secondary" className="text-xs">
-                      {interest}
-                    </Badge>
-                  ))}
-                </div>
-                <Button className="w-full" size="sm">
-                  View Profile
-                </Button>
               </CardContent>
             </Card>
           ))}
@@ -101,6 +132,4 @@ const TopRatedTravelersSection = () => {
       </div>
     </section>
   );
-};
-
-export default TopRatedTravelersSection;
+}

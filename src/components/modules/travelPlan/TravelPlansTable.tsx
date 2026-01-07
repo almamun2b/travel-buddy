@@ -159,7 +159,6 @@ export default function TravelPlansTable({
     );
   };
 
-  // Debounce search term
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -168,7 +167,6 @@ export default function TravelPlansTable({
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Debounce min budget
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedMinBudget(minBudget);
@@ -177,7 +175,6 @@ export default function TravelPlansTable({
     return () => clearTimeout(timer);
   }, [minBudget]);
 
-  // Debounce max budget
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedMaxBudget(maxBudget);
@@ -186,7 +183,6 @@ export default function TravelPlansTable({
     return () => clearTimeout(timer);
   }, [maxBudget]);
 
-  // Update URL when debounced values change
   useEffect(() => {
     const updates: Record<string, string | number> = {};
     let hasUpdates = false;
@@ -504,15 +500,11 @@ export default function TravelPlansTable({
                         <ViewTravelPlanModal travelPlanId={plan.id} />
                         <UpdateTravelPlanStatusModal
                           travelPlanId={plan.id}
-                          onSuccess={() => {
-                            // The revalidateTag in the service will handle data refresh
-                          }}
+                          onSuccess={() => {}}
                         />
                         <DeleteTravelPlanModal
                           travelPlanId={plan.id}
-                          onSuccess={() => {
-                            // The revalidateTag in the service will handle data refresh
-                          }}
+                          onSuccess={() => {}}
                         />
                       </div>
                     </TableCell>

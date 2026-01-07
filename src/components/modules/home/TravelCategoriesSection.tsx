@@ -6,6 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Camera, Coffee, Heart, Mountain, Plane, Users } from "lucide-react";
+import Link from "next/link";
 
 const TravelCategoriesSection = () => {
   const categories = [
@@ -70,15 +71,17 @@ const TravelCategoriesSection = () => {
               className="cursor-pointer hover:shadow-xl transition-all hover:-translate-y-1 text-center group"
             >
               <CardHeader className="pb-4">
-                <div
-                  className={`w-16 h-16 mx-auto bg-gradient-to-br ${category.color} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}
-                >
-                  <category.icon className="w-8 h-8 text-white" />
-                </div>
-                <CardTitle className="text-sm">{category.name}</CardTitle>
-                <CardDescription className="text-xs">
-                  {category.count} travelers
-                </CardDescription>
+                <Link href={`/travel-plan?category=${category.name}`}>
+                  <div
+                    className={`w-16 h-16 mx-auto bg-gradient-to-br ${category.color} rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}
+                  >
+                    <category.icon className="w-8 h-8 text-white" />
+                  </div>
+                  <CardTitle className="text-sm">{category.name}</CardTitle>
+                  <CardDescription className="text-xs">
+                    {category.count} travelers
+                  </CardDescription>
+                </Link>
               </CardHeader>
             </Card>
           ))}

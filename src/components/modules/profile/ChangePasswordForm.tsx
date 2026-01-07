@@ -15,10 +15,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-// Update schema to match payload
 const changePasswordSchema = z
   .object({
-    oldPassword: z.string().min(1, "Current password is required"), // Changed from currentPassword
+    oldPassword: z.string().min(1, "Current password is required"),
     newPassword: z
       .string()
       .min(8, "New password must be at least 8 characters")
@@ -33,7 +32,6 @@ const changePasswordSchema = z
     path: ["confirmPassword"],
   })
   .refine((data) => data.oldPassword !== data.newPassword, {
-    // Changed from currentPassword
     message: "New password must be different from current password",
     path: ["newPassword"],
   });
@@ -42,7 +40,7 @@ type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
 
 export function ChangePasswordForm() {
   const router = useRouter();
-  const [showOldPassword, setShowOldPassword] = useState(false); // Changed from showCurrentPassword
+  const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -96,7 +94,7 @@ export function ChangePasswordForm() {
         >
           {/* Old Password (changed from Current Password) */}
           <DynamicFormField
-            name="oldPassword" // Changed from currentPassword
+            name="oldPassword"
             label="Current Password *"
             description="Enter your current password to verify your identity"
           >
@@ -113,9 +111,9 @@ export function ChangePasswordForm() {
                   variant="ghost"
                   size="sm"
                   className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                  onClick={() => setShowOldPassword(!showOldPassword)} // Changed from showCurrentPassword
+                  onClick={() => setShowOldPassword(!showOldPassword)}
                 >
-                  {showOldPassword ? ( // Changed from showCurrentPassword
+                  {showOldPassword ? (
                     <EyeOff className="h-4 w-4" />
                   ) : (
                     <Eye className="h-4 w-4" />

@@ -38,7 +38,6 @@ export const NavigationSheet = ({ userInfo }: NavigationSheetProps) => {
     { label: "Travelers", href: "/travelers", icon: null },
   ];
 
-  // Function to check if a route is active
   const isActiveRoute = (href: string): boolean => {
     if (href === "/") {
       return pathname === "/";

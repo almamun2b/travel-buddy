@@ -1,4 +1,3 @@
-// import { ProfileContent } from "@/components/modules/Profile";
 import { ProfileContent } from "@/components/modules/profile/ProfileContent";
 import { me } from "@/services/auth/me";
 import { Metadata } from "next";

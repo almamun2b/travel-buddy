@@ -34,7 +34,6 @@ const TravelRequestModal = ({
     try {
       setIsLoading(true);
 
-      // Call your API
       const res = await sendTravelRequest({
         travelPlanId,
         message: message || "I'd like to join your travel plan!",

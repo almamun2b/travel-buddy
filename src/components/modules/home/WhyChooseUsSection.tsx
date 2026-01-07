@@ -1,5 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Calendar, Globe, Shield, Star, TrendingUp, Users } from "lucide-react";
 
 const WhyChooseUsSection = () => {
@@ -37,32 +36,33 @@ const WhyChooseUsSection = () => {
   ];
 
   return (
-    <section className="py-20 px-4 bg-neutral-50 dark:bg-neutral-950">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <Badge className="mb-4">Why Us</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+    <section className="py-16">
+      <div className="container px-4 md:px-6">
+        <div className="mx-auto max-w-3xl text-center mb-16">
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
             Why Choose Travel Buddy
           </h2>
-          <p className="text-xl text-muted-foreground">
+          <p className="mt-4 text-xl text-muted-foreground">
             The trusted platform for meaningful travel connections
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="border-2 hover:shadow-xl transition-shadow"
+              className="border-0 bg-card shadow-lg transition-all hover:shadow-xl"
             >
-              <CardHeader>
-                <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 rounded-full flex items-center justify-center mb-4">
-                  <feature.icon className="w-7 h-7 text-white" />
+              <CardContent className="p-6 text-center">
+                <div className="mb-4 inline-flex rounded-full bg-primary/10 p-3">
+                  <div className="text-primary">
+                    <feature.icon className="h-8 w-8" />
+                  </div>
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{feature.description}</p>
+                <h3 className="mb-2 text-lg font-semibold">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {feature.description}
+                </p>
               </CardContent>
             </Card>
           ))}

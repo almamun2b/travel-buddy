@@ -1,34 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-// {
-//     "success": true,
-//     "message": "Approved requests retrieved successfully!",
-//     "data": [
-//         {
-//             "id": "eaa5d11a-378b-4af3-983a-916f0e3f3334",
-//             "travelPlanId": "8c956f06-9fdc-40ad-84c3-6a78c30e8fa0",
-//             "message": "This message new",
-//             "user": {
-//                 "id": "24de6385-6dc2-4c28-95a8-83da905a35d2",
-//                 "fullName": "User",
-//                 "avatar": null,
-//                 "isVerified": true,
-//                 "travelInterests": [
-//                     "Sea"
-//                 ],
-//                 "bio": "This is bio",
-//                 "email": "user@gmail.com",
-//                 "contactNumber": "01745323411",
-//                 "gender": null,
-//                 "dateOfBirth": null,
-//                 "currentLocation": null,
-//                 "visitedCountries": []
-//             }
-//         }
-//     ]
-// }
-
 import { $fetch } from "@/lib/fetch";
 import type { ApprovedRequestsResponse } from "@/types/travelPlan";
 

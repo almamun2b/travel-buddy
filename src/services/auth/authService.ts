@@ -58,7 +58,9 @@ export async function getNewAccessToken() {
     let refreshTokenObject: any = null;
 
     // Use native fetch for this specific case to get Response object for cookie handling
-    const refreshUrl = `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/v1/auth/refresh-token`;
+    const refreshUrl = `${
+      process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+    }/api/v1/auth/refresh-token`;
     const response = await fetch(refreshUrl, {
       method: "POST",
       headers: {

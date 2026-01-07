@@ -10,7 +10,6 @@ export default async function TravelRequestModalWrapper({
 }: TravelRequestModalWrapperProps) {
   const userInfo = await me();
 
-  // Don't render if user is not authenticated or has no email
   if (!userInfo?.success || !userInfo?.data?.email) {
     return null;
   }
