@@ -172,3 +172,20 @@ export interface EditUserResponse {
   message: string;
   data?: AdminUser;
 }
+
+export interface TopTraveler {
+  id: string;
+  fullName: string;
+  avatar: string;
+  location: string;
+  avgRating: string;
+  totalReviews: number;
+  travelInterests: string[];
+  nextTrip: string | null;
+}
+
+export interface TopTravelersResponse {
+  success: boolean;
+  message: string;
+  data: TopTraveler[];
+}
