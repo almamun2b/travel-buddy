@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTopTravelers } from "@/services/user/getTopTravelers";
-import { TopTraveler, UserProfileResponse } from "@/types/user";
+import type { TopTraveler, UserProfileResponse } from "@/types/user";
 import { CalendarDays, MapPin, Star, UserCheck } from "lucide-react";
 import Link from "next/link";
 
