@@ -190,7 +190,6 @@ const DeleteUserModal: React.FC<DeleteUserModalProps> = ({
                 placeholder={`Type "DELETE" to confirm`}
                 className="mt-2 w-full p-2 border rounded text-sm"
                 onChange={(e) => {
-                  // Enable delete button only when DELETE is typed
                   const deleteButton =
                     document.getElementById("confirm-delete-btn");
                   if (deleteButton) {

@@ -97,7 +97,6 @@ export interface UserProfileResponse {
   data: UserProfile;
 }
 
-// Admin User Management Types
 export type UserStatus = "ACTIVE" | "INACTIVE" | "BLOCKED" | "DELETED";
 
 export interface AdminUser {

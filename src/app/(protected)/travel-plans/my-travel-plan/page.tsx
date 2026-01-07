@@ -18,7 +18,6 @@ interface TravelPlanPageProps {
 }
 
 const MyTravelPlanPage = async ({ searchParams }: TravelPlanPageProps) => {
-  // ✅ MUST await searchParams
   const params = await searchParams;
 
   const queryParams = {

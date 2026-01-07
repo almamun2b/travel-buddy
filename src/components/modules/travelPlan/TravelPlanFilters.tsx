@@ -38,7 +38,6 @@ export function TravelPlanFilters({ searchParams }: TravelPlanFiltersProps) {
     [currentParams, pathname, router]
   );
 
-  // Local state reducer for debounced inputs
   const [localState, setLocalState] = useReducer(
     (
       state: { searchTerm: string; minBudget: string; maxBudget: string },
@@ -54,17 +53,16 @@ export function TravelPlanFilters({ searchParams }: TravelPlanFiltersProps) {
     }
   );
 
-  // Debounced update function with ref-based timer management
   const timersRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
 
   const debouncedUpdateParams = useCallback(
     (key: string, updates: Partial<TravelPlanSearchParams>) => {
       const timers = timersRef.current;
-      // Clear existing timer for this key
+
       if (timers.has(key)) {
         clearTimeout(timers.get(key)!);
       }
-      // Set new timer
+
       const timer = setTimeout(() => {
         updateParams(updates);
         timers.delete(key);
@@ -74,7 +72,6 @@ export function TravelPlanFilters({ searchParams }: TravelPlanFiltersProps) {
     [updateParams]
   );
 
-  // Sync local state to URL params without causing cascading renders
   useEffect(() => {
     setLocalState({
       searchTerm: searchParams.searchTerm || "",

@@ -68,7 +68,7 @@ const MyTravelPlansClient: React.FC<MyTravelPlansClientProps> = ({
     const params = new URLSearchParams(searchParams.toString());
     params.set("sortBy", field);
     params.set("sortOrder", nextOrder);
-    params.set("page", "1"); // reset page on sort
+    params.set("page", "1");
 
     router.push(`?${params.toString()}`);
   };

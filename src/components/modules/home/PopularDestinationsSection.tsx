@@ -1,85 +1,142 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { UserProfileResponse } from "@/types/user";
+import { Calendar, Search, Users } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-const PopularDestinationsSection = () => {
-  const destinations = [
-    {
-      name: "Bali, Indonesia",
-      travelers: 1234,
-      image: "🏝️",
-      color: "from-green-400 to-blue-500 dark:from-green-600 dark:to-blue-700",
-    },
-    {
-      name: "Paris, France",
-      travelers: 2156,
-      image: "🗼",
-      color:
-        "from-pink-400 to-purple-500 dark:from-pink-600 dark:to-purple-700",
-    },
-    {
-      name: "Tokyo, Japan",
-      travelers: 1876,
-      image: "🗾",
-      color: "from-red-400 to-pink-500 dark:from-red-600 dark:to-pink-700",
-    },
-    {
-      name: "New York, USA",
-      travelers: 1543,
-      image: "🗽",
-      color:
-        "from-blue-400 to-indigo-500 dark:from-blue-600 dark:to-indigo-700",
-    },
-    {
-      name: "Dubai, UAE",
-      travelers: 1392,
-      image: "🏙️",
-      color:
-        "from-yellow-400 to-orange-500 dark:from-yellow-600 dark:to-orange-700",
-    },
-    {
-      name: "Barcelona, Spain",
-      travelers: 1687,
-      image: "🏖️",
-      color: "from-orange-400 to-red-500 dark:from-orange-600 dark:to-red-700",
-    },
-  ];
+const popularDestinations = [
+  {
+    id: 1,
+    name: "Bali, Indonesia",
+    travelers: 45,
+    image:
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80",
+    country: "Indonesia",
+  },
+  {
+    id: 2,
+    name: "Tokyo, Japan",
+    travelers: 38,
+    image:
+      "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80",
+    country: "Japan",
+  },
+  {
+    id: 3,
+    name: "Paris, France",
+    travelers: 52,
+    image:
+      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80",
+    country: "France",
+  },
+  {
+    id: 4,
+    name: "New York, USA",
+    travelers: 41,
+    image:
+      "https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=800&q=80",
+    country: "USA",
+  },
+  {
+    id: 5,
+    name: "Bangkok, Thailand",
+    travelers: 36,
+    image:
+      "https://images.unsplash.com/photo-1563492065599-3520f775eeed?auto=format&fit=crop&w=800&q=80",
+    country: "Thailand",
+  },
+  {
+    id: 6,
+    name: "Sydney, Australia",
+    travelers: 29,
+    image:
+      "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=800&q=80",
+    country: "Australia",
+  },
+];
 
+interface PopularDestinationsSectionProps {
+  user: UserProfileResponse | null;
+}
+
+export default async function PopularDestinationsSection({
+  user,
+}: PopularDestinationsSectionProps) {
   return (
-    <section className="py-20 px-4 bg-background">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <Badge className="mb-4">Explore</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Popular Destinations
-          </h2>
-          <p className="text-xl text-muted-foreground">
-            Discover where travelers are heading next
-          </p>
+    <section className="py-32">
+      <div className="container px-4 md:px-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold tracking-tight">
+              Popular Destinations
+            </h2>
+            <p className="mt-2 text-muted-foreground">
+              Where our community is traveling next
+            </p>
+          </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {destinations.map((dest, index) => (
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {popularDestinations.map((destination) => (
             <Card
-              key={index}
-              className="cursor-pointer hover:shadow-xl transition-all hover:-translate-y-2 overflow-hidden group"
+              key={destination.id}
+              className="group overflow-hidden border-0 shadow-lg transition-all hover:shadow-xl"
             >
-              <div
-                className={`h-48 bg-gradient-to-br ${dest.color} flex items-center justify-center text-6xl relative`}
-              >
-                <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 dark:group-hover:opacity-20 transition-opacity"></div>
-                {dest.image}
+              <div className="relative h-64 overflow-hidden">
+                <Image
+                  src={destination.image}
+                  alt={destination.name}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+
+                <div className="absolute bottom-4 left-4 right-4 text-white">
+                  <div className="mb-2">
+                    <Badge className="bg-white/20 backdrop-blur-sm border-0 text-white hover:bg-white/30">
+                      {destination.country}
+                    </Badge>
+                  </div>
+                  <h3 className="text-2xl font-bold drop-shadow-lg">
+                    {destination.name}
+                  </h3>
+                </div>
+
+                <Badge className="absolute right-4 top-4 bg-white/20 backdrop-blur-sm border-0 text-white hover:bg-white/30">
+                  <Users className="mr-1 h-3 w-3" />
+                  {destination.travelers} travelers
+                </Badge>
               </div>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <span>{dest.name}</span>
-                </CardTitle>
-              </CardHeader>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className="gap-2 hover:bg-primary/10"
+                  >
+                    <Link href={`/travel-plan`}>
+                      <Search className="h-4 w-4" />
+                      Find Buddies
+                    </Link>
+                  </Button>
+                  {user?.data && user.data.email && (
+                    <Button size="sm" asChild className="gap-2">
+                      <Link href={`/travel-plans/my-travel-plan`}>
+                        <Calendar className="h-4 w-4" />
+                        Create Plan
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
             </Card>
           ))}
         </div>
       </div>
     </section>
   );
-};
-
-export default PopularDestinationsSection;
+}

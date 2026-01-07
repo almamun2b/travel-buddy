@@ -21,7 +21,6 @@ const MatchTravelersPage = async ({
 }: MatchTravelersPageProps) => {
   const params = await searchParams;
 
-  // Check if user is authenticated
   const user = await me();
 
   if (!user?.data?.email) {
@@ -140,7 +139,7 @@ const MatchTravelersPage = async ({
   const totalPages = Math.ceil(response.meta?.total / response.meta?.limit);
   return (
     <section className="mx-auto px-6 py-20 pt-32">
-      <h2 className="text-3xl font-bold mb-4 text-center">
+      <h2 className="text-3xl font-bold mb-4 text-center pb-20">
         Travel Plan According to the Interest
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

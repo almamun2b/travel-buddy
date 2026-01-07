@@ -1,3 +1,4 @@
+import ComingSoon from "@/components/shared/ComingSoon";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,7 +8,12 @@ export const metadata: Metadata = {
 };
 
 const ContactPage = () => {
-  return <div>ContactPage</div>;
+  return (
+    <ComingSoon
+      title="Contact Us"
+      description="We're working on a comprehensive guide to show you exactly how Travel Buddy works. This page will include step-by-step instructions, video tutorials, and best practices for finding and connecting with travel buddies."
+    />
+  );
 };
 
 export default ContactPage;

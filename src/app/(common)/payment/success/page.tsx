@@ -1,4 +1,3 @@
-// app/payment/success/page.tsx
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -76,7 +75,6 @@ const PaymentSuccessPage = async ({
     const startDate = new Date(subscription.startDate);
     const endDate = new Date(subscription.endDate);
 
-    // Format dates
     const formatDate = (date: Date) => {
       return date.toLocaleDateString("en-US", {
         year: "numeric",

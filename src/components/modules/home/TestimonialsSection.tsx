@@ -1,89 +1,93 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Plane, Star } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
+import { Star, ThumbsUp } from "lucide-react";
 
-const TestimonialsSection = () => {
-  const testimonials = [
-    {
-      name: "Alexandra Kim",
-      location: "Seattle, WA",
-      avatar: "AK",
-      rating: 5,
-      text: "I found the perfect travel buddy for my trip to Iceland! We both loved photography and hiking. It turned what would have been a solo trip into an unforgettable adventure.",
-      trip: "Iceland Adventure",
-    },
-    {
-      name: "David Martinez",
-      location: "Miami, FL",
-      avatar: "DM",
-      rating: 5,
-      text: "As someone who travels for work, I always felt lonely eating alone. This platform helped me find local professionals to grab dinner with. Game changer!",
-      trip: "Business Travel",
-    },
-    {
-      name: "Priya Patel",
-      location: "Mumbai, India",
-      avatar: "PP",
-      rating: 5,
-      text: "Met two amazing people through this app for my Europe trip. We're still best friends and planning our next adventure together. Highly recommend!",
-      trip: "Europe Backpacking",
-    },
-  ];
+const testimonials = [
+  {
+    id: 1,
+    name: "Maria Rodriguez",
+    location: "Madrid, Spain",
+    content:
+      "Found the perfect travel buddy for my Bali trip! We're still friends and planning our next adventure together.",
+    rating: 5,
+    avatar: "https://picsum.photos/seed/travel-destination/400/300",
+    date: "2 weeks ago",
+  },
+  {
+    id: 2,
+    name: "James Wilson",
+    location: "Toronto, Canada",
+    content:
+      "As a solo traveler, this platform changed everything. Met amazing people and shared unforgettable experiences.",
+    rating: 5,
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+    date: "1 month ago",
+  },
+  {
+    id: 3,
+    name: "Priya Patel",
+    location: "Mumbai, India",
+    content:
+      "The matching algorithm is spot on! Found someone with exactly the same travel style and interests.",
+    rating: 4,
+    avatar: "https://picsum.photos/seed/travel-destination/400/300",
+    date: "2 weeks ago",
+  },
+];
 
+export default function TestimonialsSection() {
   return (
-    <section className="py-20 px-4 bg-background">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
-          <Badge className="mb-4">Success Stories</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Traveler Testimonials
+    <section className="pb-16 mt-24">
+      <div className="container px-4 md:px-6">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-3xl font-bold tracking-tight">
+            Traveler Stories
           </h2>
-          <p className="text-xl text-muted-foreground">
-            Real stories from travelers who found their perfect companions
+          <p className="mt-4 text-xl text-muted-foreground">
+            Hear from our community about their shared adventures
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <div className="flex items-start gap-4">
-                  <Avatar className="w-12 h-12">
-                    <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 text-white">
-                      {testimonial.avatar}
+        <div className="mt-12 grid gap-6 md:grid-cols-3">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="border-0 shadow-lg">
+              <CardContent className="p-6">
+                <div className="flex items-center gap-3">
+                  <Avatar>
+                    <AvatarImage
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                    />
+                    <AvatarFallback>
+                      {testimonial.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1">
-                    <CardTitle className="text-lg">
-                      {testimonial.name}
-                    </CardTitle>
-                    <CardDescription className="text-sm">
+                  <div>
+                    <h4 className="font-semibold">{testimonial.name}</h4>
+                    <p className="text-sm text-muted-foreground">
                       {testimonial.location}
-                    </CardDescription>
-                    <div className="flex gap-1 mt-2">
-                      {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className="w-4 h-4 fill-yellow-400 text-yellow-400 dark:fill-yellow-500 dark:text-yellow-500"
-                        />
-                      ))}
-                    </div>
+                    </p>
+                  </div>
+                  <div className="ml-auto flex items-center gap-1">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="font-semibold">{testimonial.rating}</span>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4">{testimonial.text}</p>
-                <Badge variant="secondary" className="text-xs">
-                  <Plane className="w-3 h-3 mr-1" />
-                  {testimonial.trip}
-                </Badge>
+
+                <p className="mt-4 text-muted-foreground">
+                  {testimonial.content}
+                </p>
+
+                <div className="mt-4 flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">
+                    {testimonial.date}
+                  </span>
+                  <ThumbsUp className="h-4 w-4 text-green-500" />
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -91,6 +95,4 @@ const TestimonialsSection = () => {
       </div>
     </section>
   );
-};
-
-export default TestimonialsSection;
+}

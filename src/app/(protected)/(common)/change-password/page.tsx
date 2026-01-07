@@ -9,8 +9,6 @@ export const metadata: Metadata = {
     "Securely update your Travel Buddy account password. Keep your travel profile protected with a strong password.",
 };
 
-// Dynamic SSR - authenticated page
-
 const ChangePasswordPage = async () => {
   const res = await me();
 

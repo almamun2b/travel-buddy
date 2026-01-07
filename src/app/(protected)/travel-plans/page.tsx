@@ -37,7 +37,6 @@ export default async function TravelPlanPage({
     redirect("/");
   }
 
-  // Build query parameters
   const queryParams: {
     page: number;
     limit: number;
@@ -57,7 +56,6 @@ export default async function TravelPlanPage({
     sortOrder: (params.sortOrder as "asc" | "desc") || "desc",
   };
 
-  // Only include filters if they have values
   if (params.searchTerm) queryParams.searchTerm = params.searchTerm;
   if (params.travelType && params.travelType !== "all")
     queryParams.travelType = params.travelType;
@@ -70,7 +68,6 @@ export default async function TravelPlanPage({
 
   console.log(queryParams, "queryParams");
 
-  // Fetch travel plans on server
   const result = await getAdminTravelPlans(queryParams);
 
   const travelPlans = result?.success ? result.data || [] : [];

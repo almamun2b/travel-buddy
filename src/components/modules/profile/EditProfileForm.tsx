@@ -41,7 +41,7 @@ const updateProfileSchema = z.object({
     .refine(
       (date) => {
         if (!date || date === "") return true;
-        // Accept YYYY-MM-DD format from date input
+
         const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
         if (!dateRegex.test(date)) return false;
         const parsed = new Date(date);
@@ -120,7 +120,6 @@ export function UpdateProfileForm({ user }: UpdateProfileFormProps) {
   };
 
   const onSubmit = async (data: UpdateProfileFormData) => {
-    // Convert dateOfBirth to ISO-8601 format if present
     const processedData = {
       ...data,
       dateOfBirth: data.dateOfBirth

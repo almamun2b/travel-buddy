@@ -1,4 +1,8 @@
-import PricingSection from "@/components/modules/pricing/PricingSection";
+import PricingFAQ from "@/components/modules/pricing/PricingFAQ";
+import PricingHeroSection from "@/components/modules/pricing/PricingHeroSection";
+import PricingInteractive from "@/components/modules/pricing/PricingInteractive";
+import PricingTrustBadges from "@/components/modules/pricing/PricingTrustBadges";
+import PricingValueFeatures from "@/components/modules/pricing/PricingValueFeatures";
 import { getSubscriptionPlans } from "@/services/payment/getSubscriptionPlans";
 import { Metadata } from "next";
 
@@ -8,7 +12,7 @@ export const metadata: Metadata = {
     "Explore Travel Buddy's subscription plans and pricing options. Find the perfect plan for your travel companion matching needs.",
 };
 
-const PricingPage = async () => {
+const PricingPageComponent = async () => {
   const result = await getSubscriptionPlans();
 
   if (!result) return;
@@ -26,7 +30,15 @@ const PricingPage = async () => {
 
   const subscriptionPlans = result.data;
 
-  return <PricingSection plans={subscriptionPlans} />;
+  return (
+    <div className="min-h-screen bg-background">
+      <PricingHeroSection />
+      <PricingInteractive plans={subscriptionPlans} />
+      <PricingValueFeatures />
+      <PricingFAQ />
+      <PricingTrustBadges />
+    </div>
+  );
 };
 
-export default PricingPage;
+export default PricingPageComponent;

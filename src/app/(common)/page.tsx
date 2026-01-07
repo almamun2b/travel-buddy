@@ -1,4 +1,13 @@
-import LandingPageContent from "@/components/modules/home/LandingPageContent";
+import AboutStatsSection from "@/components/modules/about/AboutStatsSection";
+import CTASection from "@/components/modules/home/CTASection";
+import HeroSection from "@/components/modules/home/HeroSection";
+import HowItWorksSection from "@/components/modules/home/HowItWorksSection";
+import PopularDestinationsSection from "@/components/modules/home/PopularDestinationsSection";
+import TestimonialsSection from "@/components/modules/home/TestimonialsSection";
+import TopRatedTravelersSection from "@/components/modules/home/TopRatedTravelersSection";
+import TravelCategoriesSection from "@/components/modules/home/TravelCategoriesSection";
+import WhyChooseUsSection from "@/components/modules/home/WhyChooseUsSection";
+import { me } from "@/services/auth/me";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -8,12 +17,18 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
+  const user = await me();
   return (
     <div className="pt-20">
-      <LandingPageContent />
-      {/* <WhyChooseUsSection />
+      <HeroSection />
+      <HowItWorksSection />
+      <WhyChooseUsSection />
+      <PopularDestinationsSection user={user} />
       <TravelCategoriesSection />
-      <CTASection /> */}
+      <TopRatedTravelersSection user={user} />
+      <TestimonialsSection />
+      <AboutStatsSection />
+      <CTASection user={user} />
     </div>
   );
 }

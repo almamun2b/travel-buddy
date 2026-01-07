@@ -104,7 +104,6 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
     [params, router]
   );
 
-  // Debounce search term
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -113,9 +112,7 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Update URL when debounced search term changes
   useEffect(() => {
-    // Only update if debouncedSearchTerm is different from previous AND different from current URL
     if (
       debouncedSearchTerm !== previousDebouncedSearchTerm.current &&
       debouncedSearchTerm !== searchParams.searchTerm
@@ -459,17 +456,10 @@ export default function UsersTable({ users, meta, searchParams }: Props) {
                     <TableCell>
                       <div className="flex items-center justify-end gap-2">
                         <ViewUserModal userId={user.id} />
-                        <EditUserModal
-                          userId={user.id}
-                          onSuccess={() => {
-                            // The revalidateTag in the service will handle data refresh
-                          }}
-                        />
+                        <EditUserModal userId={user.id} onSuccess={() => {}} />
                         <DeleteUserModal
                           userId={user.id}
-                          onSuccess={() => {
-                            // The revalidateTag in the service will handle data refresh
-                          }}
+                          onSuccess={() => {}}
                         />
                       </div>
                     </TableCell>

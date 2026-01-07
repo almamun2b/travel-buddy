@@ -1,4 +1,3 @@
-// TypeScript types for dashboard data
 export interface AdminData {
   stats: {
     totalUsers: number;

@@ -219,9 +219,7 @@ const MyTravelPlansTable: React.FC<MyTravelPlansTableProps> = ({
                   <div className="flex items-center justify-end gap-2">
                     <UpdateTravelPlanStatusModal
                       travelPlanId={plan.id}
-                      onSuccess={() => {
-                        // The revalidateTag in the service will handle data refresh
-                      }}
+                      onSuccess={() => {}}
                     />
                     <Button asChild variant="outline" size="sm">
                       <Link href={`/travel-plan/${plan.id}`}>

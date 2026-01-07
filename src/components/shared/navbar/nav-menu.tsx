@@ -27,7 +27,6 @@ export const NavMenu = ({ onClickMenu, ...props }: NavMenuProps) => {
     { label: "Travelers", href: "/travelers" },
   ];
 
-  // Function to check if a route is active
   const isActiveRoute = (href: string): boolean => {
     if (href === "/") {
       return pathname === "/";
@@ -47,7 +46,6 @@ export const NavMenu = ({ onClickMenu, ...props }: NavMenuProps) => {
                 className={cn(
                   "transition-all duration-200 relative",
                   isActive && "text-foreground font-semibold"
-                  // Add underline effect for active state
                 )}
                 data-active={isActive}
               >
