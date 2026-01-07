@@ -159,7 +159,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <GalleryVerticalEnd className="size-4" />
           </div>
           <div className="grid flex-1 text-left text-lg leading-tight">
-            <span className="truncate font-medium">Admin Dashboard</span>
+            <span className="truncate font-medium">
+              {userInfo?.data && userInfo.data.role === "ADMIN"
+                ? "Admin Dashboard"
+                : "User Dashboard"}
+            </span>
           </div>
         </div>
       </SidebarHeader>
