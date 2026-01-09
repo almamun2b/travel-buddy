@@ -95,7 +95,11 @@ async function parseResponse<T>(
   return data as T;
 }
 
-async function refreshAuth(): Promise<boolean> {
+async function refreshAuth(): Promise<{
+  success: boolean;
+  accessToken?: string;
+  refreshToken?: string;
+}> {
   try {
     const refreshUrl = toAbsoluteUrl(`${baseURL}/auth/refresh-token`);
     const serverCookieHeader = await getServerCookieHeader();
@@ -120,15 +124,19 @@ async function refreshAuth(): Promise<boolean> {
         status: res.status,
         error: errorData?.message || "Unknown error",
       });
-      return false;
+      return { success: false };
     }
 
     const data = await res.json();
     console.log("[Refresh Auth]: Refresh successful", data);
-    return true;
+    return {
+      success: true,
+      accessToken: data?.data?.accessToken,
+      refreshToken: data?.data?.refreshToken,
+    };
   } catch (error) {
     console.warn("[Refresh Auth]: Exception during refresh", error);
-    return false;
+    return { success: false };
   }
 }
 
@@ -213,24 +221,28 @@ async function request<T, P = Record<string, string | number | boolean>>(
           endpoint,
           { status: response.status }
         );
-        const refreshed = await refreshAuth();
-        if (refreshed) {
+        const refreshResult = await refreshAuth();
+        if (refreshResult.success) {
           console.log("[Auth]: Token refresh successful, retrying request");
 
           const retryHeaders = new Headers(finalHeaders);
 
           retryHeaders.delete("Authorization");
-          retryHeaders.delete("authorization");
+          if (refreshResult.accessToken) {
+            retryHeaders.set("Authorization", refreshResult.accessToken);
+            console.log("[Auth]: Using access token from refresh response");
+          } else {
+            console.log("[Auth]: No token in response, relying on cookies");
+            if (typeof window === "undefined") {
+              const updatedServerCookieHeader = await getServerCookieHeader();
+              console.log(
+                "[Auth]: Updated server cookie header after refresh:",
+                !!updatedServerCookieHeader
+              );
 
-          if (typeof window === "undefined") {
-            const updatedServerCookieHeader = await getServerCookieHeader();
-            console.log(
-              "[Auth]: Updated server cookie header after refresh:",
-              !!updatedServerCookieHeader
-            );
-
-            if (updatedServerCookieHeader) {
-              retryHeaders.set("Cookie", updatedServerCookieHeader);
+              if (updatedServerCookieHeader) {
+                retryHeaders.set("Cookie", updatedServerCookieHeader);
+              }
             }
           }
 
