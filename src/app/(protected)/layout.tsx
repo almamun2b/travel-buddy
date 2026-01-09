@@ -6,20 +6,12 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { me } from "@/services/auth/me";
-import { redirect } from "next/navigation";
 
 export default async function DashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const user = await me();
-
-  if (!user?.success || !user.data) {
-    redirect("/login");
-  }
-
   return (
     <SidebarProvider>
       <AppSidebar />
