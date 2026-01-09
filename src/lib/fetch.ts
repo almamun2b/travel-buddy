@@ -216,26 +216,28 @@ async function request<T, P = Record<string, string | number | boolean>>(
         const refreshed = await refreshAuth();
         if (refreshed) {
           console.log("[Auth]: Token refresh successful, retrying request");
-          // Get updated server cookie header after refresh
-          const updatedServerCookieHeader = await getServerCookieHeader();
-          const updatedMergedHeaders: HeadersInit = {
-            ...defaultHeaders,
-            ...(typeof headers === "object" ? (headers as HeadersInit) : {}),
-            ...(updatedServerCookieHeader
-              ? { Cookie: updatedServerCookieHeader }
-              : {}),
-          };
 
-          const updatedFinalHeaders = new Headers(updatedMergedHeaders);
-          if (isFormData(restOptions.body)) {
-            updatedFinalHeaders.delete("Content-Type");
-            updatedFinalHeaders.delete("content-type");
+          const retryHeaders = new Headers(finalHeaders);
+
+          retryHeaders.delete("Authorization");
+          retryHeaders.delete("authorization");
+
+          if (typeof window === "undefined") {
+            const updatedServerCookieHeader = await getServerCookieHeader();
+            console.log(
+              "[Auth]: Updated server cookie header after refresh:",
+              !!updatedServerCookieHeader
+            );
+
+            if (updatedServerCookieHeader) {
+              retryHeaders.set("Cookie", updatedServerCookieHeader);
+            }
           }
 
           const retryRes = await fetch(url, {
             ...restOptions,
             credentials: "include",
-            headers: updatedFinalHeaders,
+            headers: retryHeaders,
           });
           await hooks.onResponse?.({
             endpoint,
