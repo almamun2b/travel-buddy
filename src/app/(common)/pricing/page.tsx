@@ -4,6 +4,7 @@ import PricingInteractive from "@/components/modules/pricing/PricingInteractive"
 import PricingTrustBadges from "@/components/modules/pricing/PricingTrustBadges";
 import PricingValueFeatures from "@/components/modules/pricing/PricingValueFeatures";
 import { getSubscriptionPlans } from "@/services/payment/getSubscriptionPlans";
+import { getSubscriptionStatus } from "@/services/payment/getSubscriptionStatus";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,11 +14,14 @@ export const metadata: Metadata = {
 };
 
 const PricingPageComponent = async () => {
-  const result = await getSubscriptionPlans();
+  const [plansResult, subscriptionResult] = await Promise.all([
+    getSubscriptionPlans(),
+    getSubscriptionStatus(),
+  ]);
 
-  if (!result) return;
+  if (!plansResult) return;
 
-  if (!result.success) {
+  if (!plansResult.success) {
     return (
       <div className="container px-4 py-16 text-center">
         <h1 className="text-3xl font-bold">Pricing</h1>
@@ -28,12 +32,18 @@ const PricingPageComponent = async () => {
     );
   }
 
-  const subscriptionPlans = result.data;
+  const subscriptionPlans = plansResult.data;
+  const currentSubscription = subscriptionResult.success
+    ? subscriptionResult.data
+    : null;
 
   return (
     <div className="min-h-screen bg-background">
       <PricingHeroSection />
-      <PricingInteractive plans={subscriptionPlans} />
+      <PricingInteractive
+        plans={subscriptionPlans}
+        currentSubscription={currentSubscription}
+      />
       <PricingValueFeatures />
       <PricingFAQ />
       <PricingTrustBadges />

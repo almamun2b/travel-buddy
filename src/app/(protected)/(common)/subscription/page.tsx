@@ -1,3 +1,4 @@
+import { CancelSubscriptionDialog } from "@/components/modules/subscription/cancel-subscription-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +11,7 @@ import {
 import { getSubscriptionStatus } from "@/services/payment/getSubscriptionStatus";
 import { Calendar, CheckCircle, Clock, XCircle } from "lucide-react";
 import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Subscription - Travel Buddy",
@@ -151,19 +153,15 @@ const SubscriptionPage = async () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="hidden flex-col sm:flex-row gap-3">
-                {subscriptionData.data.hasSubscription ? (
-                  <>
-                    <Button variant="outline">Upgrade Plan</Button>
+              <div className="flex flex-col sm:flex-row gap-3">
+                {subscriptionData.data.hasSubscription && (
+                  <CancelSubscriptionDialog>
                     <Button variant="outline">Cancel Subscription</Button>
-                    <Button variant="outline">View Billing History</Button>
-                  </>
-                ) : (
-                  <>
-                    <Button>Get Started</Button>
-                    <Button variant="outline">View Plans</Button>
-                  </>
+                  </CancelSubscriptionDialog>
                 )}
+                <Button asChild variant="outline">
+                  <Link href="/pricing">View Pricing</Link>
+                </Button>
               </div>
             </CardContent>
           </Card>

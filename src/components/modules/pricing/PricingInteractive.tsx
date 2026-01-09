@@ -1,5 +1,6 @@
 "use client";
 
+import { SubscriptionStatus } from "@/types/payment";
 import { useState } from "react";
 import PricingCards from "./PricingCards";
 import PricingToggle from "./PricingToggle";
@@ -12,9 +13,13 @@ interface Plan {
 
 interface PricingInteractiveProps {
   plans: Plan[];
+  currentSubscription?: SubscriptionStatus | null;
 }
 
-export default function PricingInteractive({ plans }: PricingInteractiveProps) {
+export default function PricingInteractive({
+  plans,
+  currentSubscription,
+}: PricingInteractiveProps) {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">(
     "monthly"
   );
@@ -22,7 +27,11 @@ export default function PricingInteractive({ plans }: PricingInteractiveProps) {
   return (
     <>
       <PricingToggle onBillingCycleChange={setBillingCycle} />
-      <PricingCards plans={plans} billingCycle={billingCycle} />
+      <PricingCards
+        plans={plans}
+        billingCycle={billingCycle}
+        currentSubscription={currentSubscription}
+      />
     </>
   );
 }
