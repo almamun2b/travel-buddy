@@ -11,6 +11,10 @@ export const exploreTravelers = async (params: GetAllTravelersParams = {}) => {
   const res = await $fetch.get<TravelersResponse, GetAllTravelersParams>(
     `/user/explore/travelers`,
     {
+      cache: "force-cache",
+      next: {
+        tags: ["users", "explore-travelers"],
+      },
       params,
     }
   );
@@ -19,7 +23,13 @@ export const exploreTravelers = async (params: GetAllTravelersParams = {}) => {
 
 export async function getPublicProfile({ id }: { id: string }) {
   const res = await $fetch.get<PublicUserProfileResponse>(
-    `/user/profile/${id}`
+    `/user/profile/${id}`,
+    {
+      cache: "force-cache",
+      next: {
+        tags: ["users", "public-profile"],
+      },
+    }
   );
   return res;
 }

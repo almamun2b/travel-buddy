@@ -9,8 +9,9 @@ export const getToReviewPlans = async (): Promise<GetToReviewPlansResponse> => {
     const result = await $fetch.get<GetToReviewPlansResponse>(
       "/reviews/to-review-plans",
       {
+        cache: "force-cache",
         next: {
-          tags: ["to-review-plans"],
+          tags: ["reviews", "to-review-plans"],
         },
       }
     );

@@ -14,7 +14,11 @@ export const createReview = async (
   try {
     const result = await $fetch.post<CreateReviewResponse>("/reviews", payload);
     if (result?.success) {
+      revalidateTag("reviews", "");
       revalidateTag("to-review-plans", "");
+      revalidateTag("my-reviews", "");
+      revalidateTag("given-reviews", "");
+      revalidateTag("review-by-id", "");
     }
     return (
       result || {

@@ -5,7 +5,12 @@ import { $fetch } from "@/lib/fetch";
 
 export const getReviewById = async ({ id }: { id: string }): Promise<any> => {
   try {
-    const result = await $fetch.get<any>(`/reviews/user/${id}?limit=2000`);
+    const result = await $fetch.get<any>(`/reviews/user/${id}?limit=2000`, {
+      cache: "force-cache",
+      next: {
+        tags: ["reviews", "review-by-id"],
+      },
+    });
     return result;
   } catch (error: any) {
     console.log("GET_REVIEW_ERROR:", error);

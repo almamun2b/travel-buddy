@@ -5,7 +5,12 @@ import { $fetch } from "@/lib/fetch";
 
 export async function getPublicProfile({ id }: { id: string }) {
   try {
-    const result = await $fetch.get<any>(`/user/profile/${id}`);
+    const result = await $fetch.get<any>(`/user/profile/${id}`, {
+      cache: "force-cache",
+      next: {
+        tags: ["users", "public-profile"],
+      },
+    });
     return result;
   } catch (error: any) {
     console.log("GET_PUBLIC_PROFILE_ERROR:", error);

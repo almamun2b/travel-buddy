@@ -38,6 +38,10 @@ export const getAllUsers = async (params: GetAllUsersParams = {}) => {
     console.log(processedParams, "processedParams");
 
     const result = await $fetch.get<any, GetAllUsersParams>(`/user`, {
+      cache: "force-cache",
+      next: {
+        tags: ["users", "all-users"],
+      },
       params: processedParams,
     });
 

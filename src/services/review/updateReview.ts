@@ -24,7 +24,10 @@ export const updateReview = async ({
     console.log(result, "result");
 
     if (result?.success) {
+      revalidateTag("reviews", "");
       revalidateTag("given-reviews", "");
+      revalidateTag("my-reviews", "");
+      revalidateTag("review-by-id", "");
     }
 
     return (

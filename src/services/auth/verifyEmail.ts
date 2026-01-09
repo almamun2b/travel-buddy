@@ -2,6 +2,7 @@
 "use server";
 
 import { $fetch } from "@/lib/fetch";
+import { revalidateTag } from "next/cache";
 
 export async function verifyEmailAction({
   email,
@@ -15,6 +16,11 @@ export async function verifyEmailAction({
       email,
       code,
     });
+
+    if (data?.success) {
+      revalidateTag("user", "");
+      revalidateTag("users", "");
+    }
 
     return data;
   } catch (err: any) {
@@ -30,6 +36,11 @@ export async function resendVerificationCode({ email }: { email: string }) {
     const data = await $fetch.post<any>("/auth/resend-verification-code", {
       email,
     });
+
+    if (data?.success) {
+      revalidateTag("user", "");
+      revalidateTag("users", "");
+    }
 
     return data;
   } catch (err: any) {

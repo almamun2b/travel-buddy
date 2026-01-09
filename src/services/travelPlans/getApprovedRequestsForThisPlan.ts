@@ -11,7 +11,13 @@ export const getApprovedRequestsForThisPlan = async ({
 }): Promise<ApprovedRequestsResponse> => {
   try {
     const result = await $fetch.get<ApprovedRequestsResponse>(
-      `/travel-plans/requests/approved/${travelPlanId}`
+      `/travel-plans/requests/approved/${travelPlanId}`,
+      {
+        cache: "force-cache",
+        next: {
+          tags: ["travel-requests", "approved-requests"],
+        },
+      }
     );
     return (
       result || {

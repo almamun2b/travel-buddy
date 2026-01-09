@@ -10,6 +10,10 @@ export const matchTravelPlans = async (params: TravelPlanSearchParams = {}) => {
   const result = await $fetch.get<TravelPlansResponse, TravelPlanSearchParams>(
     `/travel-plans/match`,
     {
+      cache: "force-cache",
+      next: {
+        tags: ["travel-plans", "match-travel-plans"],
+      },
       params,
     }
   );

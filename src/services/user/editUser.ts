@@ -14,6 +14,7 @@ export async function editUser({
 
     if (data?.success) {
       revalidateTag("users", "");
+      revalidateTag("user", "");
     }
 
     return (

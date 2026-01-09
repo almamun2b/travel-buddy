@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { $fetch } from "@/lib/fetch";
+import { revalidateTag } from "next/cache";
 
 export interface CreateAdminData {
   email: string;
@@ -46,6 +48,11 @@ export const createAdmin = async ({
       "/user/create-admin",
       formData
     );
+
+    if (result?.success) {
+      revalidateTag("users", "");
+      revalidateTag("all-users", "");
+    }
 
     return result;
   } catch (error: unknown) {

@@ -6,6 +6,9 @@ import { SubscriptionPlansResponse } from "@/types/payment";
 export const getSubscriptionPlans = async () => {
   const result = await $fetch.get<SubscriptionPlansResponse>(`/payment/plans`, {
     cache: "force-cache",
+    next: {
+      tags: ["subscription-plans", "payment"],
+    },
   });
 
   return result;

@@ -19,8 +19,9 @@ export const getReviewsGivenByMe = async (
     } = params;
 
     const result = await $fetch.get<GetMyReviewsResponse>("/reviews/given", {
+      cache: "force-cache",
       next: {
-        tags: ["given-reviews"],
+        tags: ["reviews", "given-reviews"],
       },
       params: {
         limit,

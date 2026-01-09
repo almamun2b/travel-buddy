@@ -22,6 +22,7 @@ export async function updateStatus({
 
     if (data?.success) {
       revalidateTag("users", "");
+      revalidateTag("user", "");
     }
 
     return (

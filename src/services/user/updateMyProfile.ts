@@ -42,6 +42,7 @@ export const updateMyProfile = async ({
 
     if (result.success) {
       revalidateTag("user", "");
+      revalidateTag("users", "");
     }
 
     return result;

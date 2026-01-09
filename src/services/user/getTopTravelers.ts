@@ -6,7 +6,13 @@ import { TopTravelersResponse } from "@/types/user";
 export const getTopTravelers = async (): Promise<TopTravelersResponse> => {
   try {
     const result = await $fetch.get<TopTravelersResponse>(
-      `/user/top-travelers`
+      `/user/top-travelers`,
+      {
+        cache: "force-cache",
+        next: {
+          tags: ["users", "top-travelers"],
+        },
+      }
     );
 
     if (!result) {

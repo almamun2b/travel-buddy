@@ -3,6 +3,7 @@
 
 import { $fetch } from "@/lib/fetch";
 import { AuthResponse } from "@/types/travelPlan";
+import { revalidateTag } from "next/cache";
 
 export interface ParsedCookie {
   [key: string]: string | undefined;
@@ -21,6 +22,10 @@ export const loginUser = async (data: any) => {
       error: (result as any)?.error,
     };
   }
+
+  // Revalidate caches after successful login
+  revalidateTag("user", "");
+  revalidateTag("users", "");
 
   return { success: true, message: result.message };
 };

@@ -14,7 +14,10 @@ export async function deleteReview({
     const data = await $fetch.delete<DeleteReviewResponse>(`/reviews/${id}`);
 
     if (data?.success) {
-      revalidateTag("given-reviews", "layout");
+      revalidateTag("reviews", "");
+      revalidateTag("given-reviews", "");
+      revalidateTag("my-reviews", "");
+      revalidateTag("review-by-id", "");
     }
 
     return (

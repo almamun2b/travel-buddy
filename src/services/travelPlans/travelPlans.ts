@@ -12,7 +12,10 @@ export async function getTravelPlans(params: TravelPlanSearchParams = {}) {
     TravelPlansResponse,
     TravelPlanSearchParams
   >(`/travel-plans`, {
-    cache: "no-store",
+    cache: "force-cache",
+    next: {
+      tags: ["travel-plans"],
+    },
     params: params,
   });
 
@@ -23,7 +26,10 @@ export async function getAdminTravelPlans(params: TravelPlanSearchParams = {}) {
     TravelPlansResponse,
     TravelPlanSearchParams
   >(`/travel-plans/admin/all`, {
-    cache: "no-store",
+    cache: "force-cache",
+    next: {
+      tags: ["travel-plans", "admin-travel-plans"],
+    },
     params: params,
   });
 
@@ -32,7 +38,13 @@ export async function getAdminTravelPlans(params: TravelPlanSearchParams = {}) {
 
 export async function getTravelPlansById({ id }: { id: string }) {
   const res = await $fetch.get<TravelPlanDetailsResponse | null>(
-    `/travel-plans/${id}`
+    `/travel-plans/${id}`,
+    {
+      cache: "force-cache",
+      next: {
+        tags: ["travel-plans", "travel-plan-by-id"],
+      },
+    }
   );
   return res;
 }

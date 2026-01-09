@@ -25,6 +25,9 @@ export async function updateTravelPlanStatus({
 
     if (data?.success) {
       revalidateTag("travel-plans", "");
+      revalidateTag("my-travel-plans", "");
+      revalidateTag("travel-plan-by-id", "");
+      revalidateTag("match-travel-plans", "");
     }
 
     return (

@@ -2,6 +2,7 @@
 "use server";
 
 import { $fetch } from "@/lib/fetch";
+import { revalidateTag } from "next/cache";
 
 export const respondToTravelRequest = async ({
   requestId,
@@ -20,6 +21,15 @@ export const respondToTravelRequest = async ({
     }>(`/travel-plans/requests/${requestId}/respond`, {
       status,
     });
+
+    if (result?.success) {
+      revalidateTag("travel-plans", "");
+      revalidateTag("travel-requests", "");
+      revalidateTag("my-travel-requests", "");
+      revalidateTag("pending-requests", "");
+      revalidateTag("approved-requests", "");
+    }
+
     return (
       result || {
         success: false,

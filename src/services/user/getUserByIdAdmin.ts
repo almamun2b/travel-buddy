@@ -7,7 +7,12 @@ export async function getUserById({
   id: string;
 }): Promise<AdminUserResponse> {
   try {
-    const data = await $fetch.get<AdminUserResponse>(`/user/${id}`);
+    const data = await $fetch.get<AdminUserResponse>(`/user/${id}`, {
+      cache: "force-cache",
+      next: {
+        tags: ["users", "user-by-id", "admin-user-by-id"],
+      },
+    });
     return (
       data || {
         success: false,

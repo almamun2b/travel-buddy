@@ -8,7 +8,13 @@ export const getPendingRequestsForMyPlans =
   async (): Promise<PendingRequestsResponse> => {
     try {
       const result = await $fetch.get<PendingRequestsResponse>(
-        "/travel-plans/requests/pending"
+        "/travel-plans/requests/pending",
+        {
+          cache: "force-cache",
+          next: {
+            tags: ["travel-requests", "pending-requests"],
+          },
+        }
       );
       return (
         result || {

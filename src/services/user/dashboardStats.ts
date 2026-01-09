@@ -5,7 +5,12 @@ import { $fetch } from "@/lib/fetch";
 
 export async function getDashboardStats() {
   try {
-    const data = await $fetch.get<any>("/user/dashboard-stats");
+    const data = await $fetch.get<any>("/user/dashboard-stats", {
+      cache: "force-cache",
+      next: {
+        tags: ["dashboard-stats"],
+      },
+    });
     return data;
   } catch (err: any) {
     return {

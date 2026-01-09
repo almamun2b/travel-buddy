@@ -25,6 +25,10 @@ export const getMyTravelPlans = async (
     const result = await $fetch.get<TravelPlansResponse, MyTravelPlansParams>(
       "/travel-plans/my/plans",
       {
+        cache: "force-cache",
+        next: {
+          tags: ["travel-plans", "my-travel-plans"],
+        },
         params: {
           limit,
           page,

@@ -2,6 +2,7 @@
 "use server";
 
 import { $fetch } from "@/lib/fetch";
+import { revalidateTag } from "next/cache";
 
 interface TravelPlan {
   travelPlanId: string;
@@ -9,7 +10,18 @@ interface TravelPlan {
 }
 export const sendTravelRequest = async (payload: TravelPlan): Promise<any> => {
   try {
-    const result = await $fetch.post<any>("/travel-plans/requests/send", payload);
+    const result = await $fetch.post<any>(
+      "/travel-plans/requests/send",
+      payload
+    );
+
+    if (result?.success) {
+      revalidateTag("travel-plans", "");
+      revalidateTag("travel-requests", "");
+      revalidateTag("my-travel-requests", "");
+      revalidateTag("pending-requests", "");
+    }
+
     return result;
   } catch (error: any) {
     console.log("SEND_TRAVEL_REQUEST_ERROR:", error);

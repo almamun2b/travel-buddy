@@ -8,7 +8,13 @@ export const getMyTravelRequests =
   async (): Promise<TravelRequestsResponse> => {
     try {
       const result = await $fetch.get<TravelRequestsResponse>(
-        "/travel-plans/requests/my"
+        "/travel-plans/requests/my",
+        {
+          cache: "force-cache",
+          next: {
+            tags: ["travel-requests", "my-travel-requests"],
+          },
+        }
       );
       return (
         result || {

@@ -47,6 +47,8 @@ export const createTravelPlans = async ({
 
     if (result?.success) {
       revalidateTag("travel-plans", "");
+      revalidateTag("my-travel-plans", "");
+      revalidateTag("match-travel-plans", "");
     }
 
     return (
