@@ -4,9 +4,7 @@
 import { $fetch } from "@/lib/fetch";
 import { revalidateTag } from "next/cache";
 
-export const confirmSubscription = async (payload: {
-  sessionId: string;
-}): Promise<any> => {
+export const confirmSubscription = async (payload: { sessionId: string }) => {
   try {
     const result = await $fetch.post<any>(
       "/payment/subscription/confirm",
