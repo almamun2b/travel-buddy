@@ -29,6 +29,11 @@ const settings = [
     icon: User,
   },
   {
+    name: "Current Subscription",
+    url: "/subscription",
+    icon: User,
+  },
+  {
     name: "Update Profile",
     url: "/profile/edit",
     icon: Upload,

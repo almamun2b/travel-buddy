@@ -12,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { createCheckoutSession } from "@/services/payment/createCheckoutSession";
+import { SubscriptionStatus } from "@/types/payment";
 import { Check, Crown, Star, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -26,18 +27,20 @@ interface Plan {
 interface PricingCardsProps {
   plans: Plan[];
   billingCycle: "monthly" | "yearly";
+  currentSubscription?: SubscriptionStatus | null;
 }
 
 export default function PricingCards({
   plans,
   billingCycle,
+  currentSubscription,
 }: PricingCardsProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubscribe = async (planType: string) => {
     if (planType.toLowerCase() === "free") {
-      router.push("/register");
+      router.push("/subscription");
       return;
     }
 
@@ -51,14 +54,21 @@ export default function PricingCards({
       if (res.success && res.data?.url) {
         window.location.href = res.data.url;
       } else {
-        throw new Error(res.message || "Failed to create checkout session");
+        console.warn("Subscription error:", res.message);
+        toast.error(
+          res?.message || "Failed to initiate subscription. Please try again."
+        );
       }
     } catch (error: any) {
-      console.error("Subscription error:", error);
       toast.error("Failed to initiate subscription. Please try again.");
+      console.error("Subscription error:", error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const isCurrentPlan = (planType: string) => {
+    return currentSubscription?.plan?.toUpperCase() === planType.toUpperCase();
   };
 
   const freePlan = plans.find((p) => p.plan === "FREE");
@@ -94,14 +104,20 @@ export default function PricingCards({
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button
-                  disabled
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleSubscribe("free")}
-                >
-                  Get Started Free
-                </Button>
+                {isCurrentPlan("free") ? (
+                  <Button disabled variant="outline" className="w-full">
+                    Current Plan
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={isLoading}
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => handleSubscribe("free")}
+                  >
+                    Get Started Free {isLoading ? "..." : ""}
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           )}
@@ -139,13 +155,20 @@ export default function PricingCards({
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button
-                  disabled={isLoading}
-                  className="w-full"
-                  onClick={() => handleSubscribe("monthly")}
-                >
-                  Get Monthly Plan {isLoading ? "..." : ""}
-                </Button>
+                {isCurrentPlan("monthly") ? (
+                  <Button disabled variant="secondary" className="w-full">
+                    Current Plan
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={isLoading}
+                    variant="default"
+                    className="w-full"
+                    onClick={() => handleSubscribe("monthly")}
+                  >
+                    Get Monthly Plan {isLoading ? "..." : ""}
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           )}
@@ -195,14 +218,20 @@ export default function PricingCards({
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button
-                  disabled={isLoading}
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleSubscribe("yearly")}
-                >
-                  Get Yearly Plan {isLoading ? "..." : ""}
-                </Button>
+                {isCurrentPlan("yearly") ? (
+                  <Button disabled variant="outline" className="w-full">
+                    Current Plan
+                  </Button>
+                ) : (
+                  <Button
+                    disabled={isLoading}
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => handleSubscribe("monthly")}
+                  >
+                    Get Yearly Plan {isLoading ? "..." : ""}
+                  </Button>
+                )}
               </CardFooter>
             </Card>
           )}

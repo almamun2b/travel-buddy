@@ -9,3 +9,18 @@ export interface SubscriptionPlansResponse {
   message: string;
   data: SubscriptionPlan[];
 }
+
+export interface SubscriptionStatus {
+  hasSubscription: boolean;
+  plan: "MONTHLY" | "YEARLY" | null;
+  status: "ACTIVE" | "CANCELLED" | "EXPIRED" | null;
+  startDate: string | null;
+  endDate: string | null;
+  features: string[];
+}
+
+export interface SubscriptionStatusResponse {
+  success: boolean;
+  message: string;
+  data: SubscriptionStatus;
+}
