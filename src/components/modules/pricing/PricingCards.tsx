@@ -54,11 +54,14 @@ export default function PricingCards({
       if (res.success && res.data?.url) {
         window.location.href = res.data.url;
       } else {
-        throw new Error(res.message || "Failed to create checkout session");
+        console.warn("Subscription error:", res.message);
+        toast.error(
+          res?.message || "Failed to initiate subscription. Please try again."
+        );
       }
     } catch (error: any) {
-      console.error("Subscription error:", error);
       toast.error("Failed to initiate subscription. Please try again.");
+      console.error("Subscription error:", error);
     } finally {
       setIsLoading(false);
     }
