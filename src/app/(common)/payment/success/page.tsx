@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { confirmSubscription } from "@/services/payment/confirmSubscription";
+import { getSubscriptionStatus } from "@/services/payment/getSubscriptionStatus";
 import {
   ArrowRight,
   Calendar,
@@ -64,16 +64,17 @@ const PaymentSuccessPage = async ({
   }
 
   try {
-    const res = await confirmSubscription({ sessionId: session_id });
+    // const res = await confirmSubscription({ sessionId: session_id });
+    const res = await getSubscriptionStatus();
 
     if (!res.success) {
       throw new Error(res.message || "Failed to confirm subscription");
     }
 
     const subscription = res.data;
-    const planName = subscription.plan;
-    const startDate = new Date(subscription.startDate);
-    const endDate = new Date(subscription.endDate);
+    const planName = subscription.plan || "FREE";
+    const startDate = new Date(subscription?.startDate || "");
+    const endDate = new Date(subscription?.endDate || "");
 
     const formatDate = (date: Date) => {
       return date.toLocaleDateString("en-US", {
