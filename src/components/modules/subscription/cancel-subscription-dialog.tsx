@@ -14,6 +14,7 @@ import {
 import { cancelSubscription } from "@/services/payment/cancelSubscription";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { useState, useTransition } from "react";
+import { toast } from "sonner";
 
 interface CancelSubscriptionDialogProps {
   children: React.ReactNode;
@@ -30,13 +31,12 @@ export function CancelSubscriptionDialog({
   const handleCancel = async () => {
     startTransition(async () => {
       const result = await cancelSubscription();
-
-      if (result.success) {
+      if (result?.success) {
         setIsOpen(false);
         onCancelSuccess?.();
-        console.log("Subscription cancelled successfully");
+        toast.success("Subscription cancelled successfully");
       } else {
-        console.error("Failed to cancel subscription:", result.message);
+        toast.error(result?.message || "Failed to cancel subscription");
       }
     });
   };

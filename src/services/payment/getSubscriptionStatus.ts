@@ -7,7 +7,13 @@ export const getSubscriptionStatus =
   async (): Promise<SubscriptionStatusResponse> => {
     try {
       const result = await $fetch.get<SubscriptionStatusResponse>(
-        "/payment/subscription/status"
+        "/payment/subscription/status",
+        {
+          cache: "force-cache",
+          next: {
+            tags: ["subscription-status"],
+          },
+        }
       );
       return (
         result || {
