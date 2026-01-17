@@ -1,7 +1,7 @@
 import Footer from "@/components/shared/Footer";
 import Navbar from "@/components/shared/navbar/Navbar";
 import ErrorBoundary from "@/components/shared/ErrorBoundary";
-import { Suspense } from "react";
+// import { Suspense } from "react";
 
 export default function CommonLayout({
   children,
@@ -11,11 +11,7 @@ export default function CommonLayout({
   return (
     <>
       <ErrorBoundary>
-        <Suspense
-          fallback={<div className="h-0 w-full bg-background border-b" />}
-        >
-          <Navbar />
-        </Suspense>
+        <Navbar />
       </ErrorBoundary>
       <main className="min-h-dvh container mx-auto px-6">
         <ErrorBoundary>{children}</ErrorBoundary>
