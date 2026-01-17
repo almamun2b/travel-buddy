@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 export default async function Home() {
   const user = await me();
   return (
-    <div className="pt-20">
+    <>
       <HeroSection />
       <HowItWorksSection />
       <WhyChooseUsSection />
@@ -29,6 +29,6 @@ export default async function Home() {
       <TestimonialsSection />
       <AboutStatsSection />
       <CTASection user={user} />
-    </div>
+    </>
   );
 }
