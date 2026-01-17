@@ -14,7 +14,11 @@ import { usePathname } from "next/navigation";
 
 type NavMenuProps = NavigationMenuProps & {
   onClickMenu?: () => void;
-  navMenus: any[];
+  navMenus: {
+    label: string;
+    href: string;
+    icon: React.ReactNode;
+  }[];
 };
 
 export const NavMenu = ({ onClickMenu, navMenus, ...props }: NavMenuProps) => {

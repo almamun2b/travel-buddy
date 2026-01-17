@@ -9,14 +9,14 @@ import { me } from "@/services/auth/me";
 const Navbar = async () => {
   const userInfo = await me();
   const navMenus = [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
+    { label: "Home", href: "/", icon: null },
+    { label: "About", href: "/about", icon: null },
     ...(userInfo?.data?.email
-      ? [{ label: "Matching Plan", href: "/matching-plan" }]
+      ? [{ label: "Matching Plan", href: "/matching-plan", icon: null }]
       : []),
-    { label: "Pricing", href: "/pricing" },
-    { label: "Travel Plans", href: "/travel-plan" },
-    { label: "Travelers", href: "/travelers" },
+    { label: "Pricing", href: "/pricing", icon: null },
+    { label: "Travel Plans", href: "/travel-plan", icon: null },
+    { label: "Travelers", href: "/travelers", icon: null },
   ];
   return (
     <nav className="fixed h-14 w-full bg-background border dark:border-slate-700/70 z-50">
@@ -24,7 +24,7 @@ const Navbar = async () => {
         <div className="flex items-center gap-4">
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <NavigationSheet userInfo={null} />
+            <NavigationSheet userInfo={userInfo} navMenus={navMenus} />
           </div>
 
           {/* Logo - Always visible */}

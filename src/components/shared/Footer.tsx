@@ -60,9 +60,9 @@ const Footer = () => {
             <div className="space-y-6 max-w-[420px]">
               <Link href="/" className="inline-flex items-center gap-2 mb-4">
                 <Image
-                  width={50}
-                  height={50}
-                  className="w-12 h-auto"
+                  width={128}
+                  height={128}
+                  className="w-[50px] h-[50px] aspect-square"
                   src={logo2}
                   alt="Company Logo"
                 ></Image>
