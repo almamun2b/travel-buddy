@@ -9,7 +9,9 @@ import {
   Phone,
   Twitter,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
+import logo2 from "@/assets/logo2.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -57,9 +59,13 @@ const Footer = () => {
           <div className="md:col-span-5">
             <div className="space-y-6 max-w-[420px]">
               <Link href="/" className="inline-flex items-center gap-2 mb-4">
-                <div className="rounded-lg bg-primary p-2">
-                  <Globe className="h-5 w-5 text-primary-foreground" />
-                </div>
+                <Image
+                  width={128}
+                  height={128}
+                  className="w-[50px] h-[50px] aspect-square"
+                  src={logo2}
+                  alt="Company Logo"
+                ></Image>
                 <div>
                   <h2 className="text-xl font-bold">Travel Buddy</h2>
                   <p className="text-sm text-muted-foreground">
