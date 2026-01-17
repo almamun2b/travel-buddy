@@ -132,7 +132,7 @@ const Footer = () => {
                   aria-label={social.label}
                   className="text-muted-foreground hover:text-primary transition-colors"
                 >
-                  {social.icon}lo
+                  {social.icon}
                 </Link>
               ))}
             </div>
