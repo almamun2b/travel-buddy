@@ -5,7 +5,7 @@ export default async function AuthLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="min-h-dvh container mx-auto px-6">
+    <main className="min-h-dvh mx-auto">
       <ErrorBoundary>{children}</ErrorBoundary>
     </main>
   );

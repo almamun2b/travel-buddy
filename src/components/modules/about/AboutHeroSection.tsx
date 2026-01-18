@@ -3,8 +3,8 @@ import { Sparkles } from "lucide-react";
 
 export default function AboutHeroSection() {
   return (
-    <section className="relative overflow-hidden py-20 lg:py-32">
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-secondary/10" />
+    <section className="relative overflow-hidden py-20 lg:py-32 mb-16">
+      <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-card to-primary/5" />
       <div className="container relative z-10 px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
           <Badge variant="outline" className="mb-6">

@@ -1,7 +1,7 @@
+import logo2 from "@/assets/logo2.png";
 import { Separator } from "@/components/ui/separator";
 import {
   Facebook,
-  Globe,
   Heart,
   Instagram,
   Linkedin,
@@ -9,6 +9,7 @@ import {
   Phone,
   Twitter,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 const Footer = () => {
@@ -20,17 +21,14 @@ const Footer = () => {
       links: [
         { name: "About Us", href: "/about" },
         { name: "How It Works", href: "/how-it-works" },
-        { name: "Success Stories", href: "/stories" },
-        { name: "Careers", href: "/careers" },
+        { name: "Success Stories", href: "/coming-soon" },
       ],
     },
     {
       title: "Explore",
       links: [
         { name: "Browse Travel Plans", href: "/travel-plan" },
-        { name: "Travel Blog", href: "/blog" },
         { name: "FAQ", href: "/faq" },
-        { name: "Support Center", href: "/support" },
       ],
     },
     {
@@ -57,9 +55,13 @@ const Footer = () => {
           <div className="md:col-span-5">
             <div className="space-y-6 max-w-[420px]">
               <Link href="/" className="inline-flex items-center gap-2 mb-4">
-                <div className="rounded-lg bg-primary p-2">
-                  <Globe className="h-5 w-5 text-primary-foreground" />
-                </div>
+                <Image
+                  width={128}
+                  height={128}
+                  className="w-[50px] h-[50px] aspect-square"
+                  src={logo2}
+                  alt="Company Logo"
+                ></Image>
                 <div>
                   <h2 className="text-xl font-bold">Travel Buddy</h2>
                   <p className="text-sm text-muted-foreground">

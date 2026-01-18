@@ -1,3 +1,4 @@
+import ComingSoon from "@/components/shared/ComingSoon";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,7 +8,13 @@ export const metadata: Metadata = {
 };
 
 const ResetPasswordPage = () => {
-  return <div>ResetPasswordPage</div>;
+  return (
+    <ComingSoon
+      title="Coming Soon"
+      description="This feature is currently under development. We'll notify you when it's ready!"
+      showNotification={false}
+    />
+  );
 };
 
 export default ResetPasswordPage;

@@ -10,7 +10,7 @@ export default async function AboutCTASection() {
     <section className="py-16">
       <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-4xl">
-          <Card className="border-0 bg-gradient-to-br from-primary/5 via-card to-primary/5 shadow-2xl">
+          <Card className="border-0 bg-linear-to-br from-primary/5 via-card to-primary/5 shadow-2xl">
             <CardContent className="p-8 text-center md:p-12">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
                 Ready for Your Next Adventure?

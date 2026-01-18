@@ -1,11 +1,14 @@
 "use client";
 
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useId, useState } from "react";
+import { forwardRef, useId, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 
-export default function Password({ ...field }) {
+const Password = forwardRef<
+  HTMLInputElement,
+  React.ComponentProps<typeof Input>
+>((props, ref) => {
   const id = useId();
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
@@ -19,7 +22,8 @@ export default function Password({ ...field }) {
           className="pe-9"
           placeholder="*******"
           type={isVisible ? "text" : "password"}
-          {...field}
+          ref={ref}
+          {...props}
         />
         <button
           className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
@@ -38,4 +42,8 @@ export default function Password({ ...field }) {
       </div>
     </div>
   );
-}
+});
+
+Password.displayName = "Password";
+
+export default Password;

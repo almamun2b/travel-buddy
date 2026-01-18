@@ -22,21 +22,20 @@ interface NavigationSheetProps {
       email: string;
     };
   } | null;
+  navMenus: {
+    label: string;
+    href: string;
+    icon: React.ReactNode;
+  }[];
 }
 
-export const NavigationSheet = ({ userInfo }: NavigationSheetProps) => {
+export const NavigationSheet = ({
+  userInfo,
+  navMenus,
+}: NavigationSheetProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const isLoggedIn = userInfo?.data?.email;
-
-  const navMenus = [
-    { label: "Home", href: "/", icon: null },
-    { label: "About", href: "/about", icon: null },
-    { label: "Matching Plan", href: "/matching-plan", icon: null },
-    { label: "Pricing", href: "/pricing", icon: null },
-    { label: "Travel Plans", href: "/travel-plan", icon: null },
-    { label: "Travelers", href: "/travelers", icon: null },
-  ];
 
   const isActiveRoute = (href: string): boolean => {
     if (href === "/") {
@@ -87,7 +86,8 @@ export const NavigationSheet = ({ userInfo }: NavigationSheetProps) => {
                   className={cn(
                     "flex items-center px-4 py-3 text-sm font-medium rounded-md transition-colors",
                     "hover:bg-accent hover:text-accent-foreground",
-                    isActive && "bg-accent text-accent-foreground font-semibold"
+                    isActive &&
+                      "bg-accent text-accent-foreground font-semibold",
                   )}
                 >
                   {menu.label}

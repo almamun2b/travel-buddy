@@ -32,10 +32,8 @@ export default function AboutValuesSection() {
     <section className="py-32">
       <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Our Values
-          </h2>
-          <p className="mt-4 text-xl text-muted-foreground">
+          <h2 className="title">Our Values</h2>
+          <p className="mt-4 subtile">
             The principles that guide everything we do
           </p>
         </div>
@@ -43,7 +41,7 @@ export default function AboutValuesSection() {
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {values.map((value) => (
             <div key={value.title}>
-              <Card className="h-full border-0 bg-card shadow-lg transition-all hover:shadow-xl">
+              <Card className="h-full border-0 bg-card shadow-3 hover:shadow-6 transition-all">
                 <CardContent className="p-6 text-center">
                   <div className="mb-4 inline-flex rounded-full bg-primary/10 p-3">
                     <div className="text-primary">{value.icon}</div>

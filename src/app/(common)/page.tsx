@@ -19,16 +19,16 @@ export const metadata: Metadata = {
 export default async function Home() {
   const user = await me();
   return (
-    <div className="pt-20">
+    <>
       <HeroSection />
       <HowItWorksSection />
+      <AboutStatsSection />
       <WhyChooseUsSection />
       <PopularDestinationsSection user={user} />
       <TravelCategoriesSection />
       <TopRatedTravelersSection user={user} />
       <TestimonialsSection />
-      <AboutStatsSection />
       <CTASection user={user} />
-    </div>
+    </>
   );
 }
