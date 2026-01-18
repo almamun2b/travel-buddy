@@ -147,7 +147,7 @@ export default async function HowItWorks() {
                   className="border-0 shadow-3 relative overflow-hidden py-0"
                 >
                   <CardContent className="p-6">
-                    <div className="flex p-3 gap-3 rounded-full bg-primary/10 text-primary mb-4">
+                    <div className="flex p-3 gap-3 rounded-full bg-transparent text-primary mb-4">
                       {step.icon}
                       <h3 className="font-semibold">{step.title}</h3>
                     </div>
@@ -193,7 +193,7 @@ export default async function HowItWorks() {
               {features.map((feature, index) => (
                 <Card key={index} className="border-0 shadow-3">
                   <CardContent className="p-6 text-center">
-                    <div className="flex gap-3 items-center justify-center p-3 rounded-full bg-primary/10 text-primary mx-auto mb-4">
+                    <div className="flex gap-3 items-center justify-center p-3 rounded-full bg-transparent text-primary mx-auto mb-4">
                       {feature.icon}
                       <h3 className="font-semibold">{feature.title}</h3>
                     </div>
