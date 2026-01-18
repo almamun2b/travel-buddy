@@ -5,13 +5,10 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { logoutUser } from "@/services/auth/logout";
 import { UserProfile } from "@/types/user";
 import { useRouter } from "next/navigation";
@@ -36,14 +33,14 @@ function ProfileDropdown({ userInfo }: { userInfo: UserProfile }) {
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <Popover>
+      <PopoverTrigger asChild>
         <Button variant="outline" size="sm" className="relative h-9 w-9">
           <UserCircle className="h-8 w-8" />
         </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
+      </PopoverTrigger>
+      <PopoverContent className="w-56" align="end">
+        <div className="space-y-3">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
               {userInfo?.fullName || "User"}
@@ -52,27 +49,32 @@ function ProfileDropdown({ userInfo }: { userInfo: UserProfile }) {
               {userInfo?.email}
             </p>
           </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/dashboard" className="flex items-center cursor-pointer">
-            <LayoutDashboard className="mr-2 h-4 w-4" />
-            <span>Dashboard</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/profile" className="flex items-center cursor-pointer">
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
-          </Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Log out</span>
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+          <div className="border-t pt-3 space-y-1">
+            <Link
+              href="/dashboard"
+              className="flex items-center p-2 hover:bg-accent rounded-md cursor-pointer transition-colors"
+            >
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              <span className="text-sm">Dashboard</span>
+            </Link>
+            <Link
+              href="/profile"
+              className="flex items-center p-2 hover:bg-accent rounded-md cursor-pointer transition-colors"
+            >
+              <User className="mr-2 h-4 w-4" />
+              <span className="text-sm">Profile</span>
+            </Link>
+            <Button
+              onClick={handleLogout}
+              className="flex items-center p-2 hover:bg-accent rounded-md cursor-pointer transition-colors w-full text-left"
+            >
+              <LogOut className="mr-2 h-4 w-4" />
+              <span className="text-sm">Log out</span>
+            </Button>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 
