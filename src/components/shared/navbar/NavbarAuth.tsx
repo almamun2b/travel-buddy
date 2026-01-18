@@ -66,9 +66,10 @@ function ProfileDropdown({ userInfo }: { userInfo: UserProfile }) {
             </Link>
             <Button
               onClick={handleLogout}
-              className="flex items-center p-2 hover:bg-accent rounded-md cursor-pointer transition-colors w-full text-left"
+              variant="ghost"
+              className="flex items-center justify-start px-2.5! hover:bg-accent rounded-md cursor-pointer transition-colors w-full"
             >
-              <LogOut className="mr-2 h-4 w-4" />
+              <LogOut className="mr-0 h-4 w-4" />
               <span className="text-sm">Log out</span>
             </Button>
           </div>
