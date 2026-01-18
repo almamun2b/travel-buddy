@@ -53,7 +53,7 @@ export default function TestimonialsSection() {
     <section className="pb-16 mt-24">
       <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="title">Traveler Stories</h2>
+          <h2 className="title">Traveler Testimonials</h2>
           <p className="mt-4 subtitle">
             Hear from our community about their shared adventures
           </p>
