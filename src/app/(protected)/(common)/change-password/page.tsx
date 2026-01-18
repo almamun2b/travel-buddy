@@ -16,15 +16,12 @@ const ChangePasswordPage = async () => {
     notFound();
   }
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Change Password</h1>
+    <div className="space-y-6 mt-10">
       <div className="mx-auto max-w-2xl">
-        <div className="rounded-lg border bg-card p-6">
-          <h1 className="text-xl font-bold tracking-tight text-foreground text-center pb-4">
-            Change Password
-          </h1>
-          <ChangePasswordForm />
-        </div>
+        <h1 className="text-xl font-bold tracking-tight text-foreground text-center pb-4">
+          Change Password
+        </h1>
+        <ChangePasswordForm />
       </div>
     </div>
   );

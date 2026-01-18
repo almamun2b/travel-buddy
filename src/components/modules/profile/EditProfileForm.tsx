@@ -47,7 +47,7 @@ const updateProfileSchema = z.object({
         const parsed = new Date(date);
         return !isNaN(parsed.getTime());
       },
-      { message: "Invalid date format. Please use YYYY-MM-DD format" }
+      { message: "Invalid date format. Please use YYYY-MM-DD format" },
     ),
 });
 
@@ -77,7 +77,7 @@ export function UpdateProfileForm({ user }: UpdateProfileFormProps) {
    * ---------------------------- */
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(
-    user.avatar ?? null
+    user.avatar ?? null,
   );
   const router = useRouter();
 
@@ -142,7 +142,7 @@ export function UpdateProfileForm({ user }: UpdateProfileFormProps) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 max-w-3xl mx-auto"
+        className="space-y-8 max-w-3xl mx-auto mt-10"
       >
         {/* Avatar */}
         <div className="flex items-center gap-6">
