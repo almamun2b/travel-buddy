@@ -38,20 +38,20 @@ const WhyChooseUsSection = () => {
   return (
     <section className="py-16">
       <div className="container px-4 md:px-6">
-        <div className="mx-auto max-w-3xl text-center mb-16">
+        <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Why Choose Travel Buddy
+            Why Choose <span className="text-primary">Travel Buddy</span>
           </h2>
           <p className="mt-4 text-xl text-muted-foreground">
             The trusted platform for meaningful travel connections
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 mt-10">
           {features.map((feature, index) => (
             <Card
               key={index}
-              className="border-0 bg-card shadow-lg transition-all hover:shadow-xl"
+              className="border-0 bg-card shadow-3 hover:shadow-6 transition-all"
             >
               <CardContent className="p-6 text-center">
                 <div className="mb-4 inline-flex rounded-full bg-primary/10 p-3">
@@ -60,7 +60,7 @@ const WhyChooseUsSection = () => {
                   </div>
                 </div>
                 <h3 className="mb-2 text-lg font-semibold">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground max-w-[220px] mx-auto">
                   {feature.description}
                 </p>
               </CardContent>

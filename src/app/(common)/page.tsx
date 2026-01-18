@@ -22,12 +22,12 @@ export default async function Home() {
     <>
       <HeroSection />
       <HowItWorksSection />
+      <AboutStatsSection />
       <WhyChooseUsSection />
       <PopularDestinationsSection user={user} />
       <TravelCategoriesSection />
       <TopRatedTravelersSection user={user} />
       <TestimonialsSection />
-      <AboutStatsSection />
       <CTASection user={user} />
     </>
   );

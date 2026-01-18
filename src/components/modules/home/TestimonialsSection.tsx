@@ -1,6 +1,16 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { Star, ThumbsUp } from "lucide-react";
+import { useState } from "react";
 
 const testimonials = [
   {
@@ -37,60 +47,118 @@ const testimonials = [
 ];
 
 export default function TestimonialsSection() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
   return (
     <section className="pb-16 mt-24">
       <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight">
-            Traveler Stories
-          </h2>
-          <p className="mt-4 text-xl text-muted-foreground">
+          <h2 className="title">Traveler Stories</h2>
+          <p className="mt-4 subtitle">
             Hear from our community about their shared adventures
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {testimonials.map((testimonial) => (
-            <Card key={testimonial.id} className="border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarImage
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                    />
-                    <AvatarFallback>
-                      {testimonial.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h4 className="font-semibold">{testimonial.name}</h4>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonial.location}
-                    </p>
-                  </div>
-                  <div className="ml-auto flex items-center gap-1">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span className="font-semibold">{testimonial.rating}</span>
-                  </div>
-                </div>
+        <div className="mt-10 relative">
+          <Carousel
+            className="w-full max-w-2xl mx-auto"
+            opts={{
+              align: "center",
+              loop: true,
+            }}
+            setApi={(api) => {
+              if (api) {
+                api.on("select", () => {
+                  setCurrentSlide(api.selectedScrollSnap());
+                });
+              }
+            }}
+          >
+            <CarouselContent>
+              {testimonials.map((testimonial) => (
+                <CarouselItem key={testimonial.id}>
+                  <div className="p-1">
+                    <Card className="border-0 shadow-3 transition-all">
+                      <CardContent className="p-8">
+                        <div className="flex flex-col items-center text-center space-y-4">
+                          <Avatar className="h-20 w-20">
+                            <AvatarImage
+                              src={testimonial.avatar}
+                              alt={testimonial.name}
+                            />
+                            <AvatarFallback className="text-lg">
+                              {testimonial.name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
 
-                <p className="mt-4 text-muted-foreground">
-                  {testimonial.content}
-                </p>
+                          <div className="space-y-2">
+                            <h4 className="font-semibold text-lg">
+                              {testimonial.name}
+                            </h4>
+                            <p className="text-sm text-muted-foreground">
+                              {testimonial.location}
+                            </p>
+                            <div className="flex items-center justify-center gap-1">
+                              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                              <span className="font-semibold">
+                                {testimonial.rating}
+                              </span>
+                            </div>
+                          </div>
 
-                <div className="mt-4 flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">
-                    {testimonial.date}
-                  </span>
-                  <ThumbsUp className="h-4 w-4 text-green-500" />
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                          <blockquote className="text-muted-foreground italic leading-relaxed">
+                            &ldquo;{testimonial.content}&rdquo;
+                          </blockquote>
+
+                          <div className="flex items-center justify-between w-full text-sm">
+                            <span className="text-muted-foreground">
+                              {testimonial.date}
+                            </span>
+                            <div className="flex items-center gap-1 text-green-500">
+                              <ThumbsUp className="h-4 w-4" />
+                              <span>Helpful</span>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden md:flex" />
+            <CarouselNext className="hidden md:flex" />
+          </Carousel>
+
+          {/* Carousel indicators */}
+          <div className="flex justify-center gap-2 mt-6">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                className={`h-2 rounded-full transition-all ${
+                  currentSlide === index
+                    ? "w-8 bg-primary"
+                    : "w-2 bg-muted-foreground/30"
+                }`}
+                onClick={() => {
+                  const carouselElement = document.querySelector(
+                    '[data-slot="carousel-content"]',
+                  ) as HTMLElement;
+                  if (carouselElement && "emblaApi" in carouselElement) {
+                    const api = (
+                      carouselElement as {
+                        emblaApi: { scrollTo: (index: number) => void };
+                      }
+                    ).emblaApi;
+                    api.scrollTo(index);
+                  }
+                }}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

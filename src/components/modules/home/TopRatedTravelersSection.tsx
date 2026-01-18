@@ -30,15 +30,11 @@ export default async function TopRatedTravelersSection({
     return (
       <section className="py-32">
         <div className="container px-4 md:px-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-3xl font-bold tracking-tight">
-                Top Rated Travelers
-              </h2>
-              <p className="mt-2 text-muted-foreground">
-                Connect with our most trusted community members
-              </p>
-            </div>
+          <div className="text-center">
+            <h2 className="title">Top Rated Travelers</h2>
+            <p className="mt-4 subtile">
+              Connect with our most trusted community members
+            </p>
           </div>
           <div className="mt-8 text-center">
             <p className="text-red-500">{error}</p>
@@ -51,51 +47,53 @@ export default async function TopRatedTravelersSection({
   return (
     <section className="py-32">
       <div className="container px-4 md:px-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">
-              Top Rated Travelers
-            </h2>
-            <p className="mt-2 text-muted-foreground">
-              Connect with our most trusted community members
-            </p>
-          </div>
+        <div className="text-center">
+          ``
+          <h2 className="title">Top Rated Travelers</h2>
+          <p className="mt-4 subtile">
+            Connect with our most trusted community members
+          </p>
         </div>
 
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
           {topTravelers.map((traveler) => (
-            <Card key={traveler.id} className="border-0 shadow-lg">
+            <Card
+              key={traveler.id}
+              className="border-0 bg-linear-to-br from-primary/5 via-card to-primary/5 shadow-3 hover:shadow-6 transition-all"
+            >
               <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <Avatar className="h-16 w-16 border-2 border-primary/20">
+                <div className="flex flex-col items-center text-center">
+                  <Avatar className="h-20 w-20 border-2 border-primary/20 mb-4">
                     <AvatarImage
                       src={traveler.avatar}
                       alt={traveler.fullName}
                     />
-                    <AvatarFallback>
+                    <AvatarFallback className="text-lg">
                       {traveler.fullName
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="font-semibold">{traveler.fullName}</h3>
-                        <p className="text-sm text-muted-foreground">
-                          <MapPin className="mr-1 inline h-3 w-3" />
-                          {traveler.location}
-                        </p>
-                      </div>
+
+                  <div className="w-full">
+                    <div className="flex items-center justify-center gap-2 mb-2">
+                      <h3 className="font-semibold text-lg">
+                        {traveler.fullName}
+                      </h3>
                       <Badge variant="secondary" className="gap-1">
                         <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
                         {traveler.avgRating}
                       </Badge>
                     </div>
 
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      {traveler.travelInterests.map((interest) => (
+                    <p className="text-sm text-muted-foreground mb-4">
+                      <MapPin className="mr-1 inline h-3 w-3" />
+                      {traveler.location || "Location not specified"}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 justify-center mb-4">
+                      {traveler?.travelInterests.map((interest) => (
                         <Badge
                           key={interest}
                           variant="outline"
@@ -106,7 +104,7 @@ export default async function TopRatedTravelersSection({
                       ))}
                     </div>
 
-                    <div className="mt-4 text-sm">
+                    <div className="text-sm mb-4">
                       <p className="text-muted-foreground">
                         <CalendarDays className="mr-1 inline h-3 w-3" />
                         {traveler.nextTrip
@@ -116,19 +114,17 @@ export default async function TopRatedTravelersSection({
                     </div>
 
                     {user?.data && user.data.email && (
-                      <div className="mt-4 flex gap-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="flex-1 gap-2"
-                          asChild
-                        >
-                          <Link href={`/travelers/${traveler.id}`}>
-                            <UserCheck className="h-4 w-4" />
-                            View Profile
-                          </Link>
-                        </Button>
-                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="w-full gap-2"
+                        asChild
+                      >
+                        <Link href={`/travelers/${traveler.id}`}>
+                          <UserCheck className="h-4 w-4" />
+                          View Profile
+                        </Link>
+                      </Button>
                     )}
                   </div>
                 </div>

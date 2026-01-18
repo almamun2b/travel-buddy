@@ -49,7 +49,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="relative overflow-hidden py-18">
+    <section className="relative overflow-hidden pt-15 pb-10">
       <div className="container relative z-10 px-4 md:px-6 py-10 md:py-18 rounded-sm">
         <div className="mx-auto max-w-4xl text-center ">
           <Badge variant="outline" className="mb-6">
@@ -67,7 +67,7 @@ export default function HeroSection() {
 
           {/* Search Bar */}
           <div className="mt-10">
-            <Card className="mx-auto max-w-4xl border-0 bg-card/50 shadow-5 hover:shadow-6 backdrop-blur-sm">
+            <Card className="mx-auto max-w-4xl border-0 bg-card/50 shadow-3 hover:shadow-6 transition-all">
               <CardContent className="p-6">
                 <div className="grid gap-4 md:grid-cols-4">
                   <div className="space-y-2">

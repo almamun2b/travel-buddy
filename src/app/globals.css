@@ -167,3 +167,15 @@
     box-shadow: var(--shadow-8);
   }
 }
+
+@layer components {
+  .title {
+    @apply text-3xl font-bold tracking-tight sm:text-4xl;
+  }
+  .subtitle {
+    @apply text-xl text-muted-foreground;
+  }
+  .description {
+    @apply text-muted-foreground;
+  }
+}

@@ -40,10 +40,7 @@ export const NavMenu = ({ onClickMenu, navMenus, ...props }: NavMenuProps) => {
             <NavigationMenuItem key={menu.label}>
               <NavigationMenuLink
                 asChild
-                className={cn(
-                  "transition-all duration-200 relative",
-                  isActive && "text-foreground font-semibold",
-                )}
+                className={cn("transition-all duration-200 relative")}
                 data-active={isActive}
               >
                 <Link href={menu.href} onClick={onClickMenu}>

@@ -54,17 +54,15 @@ const TravelCategoriesSection = () => {
   return (
     <section className="py-20 px-4 bg-background">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16">
+        <div className="text-center">
           <Badge className="mb-4">Categories</Badge>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Travel Categories
-          </h2>
-          <p className="text-xl text-muted-foreground">
+          <h2 className="title">Travel Categories</h2>
+          <p className="subtitle mt-4">
             Find travelers who share your interests
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-10">
           {categories.map((category, index) => (
             <Card
               key={index}

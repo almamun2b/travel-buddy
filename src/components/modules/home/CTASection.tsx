@@ -12,7 +12,7 @@ export default function CTASection({ user }: CTAProps) {
   return (
     <section className="py-16">
       <div className="mx-auto max-w-5xl px-4 md:px-6">
-        <Card className="border-0 bg-gradient-to-r from-primary/10 to-primary/5 shadow-2xl">
+        <Card className="border-0 bg-linear-to-br from-primary/5 via-card to-primary/5 shadow-2xl">
           <CardContent className="p-8 text-center md:p-12">
             <div className="mx-auto max-w-3xl">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">

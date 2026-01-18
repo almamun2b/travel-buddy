@@ -42,10 +42,8 @@ export default function AboutTeamSection() {
     <section className="py-32">
       <div className="container px-4 md:px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            Meet Our Team
-          </h2>
-          <p className="mt-4 text-xl text-muted-foreground">
+          <h2 className="title">Meet Our Team</h2>
+          <p className="mt-4 subtile">
             Passionate travelers and experts dedicated to your journey
           </p>
         </div>
@@ -53,7 +51,7 @@ export default function AboutTeamSection() {
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {teamMembers.map((member) => (
             <div key={member.name}>
-              <Card className="h-full border-0 bg-card shadow-lg transition-all hover:shadow-xl">
+              <Card className="h-full border-0 bg-card shadow-3 hover:shadow-6 transition-all">
                 <CardContent className="p-6 text-center">
                   <Avatar className="mx-auto mb-4 h-24 w-24">
                     <AvatarImage src={member.avatar} alt={member.name} />

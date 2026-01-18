@@ -67,34 +67,28 @@ export default async function PopularDestinationsSection({
   return (
     <section className="py-32">
       <div className="container px-4 md:px-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight">
-              Popular Destinations
-            </h2>
-            <p className="mt-2 text-muted-foreground">
-              Where our community is traveling next
-            </p>
-          </div>
+        <div className="text-center">
+          <h2 className="title">Popular Destinations</h2>
+          <p className="mt-4 subtile">Where our community is traveling next</p>
         </div>
 
-        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {popularDestinations.map((destination) => (
             <Card
               key={destination.id}
-              className="group overflow-hidden border-0 shadow-lg transition-all hover:shadow-xl"
+              className="group overflow-hidden border-0 shadow-lg transition-all hover:shadow-xl rounded-2xl bg-transparent py-0"
             >
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-64 overflow-hidden rounded-t-2xl">
                 <Image
                   src={destination.image}
                   alt={destination.name}
                   fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="object-cover transition-transform duration-300 group-hover:scale-105 rounded-t-2xl"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent rounded-t-2xl" />
 
-                <div className="absolute bottom-4 left-4 right-4 text-white">
+                <div className="absolute bottom-4 left-4 right-4 text-white ">
                   <div className="mb-2">
                     <Badge className="bg-white/20 backdrop-blur-sm border-0 text-white hover:bg-white/30">
                       {destination.country}
