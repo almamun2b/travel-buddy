@@ -1,7 +1,7 @@
+import logo2 from "@/assets/logo2.png";
 import { Separator } from "@/components/ui/separator";
 import {
   Facebook,
-  Globe,
   Heart,
   Instagram,
   Linkedin,
@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import logo2 from "@/assets/logo2.png";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -23,16 +22,13 @@ const Footer = () => {
         { name: "About Us", href: "/about" },
         { name: "How It Works", href: "/how-it-works" },
         { name: "Success Stories", href: "/stories" },
-        { name: "Careers", href: "/careers" },
       ],
     },
     {
       title: "Explore",
       links: [
         { name: "Browse Travel Plans", href: "/travel-plan" },
-        { name: "Travel Blog", href: "/blog" },
         { name: "FAQ", href: "/faq" },
-        { name: "Support Center", href: "/support" },
       ],
     },
     {
