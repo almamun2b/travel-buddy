@@ -1,10 +1,10 @@
+import { me } from "@/services/auth/me";
 import Link from "next/link";
 import NavbarAuth from "./NavbarAuth";
 import { Logo } from "./logo";
 import { ModeToggle } from "./mode-toggle";
 import { NavMenu } from "./nav-menu";
 import { NavigationSheet } from "./navigation-sheet";
-import { me } from "@/services/auth/me";
 
 const Navbar = async () => {
   const userInfo = await me();
@@ -44,7 +44,7 @@ const Navbar = async () => {
             <ModeToggle />
           </div>
           <div>
-            <NavbarAuth />
+            <NavbarAuth user={userInfo?.data || null} />
           </div>
         </div>
       </div>
